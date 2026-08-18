@@ -4,16 +4,24 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ## Unreleased
 
+_No changes yet._
+
+## 0.1.0 — 2026-08-18
+
+### Release summary
+
+Version 0.1.0 establishes the first verified C++17/PlatformIO firmware baseline for Free Modular Drift. It preserves Drift's four modulation concepts while correcting documented numerical and state-handling issues, adds mathematical and regression verification, AVR resource and timing guardrails, reproducible tag-driven release tooling, and a versioned PDF user manual generated only for tagged releases.
+
 ### Added
 
 - Shared Drift orange-red heart asset plus automated footer validation for user-facing Markdown documentation.
 - Reusable, raster-free SVG redraws of the manual's front-panel reference, algorithm diagrams and configuration-switch illustrations under `docs/manual/assets/`, with automated vector-asset validation and selected figures reused in repository documentation.
 - Maintained end-user manual source under `docs/manual/`, with a separate CC BY-NC 4.0 licence and publication notes for the required Ubuntu/Ubuntu Light typography.
-- Reproducible manual publication tooling and CI that converts the unversioned ODT source into a versioned release PDF and rejects tagged-release artifacts with missing/substituted Ubuntu fonts.
+- Reproducible manual publication tooling integrated into the tag-driven release workflow, converting the unversioned ODT source into a versioned release PDF and rejecting release artifacts with missing/substituted Ubuntu fonts.
 - C++17/PlatformIO firmware architecture with a portable `lib/fmd` core and ATmega328P ports-and-adapters hardware boundary.
 - Perlin, Brownian, Bézier and LFO implementations with deterministic paired-LFSR random generation.
 - Dedicated mathematical unit-test suites for each of the four algorithms, plus shared fixed-point/frequency/reference-table suites, covering reference equations, boundaries, monotonicity, continuity, distribution behavior, long-run behavior and state-transition properties.
-- Native unit, integration, property, regression and system tests with machine-checked requirement traceability; the current unreleased baseline contains 88 test cases and 32 acceptance criteria.
+- Native unit, integration, property, regression and system tests with machine-checked requirement traceability; the 0.1.0 baseline contains 88 test cases and 32 acceptance criteria.
 - Native coverage, sanitizer, Nano old/new bootloader, AVR resource-budget and timing-probe CI targets.
 - Detailed developer analyses for all four algorithms, including mathematical foundations, upstream implementation review, computational cost, optimization opportunities and verification strategy.
 - GitHub issue forms, pull-request template, security policy, contributor guidance, dependency automation and tag-driven release workflow.
@@ -21,8 +29,10 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Changed
 
+- Dependabot version updates are grouped and reduced to a monthly cadence with at most one open version-update PR per ecosystem to avoid dependency-PR bursts; security updates remain governed separately by GitHub.
+- Root README quick-start documentation expanded with front-panel, DIP-switch and per-algorithm SVG guidance, including the physical rear-switch numbering and user-facing control behavior.
 - Repository identity prepared for `napolitano/eurorack-organic-modulation-firmware`, including GitHub status badges and stricter ATmega328P engineering guardrails of 85% application flash and 65% static SRAM.
-- Root README reorganized around upstream acknowledgement, a user-oriented explanation of Drift, project rationale, quick-start guide, repository index, neutral upstream-findings table and release-history placeholder for the currently unreleased project.
+- Root README reorganized around upstream acknowledgement, a user-oriented explanation of Drift, project rationale, quick-start guide, repository index, neutral upstream-findings table and concise release history.
 - Manual PDF validation no longer treats the ODT cached `meta:page-count` statistic as a release contract; release validation relies on page geometry, source-content checks and strict embedded Ubuntu/Ubuntu Light verification instead.
 - End-user manual content was reviewed against the corrected firmware: generic Speed/output wording now distinguishes Brownian and LFO behavior, Bezier timing is documented as triangular log-speed variation rather than Gaussian intervals, continuous curve morphing is described accurately, original-hardware power figures are restored, and every algorithm section now ends with mathematical foundations and a musical interpretation.
 - Perlin gradient selection and phase advancement and Bézier speed-variation scaling are exposed as pure production math contracts so state/edge behavior can be verified without test-only implementations.

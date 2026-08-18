@@ -1,16 +1,32 @@
 version: 2
+
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    groups:
+      github-actions:
+        patterns:
+          - "*"
     labels:
       - "dependencies"
       - "ci"
+    commit-message:
+      prefix: "chore(deps)"
+
   - package-ecosystem: "pip"
     directory: "/scripts"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    open-pull-requests-limit: 1
+    groups:
+      python-ci:
+        patterns:
+          - "*"
     labels:
       - "dependencies"
       - "ci"
+    commit-message:
+      prefix: "chore(deps)"

@@ -1,6 +1,6 @@
 {
   "name": "fm-drift-firmware",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "build": {
     "includeDir": "include",
     "srcDir": "src",
@@ -8,7 +8,7 @@
       "+<**/*.cpp>"
     ]
   },
-  "description": "Unreleased local FM Drift production library. 0.0.0 is a PlatformIO manifest placeholder, not a firmware release version.",
+  "description": "Portable C++17 production library for the Free Modular Drift organic/random Eurorack modulation firmware.",
   "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",
