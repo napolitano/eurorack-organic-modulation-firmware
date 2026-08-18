@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 403" role="img" aria-label="Skewed triangle LFO">
+<title>Skewed triangle LFO</title>
+<style>
+  text { font-family: Ubuntu, "Ubuntu Sans", Arial, sans-serif; }
+  .title { font-size: 34px; font-weight: 700; fill: #1a1a1a; }
+  .subtitle { font-size: 25px; font-weight: 300; fill: #9a9a9a; }
+  .label { font-size: 24px; font-weight: 500; fill: #1a1a1a; }
+  .small { font-size: 18px; font-weight: 300; fill: #8d8d8d; }
+</style>
+<rect width="1056" height="403" fill="white"/>
+<text x="34" y="52" class="title">Skewed triangle LFO</text>
+<polyline points="68.0,314.5 74.0,310.5 208.0,135.0 238.0,171.5 242.0,181.0 258.0,197.5 260.0,207.0 264.0,208.5 338.0,306.5 346.0,314.0 388.0,314.5 392.0,312.0 528.0,135.0 558.0,171.5 562.0,181.0 578.0,197.5 580.0,207.0 584.0,208.5 662.0,311.5 666.0,314.0 708.0,315.0 714.0,310.5 848.0,135.0 878.0,171.5 882.0,181.0 898.0,197.5 900.0,207.0 908.0,213.5 984.0,313.0 1028.0,314.5 1034.0,310.5 1054.0,283.5" fill="none" stroke="#e64a2b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="78.0,315.0 88.0,309.5 286.0,135.0 302.0,168.0 304.0,180.5 352.0,304.5 358.0,314.5 398.0,315.0 404.0,312.5 606.0,135.0 622.0,168.0 624.0,180.5 674.0,309.0 678.0,314.0 720.0,314.5 726.0,311.5 926.0,135.5 942.0,167.5 944.0,180.5 994.0,309.0 998.0,314.0 1038.0,315.0 1054.0,304.0" fill="none" stroke="#e8722a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="88.0,315.0 98.0,311.5 358.0,136.5 368.0,296.0 408.0,315.0 418.0,311.5 678.0,136.5 688.0,294.5 728.0,315.0 738.0,311.5 998.0,136.0 1008.0,296.0 1048.0,315.0 1054.0,313.0" fill="none" stroke="#efc93a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="39" y1="352" x2="87" y2="352" stroke="#e64a2b" stroke-width="5"/><text x="100" y="359" class="label" style="font-size:19px">Texture 50%</text>
+<line x1="360" y1="352" x2="408" y2="352" stroke="#e8722a" stroke-width="5"/><text x="421" y="359" class="label" style="font-size:19px">Texture 75%</text>
+<line x1="690" y1="352" x2="738" y2="352" stroke="#efc93a" stroke-width="5"/><text x="751" y="359" class="label" style="font-size:19px">Texture 100%</text>
+</svg>

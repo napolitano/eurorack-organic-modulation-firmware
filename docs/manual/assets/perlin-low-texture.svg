@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 360" role="img" aria-label="Low texture Perlin noise">
+<title>Low texture Perlin noise</title>
+<style>
+  text { font-family: Ubuntu, "Ubuntu Sans", Arial, sans-serif; }
+  .title { font-size: 34px; font-weight: 700; fill: #1a1a1a; }
+  .subtitle { font-size: 25px; font-weight: 300; fill: #9a9a9a; }
+  .label { font-size: 24px; font-weight: 500; fill: #1a1a1a; }
+  .small { font-size: 18px; font-weight: 300; fill: #8d8d8d; }
+</style>
+<rect width="1056" height="360" fill="white"/>
+<text x="34" y="53" class="title">Low texture Perlin noise</text>
+<text x="34" y="96" class="subtitle">Texture 0%</text>
+<polyline points="46.0,228.0 112.0,182.0 132.0,171.5 154.0,164.5 174.0,164.5 214.0,176.5 262.0,202.0 294.0,226.5 340.0,268.5 370.0,286.5 404.0,293.0 468.0,288.5 526.0,287.5 570.0,281.5 594.0,273.5 760.0,181.5 784.0,174.5 800.0,174.5 834.0,187.0 896.0,224.5 946.0,243.0 1010.0,262.0" fill="none" stroke="#e64a2b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

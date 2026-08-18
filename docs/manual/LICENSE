@@ -1,0 +1,18 @@
+<!-- SPDX-FileCopyrightText: 2026 Axel Napolitano -->
+<!-- SPDX-License-Identifier: CC-BY-NC-4.0 -->
+
+# Manual licence — CC BY-NC 4.0
+
+Copyright © 2026 Axel Napolitano.
+
+Unless a file states otherwise, the end-user manual and documentation contained in `docs/manual/` are licensed under the **Creative Commons Attribution-NonCommercial 4.0 International licence (CC BY-NC 4.0)**.
+
+You may share and adapt this material for non-commercial purposes provided that appropriate attribution is given, a link to the licence is supplied, and changes are indicated. No additional legal or technological restrictions may be applied that prevent recipients from exercising the rights granted by the licence.
+
+Licence deed:
+<https://creativecommons.org/licenses/by-nc/4.0/>
+
+Legal code:
+<https://creativecommons.org/licenses/by-nc/4.0/legalcode>
+
+This licence applies to the manual/documentation only. It does not relicense the firmware, the original Free Modular Drift hardware design, upstream source code, third-party trademarks, or third-party material that is separately identified.

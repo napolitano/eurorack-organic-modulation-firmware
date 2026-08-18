@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+"""Regenerate deterministic Drift lookup-table includes.
+
+The exponential and gamma tables retain the original mathematical contracts.
+The triangular ICDF is intentionally endpoint-complete: 257 boundary samples
+cover 256 interpolation intervals, fixing the upstream final-interval plateau.
+"""
+from pathlib import Path
+import math
+
+ROOT = Path(__file__).resolve().parents[1] / "lib/fmd/include/fmd/config/generated"
+
+
+def write(name, values, formatter, per_line):
+    lines = []
+    for i in range(0, len(values), per_line):
+        chunk = ", ".join(formatter(v) for v in values[i : i + per_line])
+        if i + per_line < len(values):
+            chunk += ","
+        lines.append(chunk)
+    (ROOT / name).write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def rust_round(value):
+    # Rust f64::round(): halfway cases away from zero.
+    return math.floor(value + 0.5) if value >= 0 else math.ceil(value - 0.5)
+
+
+exp = [
+    max(0, min(0xFFFFFFFF, round((2.0 ** (16.0 * i / 256.0)) * 65536.0)))
+    for i in range(256)
+]
+
+# Boundary samples p=i/256 make every one of the 256 interpolation intervals
+# endpoint-complete. Runtime random values still occupy [0, 1), as expected for
+# a 15-bit uniform integer source.
+icdf = []
+for i in range(257):
+    p = i / 256.0
+    if p <= 0.0:
+        x = -1.0
+    elif p >= 1.0:
+        x = 1.0
+    elif p < 0.5:
+        x = -1.0 + math.sqrt(2.0 * p)
+    else:
+        x = 1.0 - math.sqrt(2.0 * (1.0 - p))
+    icdf.append(max(-32768, min(32767, rust_round(x * 32767.0))))
+
+gamma = [
+    0 if i == 0 else max(0, min(255, round(((i / 255.0) ** 2.2) * 255)))
+    for i in range(256)
+]
+
+write("Exp2Table.inc", exp, lambda v: f"0x{v:08X}UL", 4)
+write("IcdfTable.inc", icdf, str, 8)
+write("GammaTable.inc", gamma, str, 16)

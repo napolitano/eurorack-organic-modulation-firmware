@@ -1,0 +1,44 @@
+name: Feature request
+description: Propose a firmware or project feature compatible with the supported Drift hardware target.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposals are evaluated against musical usefulness, mathematical correctness, maintainability, ATmega328P resource/timing limits and compatibility with the supported Drift hardware.
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem or goal
+      description: Describe the user-facing need before suggesting an implementation.
+      placeholder: "When using Drift, I need..."
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Proposed behavior
+      description: Describe what the firmware should do from the user's point of view.
+    validations:
+      required: true
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Suggested algorithm or implementation
+      description: Optional. Include equations, state behavior, pseudocode or implementation ideas when useful.
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility and verification considerations
+      description: Note interactions with existing algorithms, control semantics, timing, deterministic behavior or test requirements.
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Project constraints
+      options:
+        - label: The proposal can run on the supported Arduino Nano R3 / ATmega328P target without requiring an unrelated hardware redesign.
+          required: true
+        - label: I understand that flash, SRAM, real-time cost and control complexity may limit otherwise useful features.
+          required: true
+        - label: I checked for an existing issue covering the same request.
+          required: true

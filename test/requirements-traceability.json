@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "acceptance_criteria": [
+    {
+      "id": "AC-01",
+      "description": "Original four-way configuration mapping is preserved.",
+      "tests": [
+        {
+          "file": "test/integration/test_selection/test_main.cpp",
+          "case": "test_original_config_pin_mapping"
+        }
+      ]
+    },
+    {
+      "id": "AC-02",
+      "description": "All four algorithms remain within the 12-bit DAC output domain.",
+      "tests": [
+        {
+          "file": "test/unit/test_algorithms/test_main.cpp",
+          "case": "test_each_algorithm_stays_in_dac_range"
+        }
+      ]
+    },
+    {
+      "id": "AC-03",
+      "description": "Fixed seeds produce deterministic algorithm sequences.",
+      "tests": [
+        {
+          "file": "test/unit/test_algorithms/test_main.cpp",
+          "case": "test_algorithms_are_deterministic_for_fixed_seed"
+        }
+      ]
+    },
+    {
+      "id": "AC-04",
+      "description": "The paired LFSR reproduces the upstream recurrence.",
+      "tests": [
+        {
+          "file": "test/unit/test_rng/test_main.cpp",
+          "case": "test_upstream_parallel_lfsr_sequence"
+        }
+      ]
+    },
+    {
+      "id": "AC-05",
+      "description": "Frequency mapping reaches the mathematically defined low-frequency endpoint.",
+      "tests": [
+        {
+          "file": "test/unit/test_frequency/test_main.cpp",
+          "case": "test_delta_time_has_mathematically_correct_minimum_frequency_endpoint"
+        }
+      ]
+    },
+    {
+      "id": "AC-06",
+      "description": "Frequency mapping is monotonic for both Speed knob and CV and its optimized conversion matches the exact rounded rational result.",
+      "tests": [
+        {
+          "file": "test/unit/test_frequency/test_main.cpp",
+          "case": "test_phase_increment_conversion_matches_exact_rational_reference"
+        },
+        {
+          "file": "test/unit/test_frequency/test_main.cpp",
+          "case": "test_delta_time_is_monotonic_for_knob"
+        },
+        {
+          "file": "test/unit/test_frequency/test_main.cpp",
+          "case": "test_delta_time_is_monotonic_for_cv"
+        },
+        {
+          "file": "test/unit/test_frequency/test_main.cpp",
+          "case": "test_phase_increment_conversion_matches_exact_reference_over_broad_uint32_sample"
+        }
+      ]
+    },
+    {
+      "id": "AC-07",
+      "description": "Brownian Texture uses a continuous normalized smoothing law without the upstream 1020 regime switch.",
+      "tests": [
+        {
+          "file": "test/regression/test_upstream_behaviour/test_main.cpp",
+          "case": "test_brownian_texture_mapping_no_longer_has_1020_regime_switch"
+        },
+        {
+          "file": "test/unit/test_brownian_algorithm/test_main.cpp",
+          "case": "test_brownian_texture_alpha_matches_full_range_linear_interpolation"
+        }
+      ]
+    },
+    {
+      "id": "AC-08",
+      "description": "LFO live Texture changes preserve output continuity within the defined fixed-point tolerance.",
+      "tests": [
+        {
+          "file": "test/regression/test_upstream_behaviour/test_main.cpp",
+          "case": "test_lfo_shape_change_is_output_continuous_at_slow_rate"
+        },
+        {
+          "file": "test/unit/test_lfo_algorithm/test_main.cpp",
+          "case": "test_lfo_phase_remap_preserves_output_within_two_q0f16_codes"
+        }
+      ]
+    },
+    {
+      "id": "AC-09",
+      "description": "Runtime advances only when a DAC write slot is available.",
+      "tests": [
+        {
+          "file": "test/integration/test_runtime/test_main.cpp",
+          "case": "test_runtime_does_not_advance_while_dac_busy"
+        }
+      ]
+    },
+    {
+      "id": "AC-10",
+      "description": "Runtime updates DAC and LED from the same computed output sample.",
+      "tests": [
+        {
+          "file": "test/integration/test_runtime/test_main.cpp",
+          "case": "test_runtime_queues_dac_and_led_together"
+        }
+      ]
+    },
+    {
+      "id": "AC-11",
+      "description": "Representative full signal paths execute for every algorithm.",
+      "tests": [
+        {
+          "file": "test/system/test_signal_path/test_main.cpp",
+          "case": "test_virtual_module_runs_all_four_algorithms"
+        }
+      ]
+    },
+    {
+      "id": "AC-12",
+      "description": "A broad control-grid property test enforces the 12-bit output invariant.",
+      "tests": [
+        {
+          "file": "test/property/test_invariants/test_main.cpp",
+          "case": "test_control_grid_preserves_12bit_output_invariant"
+        }
+      ]
+    },
+    {
+      "id": "AC-13",
+      "description": "LFO applies Texture from the first processing step and no longer exhibits the upstream first-cycle peak narrowing zero spike.",
+      "tests": [
+        {
+          "file": "test/regression/test_upstream_behaviour/test_main.cpp",
+          "case": "test_lfo_texture_is_applied_from_first_cycle"
+        },
+        {
+          "file": "test/regression/test_upstream_behaviour/test_main.cpp",
+          "case": "test_lfo_first_cycle_no_longer_contains_peak_narrowing_zero_spike"
+        }
+      ]
+    },
+    {
+      "id": "AC-14",
+      "description": "Perlin fade evaluation matches the canonical quintic and remains monotonic across its complete effective phase domain.",
+      "tests": [
+        {
+          "file": "test/unit/test_perlin_algorithm/test_main.cpp",
+          "case": "test_perlin_fade_matches_quintic_reference"
+        },
+        {
+          "file": "test/unit/test_perlin_algorithm/test_main.cpp",
+          "case": "test_perlin_fade_is_monotonic_over_complete_q0f16_domain"
+        }
+      ]
+    },
+    {
+      "id": "AC-15",
+      "description": "Perlin segment evaluation matches the independent one-dimensional gradient-noise reference and has correct lattice boundaries.",
+      "tests": [
+        {
+          "file": "test/unit/test_perlin_algorithm/test_main.cpp",
+          "case": "test_perlin_segment_matches_gradient_noise_reference"
+        },
+        {
+          "file": "test/unit/test_perlin_algorithm/test_main.cpp",
+          "case": "test_perlin_segment_is_zero_at_integer_lattice_boundary"
+        }
+      ]
+    },
+    {
+      "id": "AC-16",
+      "description": "Brownian random-walk event, direction and step laws match their documented discrete stochastic model.",
+      "tests": [
+        {
+          "file": "test/unit/test_brownian_algorithm/test_main.cpp",
+          "case": "test_brownian_exhaustive_uniform_random_domain_matches_event_and_direction_probabilities"
+        },
+        {
+          "file": "test/unit/test_brownian_algorithm/test_main.cpp",
+          "case": "test_brownian_step_size_and_event_probability_follow_documented_linear_laws"
+        }
+      ]
+    },
+    {
+      "id": "AC-17",
+      "description": "Brownian smoothing retains fractional motion and therefore avoids truncation-only deadband.",
+      "tests": [
+        {
+          "file": "test/unit/test_brownian_algorithm/test_main.cpp",
+          "case": "test_brownian_fractional_residual_eliminates_one_code_deadband"
+        }
+      ]
+    },
+    {
+      "id": "AC-18",
+      "description": "Both Bézier easing functions match their cubic reference equations and are monotonic.",
+      "tests": [
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_special_curves_match_cubic_reference"
+        },
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_special_curves_are_monotonic"
+        }
+      ]
+    },
+    {
+      "id": "AC-19",
+      "description": "Bézier Texture morph is continuous and the triangular inverse-CDF spans both mathematical endpoints without a final plateau.",
+      "tests": [
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_texture_morph_is_continuous_across_former_511_512_boundary"
+        },
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_257_point_icdf_contains_both_mathematical_endpoints"
+        },
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_runtime_icdf_interpolation_is_monotonic_and_has_no_final_plateau"
+        }
+      ]
+    },
+    {
+      "id": "AC-20",
+      "description": "Bézier phase accumulation preserves wrap overshoot.",
+      "tests": [
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_phase_wrap_preserves_overshoot"
+        }
+      ]
+    },
+    {
+      "id": "AC-21",
+      "description": "LFO waveform evaluation matches the mathematical piecewise-linear reference, is monotonic on each branch and provides exact saw endpoints.",
+      "tests": [
+        {
+          "file": "test/unit/test_lfo_algorithm/test_main.cpp",
+          "case": "test_lfo_waveform_matches_piecewise_linear_reference"
+        },
+        {
+          "file": "test/unit/test_lfo_algorithm/test_main.cpp",
+          "case": "test_lfo_rise_and_fall_are_monotonic_for_each_apex"
+        },
+        {
+          "file": "test/unit/test_lfo_algorithm/test_main.cpp",
+          "case": "test_lfo_endpoint_modes_are_exact_rising_and_falling_saws"
+        }
+      ]
+    },
+    {
+      "id": "AC-22",
+      "description": "LFO phase accumulation preserves wrap overshoot.",
+      "tests": [
+        {
+          "file": "test/unit/test_lfo_algorithm/test_main.cpp",
+          "case": "test_lfo_phase_wrap_preserves_overshoot"
+        }
+      ]
+    },
+    {
+      "id": "AC-23",
+      "description": "Shared fixed-point interpolation and multiplication primitives match their integer Q-format contracts in both interpolation directions.",
+      "tests": [
+        {
+          "file": "test/unit/test_fixed_math/test_main.cpp",
+          "case": "test_fixed_math_signed_multiply_matches_q1f15_reference"
+        },
+        {
+          "file": "test/unit/test_fixed_math/test_main.cpp",
+          "case": "test_fixed_math_u0f16_lerp_handles_both_directions"
+        },
+        {
+          "file": "test/unit/test_fixed_math/test_main.cpp",
+          "case": "test_fixed_math_i1f15_lerp_handles_signed_endpoints"
+        },
+        {
+          "file": "test/unit/test_fixed_math/test_main.cpp",
+          "case": "test_fixed_math_u4f12_lerp_handles_both_directions"
+        },
+        {
+          "file": "test/unit/test_fixed_math/test_main.cpp",
+          "case": "test_fixed_math_u16f16_lerp_handles_ascending_and_descending_tables"
+        }
+      ]
+    },
+    {
+      "id": "AC-24",
+      "description": "Perlin gradient selection, lattice handoff continuity and phase-wrap state transitions follow the documented gradient-noise model.",
+      "tests": [
+        {
+          "file": "test/unit/test_perlin_algorithm/test_main.cpp",
+          "case": "test_perlin_gradient_mapping_matches_complete_16_value_gradient_set"
+        },
+        {
+          "file": "test/unit/test_perlin_algorithm/test_main.cpp",
+          "case": "test_perlin_segment_has_value_and_slope_continuity_across_lattice_handoff"
+        },
+        {
+          "file": "test/unit/test_perlin_algorithm/test_main.cpp",
+          "case": "test_perlin_phase_wrap_preserves_overshoot_and_flags_only_on_wrap"
+        }
+      ]
+    },
+    {
+      "id": "AC-25",
+      "description": "Brownian smoothing converges bidirectionally without overshoot, resets fractional state on direction changes and retains the intended long-run centering behavior.",
+      "tests": [
+        {
+          "file": "test/unit/test_brownian_algorithm/test_main.cpp",
+          "case": "test_brownian_smoother_matches_first_order_step_in_descending_direction"
+        },
+        {
+          "file": "test/unit/test_brownian_algorithm/test_main.cpp",
+          "case": "test_brownian_smoother_resets_fractional_residual_when_direction_reverses"
+        },
+        {
+          "file": "test/unit/test_brownian_algorithm/test_main.cpp",
+          "case": "test_brownian_smoother_converges_to_target_without_overshoot_and_clears_residual"
+        },
+        {
+          "file": "test/unit/test_brownian_algorithm/test_main.cpp",
+          "case": "test_brownian_long_run_centering_keeps_walk_away_from_numeric_rails"
+        }
+      ]
+    },
+    {
+      "id": "AC-26",
+      "description": "Bézier segment-speed variation has the documented center dead zone, symmetric knob response, monotonic CV contribution and bounded full-scale behavior.",
+      "tests": [
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_speed_variation_scale_has_exact_dead_zone_and_full_scale_endpoints"
+        },
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_speed_variation_scale_is_symmetric_around_center_until_saturation"
+        },
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_speed_variation_cv_contribution_is_monotonic_and_saturates"
+        }
+      ]
+    },
+    {
+      "id": "AC-27",
+      "description": "Bézier endpoint interpolation and multi-segment A-to-B state transitions remain mathematically consistent across repeated phase rollovers.",
+      "tests": [
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_interpolation_hits_exact_segment_endpoints_for_both_directions"
+        },
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_algorithm_matches_independent_no_speed_variation_state_machine_across_rollovers"
+        },
+        {
+          "file": "test/unit/test_bezier_algorithm/test_main.cpp",
+          "case": "test_bezier_interpolation_stays_inside_endpoint_interval_over_dense_phase_grid"
+        }
+      ]
+    },
+    {
+      "id": "AC-28",
+      "description": "LFO remapping remains output-preserving over a dense phase grid, constant-control phase accumulation survives repeated wraps and live non-saw skew changes stay continuous.",
+      "tests": [
+        {
+          "file": "test/unit/test_lfo_algorithm/test_main.cpp",
+          "case": "test_lfo_phase_remap_preserves_output_over_dense_phase_grid"
+        },
+        {
+          "file": "test/unit/test_lfo_algorithm/test_main.cpp",
+          "case": "test_lfo_constant_controls_match_phase_accumulator_across_multiple_wraps"
+        },
+        {
+          "file": "test/unit/test_lfo_algorithm/test_main.cpp",
+          "case": "test_lfo_repeated_live_non_saw_texture_changes_remain_output_continuous_at_slow_rate"
+        }
+      ]
+    },
+    {
+      "id": "AC-29",
+      "description": "The paired LFSR remains deterministic and avoids trivial lock-up for extreme seeds while retaining broad short-window output diversity.",
+      "tests": [
+        {
+          "file": "test/unit/test_rng/test_main.cpp",
+          "case": "test_parallel_lfsr_extreme_seeds_do_not_lock_at_zero_or_constant_output"
+        },
+        {
+          "file": "test/unit/test_rng/test_main.cpp",
+          "case": "test_parallel_lfsr_long_runs_are_reproducible_and_have_high_short_window_diversity"
+        }
+      ]
+    },
+    {
+      "id": "AC-30",
+      "description": "Generated exp2 and gamma reference tables match their mathematical generation contracts, endpoints and monotonicity properties.",
+      "tests": [
+        {
+          "file": "test/unit/test_reference_tables/test_main.cpp",
+          "case": "test_exp2_table_matches_documented_exponential_reference_and_is_strictly_monotonic"
+        },
+        {
+          "file": "test/unit/test_reference_tables/test_main.cpp",
+          "case": "test_exp2_table_doubles_every_sixteen_indices_with_rounding_tolerance"
+        },
+        {
+          "file": "test/unit/test_reference_tables/test_main.cpp",
+          "case": "test_gamma_table_matches_gamma_2p2_reference_and_endpoints"
+        }
+      ]
+    },
+    {
+      "id": "AC-31",
+      "description": "Dynamic end-to-end runtime output matches the direct engine for all algorithms and LED state remains derived from the exact queued DAC sample.",
+      "tests": [
+        {
+          "file": "test/system/test_signal_path/test_main.cpp",
+          "case": "test_virtual_module_matches_direct_engine_for_dynamic_control_sequence"
+        },
+        {
+          "file": "test/system/test_signal_path/test_main.cpp",
+          "case": "test_virtual_module_led_always_represents_same_sample_as_dac_over_dynamic_sequence"
+        }
+      ]
+    },
+    {
+      "id": "AC-32",
+      "description": "Portable public boundaries fail safely for invalid algorithm selection and clamp out-of-domain ADC values before frequency mapping.",
+      "tests": [
+        {
+          "file": "test/unit/test_algorithms/test_main.cpp",
+          "case": "test_invalid_algorithm_enum_returns_safe_zero_output"
+        },
+        {
+          "file": "test/unit/test_frequency/test_main.cpp",
+          "case": "test_delta_time_clamps_out_of_range_adc_inputs_to_hardware_domain"
+        }
+      ]
+    }
+  ]
+}

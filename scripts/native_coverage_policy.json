@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "line_min_percent": 95.0,
+  "branch_min_percent": 75.0,
+  "reference_measurement": {
+    "date": "2026-08-18",
+    "tool": "GCC 14.2.0 + gcov strict-host harness",
+    "line_percent": 98.88,
+    "branch_percent": 82.17,
+    "note": "Local production-source baseline. Confirm with PlatformIO/gcovr CI before treating the exact percentages as cross-toolchain canonical."
+  },
+  "note": "Engineering floors below the measured baseline. Do not lower them merely to accommodate regressions."
+}

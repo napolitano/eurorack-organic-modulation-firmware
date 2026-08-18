@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 936 390" role="img" aria-label="Drift output example">
+<title>Drift output example</title>
+<style>
+  text { font-family: Ubuntu, "Ubuntu Sans", Arial, sans-serif; }
+  .title { font-size: 34px; font-weight: 700; fill: #1a1a1a; }
+  .subtitle { font-size: 25px; font-weight: 300; fill: #9a9a9a; }
+  .label { font-size: 24px; font-weight: 500; fill: #1a1a1a; }
+  .small { font-size: 18px; font-weight: 300; fill: #8d8d8d; }
+</style>
+<rect width="936" height="390" fill="white"/>
+<polyline points="38.0,179.0 44.0,181.0 118.0,237.0 154.0,253.5 188.0,255.5 256.0,247.5 326.0,256.5 364.0,255.5 418.0,242.5 460.0,223.0 482.0,207.5 544.0,142.5 570.0,121.0 618.0,98.5 636.0,94.5 656.0,93.5 678.0,98.5 698.0,112.0 716.0,131.5 760.0,188.0 786.0,209.5 802.0,213.5 828.0,211.5 896.0,187.5" fill="none" stroke="#e64a2b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
