@@ -34,15 +34,15 @@ This analysis derives the ideal piecewise waveform first, then maps the upstream
 
 Let oscillator phase be
 
-\[
+$$
 p\in[0,1).
-\]
+$$
 
 Let the apex/skew parameter be
 
-\[
+$$
 a\in[0,1].
-\]
+$$
 
 `a` is the phase at which the output reaches its maximum.
 
@@ -50,43 +50,43 @@ a\in[0,1].
 
 For
 
-\[
+$$
 0<a<1,
-\]
+$$
 
 a unit-amplitude skewed triangle can be written:
 
-\[
+$$
 y(p,a)=
 \begin{cases}
 \frac{p}{a}, & p<a\\
 1-\frac{p-a}{1-a}, & p\ge a.
 \end{cases}
-\]
+$$
 
 Equivalent falling form:
 
-\[
+$$
 y(p,a)=\frac{1-p}{1-a},\qquad p\ge a.
-\]
+$$
 
 Special cases:
 
-- \(a=0\): reverse saw/ramp down;
-- \(a=0.5\): symmetric triangle;
-- \(a\to1\): rising saw/ramp with a short reset/fall segment.
+- $a=0$: reverse saw/ramp down;
+- $a=0.5$: symmetric triangle;
+- $a\to1$: rising saw/ramp with a short reset/fall segment.
 
 The slope is
 
-\[
+$$
 \frac{dy}{dp}=\frac{1}{a}
-\]
+$$
 
 on the rising side and
 
-\[
+$$
 \frac{dy}{dp}=-\frac{1}{1-a}
-\]
+$$
 
 on the falling side.
 
@@ -94,17 +94,17 @@ This explains why extreme skew values require very large slopes in the short sid
 
 ### 1.3 Frequency and phase increment
 
-For sample rate \(f_s=2500\) Hz and desired frequency \(f\), an ideal 32-bit wrapping phase accumulator uses
+For sample rate $f_s=2500$ Hz and desired frequency $f$, an ideal 32-bit wrapping phase accumulator uses
 
-\[
+$$
 \Delta P = round\left(2^{32}\frac{f}{f_s}\right).
-\]
+$$
 
 Each sample:
 
-\[
+$$
 P_{n+1}=P_n+\Delta P\pmod{2^{32}}.
-\]
+$$
 
 The upstream code obtains an increment through the shared volts-per-octave mapping, but its cycle handling is not a pure wrapping accumulator; that difference is analyzed below.
 
@@ -160,15 +160,15 @@ Any phase overshoot beyond the endpoint is discarded.
 
 Texture is summed and clamped:
 
-\[
+$$
 c=\min(1023, textureKnob+textureCV).
-\]
+$$
 
 On a cycle rollover only:
 
-\[
+$$
 apex=c\cdot2^{22}.
-\]
+$$
 
 So:
 
@@ -276,9 +276,9 @@ The falling branch already clamps its division result before narrowing, which av
 
 Maximum Texture gives
 
-\[
+$$
 a=1023/1024\approx0.999023.
-\]
+$$
 
 The falling segment therefore occupies 1/1024 of the period rather than zero.
 
@@ -309,7 +309,7 @@ On an 8-bit AVR both are candidates for multi-instruction software routines. Exa
 
 **Classification:** design constraint.
 
-For fixed phase \(p\), changing apex \(a\) changes the closed-form value \(y(p,a)\). Therefore a memoryless implementation cannot arbitrarily change `a` while simultaneously guaranteeing:
+For fixed phase $p$, changing apex $a$ changes the closed-form value $y(p,a)$. Therefore a memoryless implementation cannot arbitrarily change `a` while simultaneously guaranteeing:
 
 - unchanged phase;
 - unchanged output;
@@ -409,17 +409,17 @@ This is implemented in the current unreleased firmware. Exact upstream sample se
 
 One mathematically clean way to change skew without an instantaneous output jump is to **remap phase** so the current output is preserved under the new apex.
 
-For a rising segment with current normalized output \(y\):
+For a rising segment with current normalized output $y$:
 
-\[
+$$
 p' = y a'.
-\]
+$$
 
 For a falling segment:
 
-\[
+$$
 p' = a' + (1-y)(1-a').
-\]
+$$
 
 Pseudocode:
 

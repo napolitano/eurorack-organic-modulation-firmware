@@ -34,11 +34,11 @@ This document establishes:
 
 ### 1.1 Brownian motion in the strict mathematical sense
 
-A standard Wiener/Brownian process \(W(t)\) is a continuous-time stochastic process with continuous paths and independent, stationary Gaussian increments. For \(t>s\),
+A standard Wiener/Brownian process $W(t)$ is a continuous-time stochastic process with continuous paths and independent, stationary Gaussian increments. For $t>s$,
 
-\[
+$$
 W(t)-W(s) \sim \mathcal{N}(0,t-s).
-\]
+$$
 
 A symmetric discrete random walk can converge to Brownian motion under an appropriate scaling limit, but a finite embedded random walk with bounds, fixed step sizes, and filtering is not itself a Wiener process.
 
@@ -46,37 +46,37 @@ This distinction matters for engineering analysis, but not as a criticism of the
 
 ### 1.2 Drift's target process
 
-Let \(X_n\) be the 16-bit internal `target_value` at sample \(n\). The target either stays in place or attempts a fixed-sized move.
+Let $X_n$ be the 16-bit internal `target_value` at sample $n$. The target either stays in place or attempts a fixed-sized move.
 
 For the combined Speed control
 
-\[
+$$
 c = \min(1023, speedKnob + speedCV),
-\]
+$$
 
 the upstream code defines
 
-\[
+$$
 step(c) = \left\lfloor\frac{256+c}{2}\right\rfloor
-\]
+$$
 
 and
 
-\[
+$$
 cutoff(c)=64c.
-\]
+$$
 
-With a nominally uniform 16-bit PRNG value \(R\), movement occurs when
+With a nominally uniform 16-bit PRNG value $R$, movement occurs when
 
-\[
+$$
 R < 64c.
-\]
+$$
 
 Ignoring the tiny PRNG-distribution details, the move probability is therefore approximately
 
-\[
+$$
 P(move) = \frac{64c}{65536} = \frac{c}{1024}.
-\]
+$$
 
 So:
 
@@ -88,15 +88,15 @@ So:
 
 The manual describes Speed primarily as controlling how likely the particle is to move. The implementation also changes the movement magnitude:
 
-\[
+$$
 step(0)=128
-\]
+$$
 
 and
 
-\[
+$$
 step(1023)=639.
-\]
+$$
 
 Therefore increasing Speed increases both:
 
@@ -105,9 +105,9 @@ Therefore increasing Speed increases both:
 
 For an idealized unbiased walk, variance growth per sample is proportional to
 
-\[
+$$
 P(move)\cdot step(c)^2.
-\]
+$$
 
 Because both factors increase with `c`, the effective diffusion strength grows much faster than it would if Speed changed only movement probability.
 
@@ -121,21 +121,21 @@ Away from the edges, the split is 50/50.
 
 Near the low edge, the threshold is
 
-\[
+$$
 cutoff_2 = cutoff\left(\frac{1}{2}-\frac{1}{64}\right)=cutoff\frac{31}{64}.
-\]
+$$
 
 Conditional on a move occurring, the probability of moving upward is approximately
 
-\[
+$$
 \frac{33}{64}=51.5625\%,
-\]
+$$
 
 and downward approximately
 
-\[
+$$
 \frac{31}{64}=48.4375\%.
-\]
+$$
 
 Near the high edge the bias is reversed.
 
@@ -143,19 +143,19 @@ This is a weak mean-reverting mechanism only near the boundaries, not a general 
 
 ### 1.5 First-order smoothing
 
-Let \(Y_n\) be `current_value` and \(X_n\) the target. A conventional first-order proportional smoother is
+Let $Y_n$ be `current_value` and $X_n$ the target. A conventional first-order proportional smoother is
 
-\[
+$$
 Y_{n+1}=Y_n+\alpha(X_n-Y_n),
-\]
+$$
 
 with
 
-\[
+$$
 0\le\alpha\le1.
-\]
+$$
 
-Smaller \(\alpha\) means more smoothing; larger \(\alpha\) follows the target more rapidly.
+Smaller $\alpha$ means more smoothing; larger $\alpha$ follows the target more rapidly.
 
 In the upstream implementation the direction is handled separately and the magnitude is computed from the absolute difference, but the real-number model is equivalent to the expression above.
 
@@ -198,27 +198,27 @@ let cv_fixed = FixedU16::<U16>::from_bits(cv);
 
 `FixedU16<U16>` is Q0.16. Therefore the raw 10-bit ADC code is interpreted directly as a Q0.16 number:
 
-\[
+$$
 t = \frac{cv}{65536}.
-\]
+$$
 
 The intended interpolation endpoints are approximately:
 
-\[
+$$
 \alpha_{min}=\frac{15}{65536}\approx0.0002289
-\]
+$$
 
 and
 
-\[
+$$
 \alpha_{max}=\frac{8191}{65536}\approx0.12498.
-\]
+$$
 
 The code then computes
 
-\[
+$$
 \alpha=cvFixed\cdot(\alpha_{max}-\alpha_{min})+\alpha_{min}.
-\]
+$$
 
 Because `cvFixed` never approaches 1, almost none of the nominal interpolation interval is used.
 
@@ -240,7 +240,7 @@ if cv >= 1020 {
 
 So the response jumps from a roughly 185 ms first-order time scale immediately to an exact target copy at the final four ADC codes.
 
-The table above uses the common \(1/\alpha\) approximation as an intuitive time-scale indicator. It is not an exact discrete-time 1/e time constant.
+The table above uses the common $1/\alpha$ approximation as an intuitive time-scale indicator. It is not an exact discrete-time 1/e time constant.
 
 ### 2.4 Integer smoothing and lost fractional movement
 
@@ -254,17 +254,17 @@ current +=/-= move
 
 The product truncates to an integer raw step. If
 
-\[
+$$
 \alpha\cdot |X-Y| < 1\text{ raw LSB},
-\]
+$$
 
 then `move == 0` and the smoother stops converging.
 
 At minimum texture, `alpha` has raw value 15. Therefore any internal difference smaller than approximately
 
-\[
+$$
 \frac{65536}{15}\approx4369
-\]
+$$
 
 can produce zero movement.
 
@@ -538,9 +538,9 @@ Using long deterministic PRNG runs and/or many seeds, estimate movement frequenc
 
 Expected relationship:
 
-\[
+$$
 P(move)\approx speed/1024.
-\]
+$$
 
 The test should use statistical tolerance rather than exact counts unless the entire finite PRNG period is deliberately enumerated.
 

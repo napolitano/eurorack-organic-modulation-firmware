@@ -15,10 +15,6 @@
 > - [Free Modular Drift](https://freemodular.org/modules/Drift/)
 > - [Quinn Freedman's upstream source](https://github.com/QuinnFreedman/modular/tree/main/modules/Drift)
 
-<p align="center">
-  <img src="docs/manual/assets/drift-front-panel.svg" alt="Drift front panel controls" width="240">
-</p>
-
 ## What is Drift?
 
 Drift is a **4 HP Eurorack modulation source** that produces evolving 0–10 V control voltages. Its defining idea is controlled movement: instead of choosing between a conventional repeating LFO and completely uncorrelated random values, Drift offers several ways to generate motion that has **continuity, memory, shape or controlled unpredictability**.
@@ -51,7 +47,7 @@ The project therefore aims to:
 - provide reproducible builds, automated tests, release notes and a versioned PDF user manual.
 
 > [!IMPORTANT]
-> **Release preparation: 0.1.0.** This source tree is prepared for tag `v0.1.0`. A GitHub Release does not exist until that tag is pushed; the tag is the sole release trigger and the release workflow performs the final build, resource checks, manual PDF generation and publication.
+> **Release 0.1.0 is published.** Tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0) is the first official release of this alternative firmware. It includes the verified firmware build, generated user-manual PDF, checksums and build provenance. New development continues under `Unreleased` in the changelog.
 
 ## Quick start
 
@@ -243,7 +239,7 @@ See the [original firmware analysis](docs/analysis/original-firmware-analysis.md
 |---|---|
 | **0.1.0** | Initial verified C++17/PlatformIO firmware baseline for Free Modular Drift: four mathematically tested modulation algorithms, documented corrections to verified upstream issues, native/AVR CI, resource guardrails, engineering analyses and a tagged-release PDF user manual. |
 
-The authoritative detailed history is the [changelog](CHANGELOG.md). Version `0.1.0` is published only when tag `v0.1.0` is pushed; no GitHub Release is created from ordinary commits or manual workflow runs.
+The authoritative detailed history is the [changelog](CHANGELOG.md). Version `0.1.0` was published from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0). Future releases follow the same rule: ordinary commits and pull requests never create a GitHub Release; only a pushed version tag does.
 
 ## Engineering architecture
 
@@ -341,7 +337,7 @@ Only a tagged release `vX.Y.Z` produces `drift-user-manual.X.Y.Z.pdf`; ordinary 
 
 ## Release process
 
-Ordinary development remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). Release preparation creates the matching versioned changelog section and package metadata; the current tree is prepared for `0.1.0`.
+Ordinary development remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). Release `0.1.0` was published from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0). For future releases, preparation creates the matching versioned changelog section and package metadata before the version tag is pushed.
 
 Releases are triggered **only by pushed version tags**. `.github/workflows/release.yml` has no manual release trigger and builds the firmware, versioned manual PDF, provenance files and checksum manifests only for the tag being published. Release notes are generated deterministically from the matching changelog section rather than from generic commit-message aggregation.
 

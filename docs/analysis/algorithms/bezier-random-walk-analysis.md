@@ -34,7 +34,7 @@ This analysis covers:
 Mathematical background:
 
 - cubic Bézier curves expressed in the Bernstein polynomial basis;
-- standard cubic smoothstep \(3t^2-2t^3\).
+- standard cubic smoothstep $3t^2-2t^3$.
 
 ---
 
@@ -42,79 +42,79 @@ Mathematical background:
 
 ### 1.1 Cubic Bézier curve
 
-A cubic Bézier curve with control points \(P_0,P_1,P_2,P_3\) is
+A cubic Bézier curve with control points $P_0,P_1,P_2,P_3$ is
 
-\[
+$$
 B(t)=(1-t)^3P_0+3(1-t)^2tP_1+3(1-t)t^2P_2+t^3P_3,
-\]
+$$
 
 for
 
-\[
+$$
 t\in[0,1].
-\]
+$$
 
 Drift does not evaluate a two-dimensional geometric curve. It uses a cubic polynomial as a **scalar interpolation fraction** between two random endpoint values.
 
-If endpoint values are \(a\) and \(b\), and \(E(t)\) is the easing function, output is
+If endpoint values are $a$ and $b$, and $E(t)$ is the easing function, output is
 
-\[
+$$
 y(t)=a+(b-a)E(t).
-\]
+$$
 
 ### 1.2 Smooth easing used by Drift
 
 The upstream `smooth_bezier_curve()` is
 
-\[
+$$
 E_s(t)=3t^2-2t^3.
-\]
+$$
 
 This is the cubic smoothstep function. It can be derived from a cubic Bézier scalar curve whose effective inner control values are 0 and 1.
 
 Properties:
 
-\[
+$$
 E_s(0)=0,\qquad E_s(1)=1,
-\]
+$$
 
-\[
+$$
 E_s'(t)=6t(1-t),
-\]
+$$
 
 so
 
-\[
+$$
 E_s'(0)=E_s'(1)=0.
-\]
+$$
 
 Successive segments therefore join with zero slope at each random endpoint, provided the mode remains in the smooth family.
 
 The function also has the useful symmetry
 
-\[
+$$
 E_s(1-t)=1-E_s(t).
-\]
+$$
 
 ### 1.3 "Reverse" / unsmoothed easing used by Drift
 
 The upstream `unsmooth_bezier_curve()` is
 
-\[
+$$
 E_u(t)=2t^3-3t^2+2t.
-\]
+$$
 
 Its derivative is
 
-\[
+$$
 E_u'(t)=6t^2-6t+2.
-\]
+$$
 
-This derivative is positive throughout \([0,1]\), with endpoint slopes
+This derivative is positive throughout $[0,1]$, with endpoint slopes
 
-\[
+$$
 E_u'(0)=E_u'(1)=2
-\]
+$$
 
 and minimum slope 0.5 at the midpoint.
 
@@ -122,30 +122,30 @@ So the function is monotonic and does not overshoot its endpoints. The "spiky" c
 
 It also satisfies
 
-\[
+$$
 E_u(1-t)=1-E_u(t).
-\]
+$$
 
 ### 1.4 Difference between the two curve families
 
 The difference is
 
-\[
+$$
 D(t)=E_u(t)-E_s(t)
      =4t^3-6t^2+2t.
-\]
+$$
 
 The maximum absolute difference occurs at
 
-\[
+$$
 t=\frac{3\pm\sqrt{3}}{6}
-\]
+$$
 
 and has magnitude approximately
 
-\[
+$$
 |D|_{max}\approx0.19245.
-\]
+$$
 
 Therefore switching curve family instantaneously during a segment can move the interpolation fraction by almost 19.25% of the current endpoint span.
 
@@ -203,15 +203,15 @@ RANGE     = 383
 
 Ignoring the one-code asymmetry before clamping, the magnitude is approximately:
 
-\[
+$$
 m = \max(0, |textureKnob-511|-128).
-\]
+$$
 
 Texture CV contributes half its raw code:
 
-\[
+$$
 m' = \min(383, m + textureCV/2).
-\]
+$$
 
 Thus:
 
@@ -229,23 +229,23 @@ The random value is **not** added directly to the segment duration. It is passed
 
 Conceptually:
 
-\[
+$$
 V'=V+kR
-\]
+$$
 
 then
 
-\[
+$$
 f \propto 2^{V'}
-\]
+$$
 
 and segment duration is approximately
 
-\[
+$$
 T \propto 2^{-V'}.
-\]
+$$
 
-Therefore even if \(R\) were Gaussian, the distribution of **time intervals** would not itself be Gaussian. A Gaussian random variable in log-frequency space produces a log-normal-like multiplicative timing distribution, subject to clamping and discrete sampling.
+Therefore even if $R$ were Gaussian, the distribution of **time intervals** would not itself be Gaussian. A Gaussian random variable in log-frequency space produces a log-normal-like multiplicative timing distribution, subject to clamping and discrete sampling.
 
 This distinction is important when interpreting the manual statement that the time between points is sampled from an increasingly wider Gaussian distribution.
 
@@ -259,23 +259,23 @@ This distinction is important when interpreting the manual statement that the ti
 
 The generator implements the inverse CDF of a symmetric triangular distribution on approximately [-1,1]:
 
-For \(p<1/2\),
+For $p<1/2$,
 
-\[
+$$
 F^{-1}(p)=-1+\sqrt{2p}
-\]
+$$
 
-and for \(p\ge1/2\),
+and for $p\ge1/2$,
 
-\[
+$$
 F^{-1}(p)=1-\sqrt{2(1-p)}.
-\]
+$$
 
 The ideal symmetric triangular distribution has mean 0 and variance
 
-\[
+$$
 \frac{1}{6}.
-\]
+$$
 
 ### 4.2 Manual discrepancy
 
@@ -319,15 +319,15 @@ so the final 128 input codes all collapse to the last LUT value instead of conti
 
 The final table point corresponds to
 
-\[
+$$
 p=\frac{32640}{32767}\approx0.9961
-\]
+$$
 
 and the ideal triangular inverse CDF there is only about
 
-\[
+$$
 +0.912.
-\]
+$$
 
 Consequences:
 
@@ -356,7 +356,7 @@ Only the **Texture knob** chooses the curve family. Texture CV does not.
 
 This agrees with the manual's explicit statement that the knob, not CV, determines smooth versus inverse easing.
 
-However, the branch is evaluated every sample. If the knob crosses code 512 mid-segment, the algorithm switches immediately between \(E_u(t)\) and \(E_s(t)\). Since those functions generally differ at the same phase, the output can jump.
+However, the branch is evaluated every sample. If the knob crosses code 512 mid-segment, the algorithm switches immediately between $E_u(t)$ and $E_s(t)$. Since those functions generally differ at the same phase, the output can jump.
 
 The comments in `bezier.rs` show that the author explicitly considered continuous curve-parameter control and rejected a straightforward closed-form approach because changing the parameter during a segment caused discontinuities. The binary family switch reduces the dimensionality of the problem, but it does not mathematically eliminate the discontinuity when crossing the threshold.
 

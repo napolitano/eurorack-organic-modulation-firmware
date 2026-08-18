@@ -19,6 +19,7 @@ jobs:
           python-version: '3.11.15'
       - run: python scripts/check_requirement_traceability.py
       - run: python scripts/check_markdown_footer.py
+      - run: python scripts/check_markdown_math.py
       - run: python scripts/test_generate_release_notes.py
       - run: python scripts/test_avr_resource_budget.py
 

@@ -47,27 +47,27 @@ A simple smooth random signal can be built by choosing random values at integer 
 
 For a segment with local coordinate
 
-\[
+$$
 x \in [0,1],
-\]
+$$
 
-let the two endpoint gradients be \(g_0\) and \(g_1\). The two local linear contributions are
+let the two endpoint gradients be $g_0$ and $g_1$. The two local linear contributions are
 
-\[
+$$
 n_0(x) = g_0 x
-\]
+$$
 
 and
 
-\[
+$$
 n_1(x) = g_1 (x-1).
-\]
+$$
 
-A smooth interpolation weight \(s(x)\) blends the two:
+A smooth interpolation weight $s(x)$ blends the two:
 
-\[
+$$
 N(x) = (1-s(x))n_0(x) + s(x)n_1(x).
-\]
+$$
 
 The important consequence is that neighboring segments naturally meet around a common lattice point without independently chosen output values producing obvious corners.
 
@@ -75,27 +75,27 @@ The important consequence is that neighboring segments naturally meet around a c
 
 The upstream firmware uses the now-standard quintic fade function
 
-\[
+$$
 s(x) = 6x^5 - 15x^4 + 10x^3.
-\]
+$$
 
 It satisfies
 
-\[
+$$
 s(0)=0, \qquad s(1)=1,
-\]
+$$
 
 and
 
-\[
+$$
 s'(0)=s'(1)=0,
-\]
+$$
 
 as well as
 
-\[
+$$
 s''(0)=s''(1)=0.
-\]
+$$
 
 This is important because it suppresses visible or audible derivative discontinuities at lattice boundaries. In a modulation source, those derivative properties correspond to a signal that can change direction organically without introducing a deliberate corner at every random segment boundary.
 
@@ -103,15 +103,15 @@ This is important because it suppresses visible or audible derivative discontinu
 
 For the ideal mathematical form,
 
-\[
+$$
 N(0)=0
-\]
+$$
 
-because \(n_0(0)=0\) and \(s(0)=0\). Similarly,
+because $n_0(0)=0$ and $s(0)=0$. Similarly,
 
-\[
+$$
 N(1)=0.
-\]
+$$
 
 Thus every ideal lattice boundary is a zero crossing of the un-offset segment function. The random gradients determine the shape between those boundaries.
 
@@ -121,14 +121,14 @@ Drift later scales and offsets the combined noise into the unipolar DAC range, s
 
 A common way to increase the apparent detail of coherent noise is to combine multiple related frequency bands, often called octaves. In a generic form,
 
-\[
+$$
 N_{sum}(t) = \sum_k a_k N_k(f_k t).
-\]
+$$
 
 Drift uses exactly two Perlin states:
 
-- a base octave advanced by \(\Delta t\);
-- a higher octave advanced by \(4\Delta t\).
+- a base octave advanced by $\Delta t$;
+- a higher octave advanced by $4\Delta t$.
 
 The second state therefore traverses its lattice four times faster.
 
@@ -138,15 +138,15 @@ This is not a generic fractal-Brownian-motion stack with a configurable number o
 
 Each octave owns a 32-bit unsigned `time` accumulator. For every 2.5 kHz processing step,
 
-\[
+$$
 T_{n+1} = (T_n + \Delta T) \bmod 2^{32}.
-\]
+$$
 
 The upper 16 bits are interpreted as the within-segment coordinate:
 
-\[
+$$
 x \approx \frac{T \gg 16}{2^{16}}.
-\]
+$$
 
 An unsigned overflow means that the algorithm has crossed a lattice boundary. At that point:
 
@@ -192,13 +192,13 @@ let grad = I1F15::from_bits(((grad_int as u16) << 11) as i16);
 
 The magnitude therefore has eight discrete possibilities. In real-number terms the gradient magnitude is approximately
 
-\[
+$$
 \frac{1}{16},\frac{2}{16},\ldots,\frac{8}{16},
-\]
+$$
 
 with the remaining random bit selecting the sign.
 
-This differs from the simplest one-dimensional presentation where gradients might be restricted to \(\pm 1\). The variable gradient magnitudes are an intentional part of Drift's output character and must be preserved by the compatibility implementation.
+This differs from the simplest one-dimensional presentation where gradients might be restricted to $\pm 1$. The variable gradient magnitudes are an intentional part of Drift's output character and must be preserved by the compatibility implementation.
 
 ### 2.3 Fixed-point representation
 
@@ -261,28 +261,28 @@ The fixed-point implementation, rather than the infinite-precision equation, is 
 
 The control value is
 
-\[
+$$
 b = \min(1023,\; textureKnob + textureCV),
-\]
+$$
 
-then represented approximately as \(b/1024\) in Q1.15.
+then represented approximately as $b/1024$ in Q1.15.
 
 The output is not a simple crossfade from the base octave to the high octave. The source computes:
 
-\[
+$$
 y = 3B + B(1-b) + Hb,
-\]
+$$
 
-where \(B\) is the base value and \(H\) the high-octave value. Rearranged:
+where $B$ is the base value and $H$ the high-octave value. Rearranged:
 
-\[
+$$
 y = (4-b)B + bH.
-\]
+$$
 
 Therefore:
 
-- at minimum texture, the internal signal is approximately \(4B\);
-- at maximum texture, it is approximately \(3B + H\).
+- at minimum texture, the internal signal is approximately $4B$;
+- at maximum texture, it is approximately $3B + H$.
 
 The high-frequency octave can therefore replace approximately one quarter of the base weighting rather than replacing the base signal entirely. This is consistent with the manual's description of adding roughness while retaining the large-scale drift.
 
@@ -329,9 +329,9 @@ The second Perlin octave is four times faster, so its highest lattice-crossing r
 
 The expression
 
-\[
+$$
 (4-b)B+bH
-\]
+$$
 
 is not a textbook fBm amplitude stack, but it is internally coherent and matches the manual's concept of preserving the smooth large-scale motion while adding a controlled amount of higher-frequency detail.
 
@@ -399,9 +399,9 @@ No anti-aliasing change should be introduced without measurement because it woul
 
 A mathematically equivalent Horner-style form is
 
-\[
+$$
 s(x)=x^3\left(x(6x-15)+10\right).
-\]
+$$
 
 A future implementation can investigate a signed/wider intermediate representation that reduces multiplication count while maintaining the required error bound.
 
@@ -430,27 +430,27 @@ Acceptance options should be stated before implementation:
 
 A later frequency-mapping revision can derive the phase increment directly from the desired frequency:
 
-\[
+$$
 \Delta T = \frac{2^{32} f}{f_s}.
-\]
+$$
 
 With
 
-\[
+$$
 f = \frac{2^V}{40}
-\]
+$$
 
 and
 
-\[
+$$
 f_s = 2500\text{ Hz},
-\]
+$$
 
 this becomes
 
-\[
+$$
 \Delta T = \frac{2^{32} 2^V}{100000}.
-\]
+$$
 
 A practical implementation can use a dedicated phase-increment LUT, reciprocal multiplication, or another fixed-point formulation chosen from measured AVR cost.
 

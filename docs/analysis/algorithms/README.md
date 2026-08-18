@@ -25,6 +25,10 @@ Each document addresses the same questions:
 7. What is the source-level computational hot path on ATmega328P?
 8. Which host tests, golden vectors, statistical tests, and hardware timing measurements are required to prove correctness?
 
+## Mathematical notation
+
+Equations in these analyses use GitHub's native MathJax rendering: inline expressions use `$...$`, while standalone equations use `$$...$$`. This keeps the mathematical notation readable in the Markdown source and rendered directly on GitHub without rasterized formula images.
+
 ## Shared implementation context
 
 Three modes — Perlin, Bézier, and LFO — use the common `shared.rs::get_delta_t()` V/oct phase-increment mapping. Brownian intentionally does not. Findings in the shared path are repeated only where they materially affect the algorithm being analyzed.

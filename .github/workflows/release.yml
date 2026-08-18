@@ -59,6 +59,7 @@ jobs:
         run: |
           python scripts/check_requirement_traceability.py
           python scripts/check_markdown_footer.py
+          python scripts/check_markdown_math.py
           python scripts/test_generate_release_notes.py
           python scripts/test_avr_resource_budget.py
           python scripts/check_user_manual_source.py

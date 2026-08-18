@@ -4,7 +4,9 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ## Unreleased
 
-_No changes yet._
+### Changed
+
+- Root README updated to reflect the published `v0.1.0` release and to remove the redundant introductory front-panel image while retaining the annotated Quick Start reference.
 
 ## 0.1.0 — 2026-08-18
 
@@ -29,6 +31,7 @@ Version 0.1.0 establishes the first verified C++17/PlatformIO firmware baseline 
 
 ### Changed
 
+- Mathematical expressions in the algorithm engineering analyses now use GitHub-native MathJax delimiters for correctly rendered inline and display equations; CI rejects legacy delimiters and unbalanced display-math blocks.
 - Dependabot version updates are grouped and reduced to a monthly cadence with at most one open version-update PR per ecosystem to avoid dependency-PR bursts; security updates remain governed separately by GitHub.
 - Root README quick-start documentation expanded with front-panel, DIP-switch and per-algorithm SVG guidance, including the physical rear-switch numbering and user-facing control behavior.
 - Repository identity prepared for `napolitano/eurorack-organic-modulation-firmware`, including GitHub status badges and stricter ATmega328P engineering guardrails of 85% application flash and 65% static SRAM.
