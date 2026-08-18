@@ -13,7 +13,7 @@ jobs:
   metadata:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
       - uses: actions/setup-python@v6.2.0
         with:
           python-version: '3.11.15'
@@ -42,7 +42,7 @@ jobs:
           - regression/test_upstream_behaviour
           - system/test_signal_path
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
       - uses: actions/setup-python@v6.2.0
         with:
           python-version: '3.11.15'
@@ -52,7 +52,7 @@ jobs:
   native-coverage:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
       - uses: actions/setup-python@v6.2.0
         with:
           python-version: '3.11.15'
@@ -67,7 +67,7 @@ jobs:
   native-sanitizers:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
       - uses: actions/setup-python@v6.2.0
         with:
           python-version: '3.11.15'
@@ -81,7 +81,7 @@ jobs:
       matrix:
         environment: [nanoatmega328new, nanoatmega328]
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
       - uses: actions/setup-python@v6.2.0
         with:
           python-version: '3.11.15'
@@ -92,7 +92,7 @@ jobs:
   timing-probe-build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
       - uses: actions/setup-python@v6.2.0
         with:
           python-version: '3.11.15'
