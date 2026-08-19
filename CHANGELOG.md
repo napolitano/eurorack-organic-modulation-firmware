@@ -6,6 +6,8 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
+- Generative-bank design specification defining Turing, Markov, Motif and Urn as four distinct forms of discrete musical memory, with a duplication audit against Classic and Organic.
+- Dedicated engineering analyses for all four proposed Generative algorithms, including mathematical contracts, AVR cost/test strategy and explicit musical assessment.
 - Release-preparation manual freezing: the final `docs/manual/drift-user-manual.odt` is now copied byte-for-byte to `docs/manual/releases/X.Y.Z/drift-user-manual.X.Y.Z.odt` before tagging, and existing snapshots are immutable by default.
 - Historical manual backfill tooling can recover an exact pre-freeze source from an existing Git tag without moving or rewriting that tag; this provides a deterministic path for the 0.1.0 manual source.
 - Optional compile-time **Organic algorithm bank** for the original Drift hardware, selected at build time while leaving the Classic 0.1.0 bank as the default. The four Organic DIP slots are Fractal, Vector, Rain and Attractor.

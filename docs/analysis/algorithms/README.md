@@ -1,6 +1,6 @@
 # Drift algorithm engineering analyses
 
-These documents analyze each supported Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The optional **Organic** documents use the same engineering structure but describe project-defined algorithms with no upstream implementation to preserve.
+These documents analyze each supported Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The optional **Organic** documents use the same engineering structure but describe project-defined algorithms with no upstream implementation to preserve. Proposed **Generative** documents extend that structure with an explicit musical assessment because phrase memory, repetition and controlled variation are part of the algorithm contract rather than merely side effects.
 
 > [!IMPORTANT]
 > The analyses are engineering notes, not criticism of the upstream project. A finding is classified according to the available evidence. Unusual behavior is not automatically a defect. Where analysis establishes a defect and a stronger mathematical contract can be stated, the unreleased firmware may correct it directly; the intentional difference is then documented and regression-tested.
@@ -20,6 +20,14 @@ These documents analyze each supported Drift algorithm independently. The four *
 - [Attractor / Hénon map](attractor-analysis.md)
 - [Organic bank architecture and control contract](../algorithm-banks/organic-bank-design.md)
 
+### Proposed Generative bank
+
+- [Turing / evolving shift register](turing-analysis.md)
+- [Markov state grammar](markov-analysis.md)
+- [Motif phrase transformation](motif-analysis.md)
+- [Urn reinforced preference](urn-analysis.md)
+- [Generative bank architecture, duplication audit and musical contract](../algorithm-banks/generative-bank-design.md)
+
 ## Common analysis contract
 
 Each document addresses the same questions:
@@ -32,6 +40,7 @@ Each document addresses the same questions:
 6. What improvement strategies are technically defensible?
 7. What is the source-level computational hot path on ATmega328P?
 8. Which host tests, golden vectors, statistical tests, and hardware timing measurements are required to prove correctness?
+9. What is the musical value of the algorithm, where is it strongest, and what limitations or overlaps must be documented?
 
 ## Mathematical notation
 
