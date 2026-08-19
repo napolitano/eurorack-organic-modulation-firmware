@@ -2,11 +2,11 @@
 
 ## 1. Purpose
 
-The proposed **Electronica** bank targets loop-oriented electronic music: house, acid, techno and adjacent styles in which a modulation source is useful not only because it moves, but because its movement has an immediately legible rhythmic role.
+The implemented **Electronica** bank targets loop-oriented electronic music: house, acid, techno and adjacent styles in which a modulation source is useful not only because it moves, but because its movement has an immediately legible rhythmic role.
 
 The existing banks already cover continuous stochastic motion, nonlinear/organic behavior, discrete generative memory and long-form ambient modulation. Electronica must therefore avoid becoming another random bank or an early version of the planned Percussion bank. Its identity is **continuous or stepped CV shaped by club-music timing concepts** rather than trigger generation.
 
-The four proposed modes are:
+The four implemented modes are:
 
 - **Pump** — a free-running sidechain-style duck/recovery contour;
 - **Acid** — a deterministic 16-step filter-modulation grammar built from levels, accents and slides;
@@ -34,7 +34,7 @@ As with every Drift bank, the bank is selected at build/flash time and the rear 
 
 ## 4. Shared Electronica tempo contract
 
-The normal Drift Speed mapping spans a much wider modulation range than a user expects from a tempo-oriented bank. Electronica therefore proposes a bank-local tempo mapping rather than pretending the full 1/40 Hz..100 Hz range is a useful BPM control.
+The normal Drift Speed mapping spans a much wider modulation range than a user expects from a tempo-oriented bank. Electronica therefore uses a bank-local tempo mapping rather than pretending the full 1/40 Hz..100 Hz range is a useful BPM control.
 
 Let normalized combined Speed be $u\in[0,1]$. The nominal quarter-note tempo is
 
@@ -62,7 +62,7 @@ $$
 
 At 240 BPM this is only 16 Hz, leaving about 156 samples per sixteenth at Drift's 2.5 kHz processing rate. No Electronica algorithm therefore requires event timing finer than the existing scheduler can represent.
 
-The mapping must be implemented with the existing fixed-point/table infrastructure or another bounded integer mapping. Floating-point arithmetic is not acceptable in the AVR hot path.
+The implementation uses the existing Exp2 reference table over indices 0..48, corresponding to exactly three octaves, with saturated `Speed knob + Speed CV` in the 10-bit control domain. Floating-point arithmetic is not used in the AVR hot path.
 
 ### External synchronization limitation
 

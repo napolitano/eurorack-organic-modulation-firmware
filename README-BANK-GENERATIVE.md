@@ -1,6 +1,6 @@
 # Free Modular Drift — Generative Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Engineering design](docs/analysis/algorithm-banks/generative-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [Engineering design](docs/analysis/algorithm-banks/generative-bank-design.md)
 
 The **Generative bank** is a compile-time alternative bank for Drift focused on stepped modulation with explicit memory. It contains **Turing, Markov, Motif and Urn**. Unlike Classic Perlin/Brownian/Bézier and Organic Fractal/Vector/Attractor, these modes do not primarily model continuous trajectories. They produce internally timed 12-bit states whose future behavior depends on retained sequence, state, phrase or reinforcement memory.
 

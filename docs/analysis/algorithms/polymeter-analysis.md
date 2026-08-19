@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-Polymeter is a proposed Electronica-bank mode for creating long deterministic accent cycles from two meters that share one sixteenth-note subdivision grid but use different loop lengths.
+Polymeter is the implemented Electronica-bank mode for creating long deterministic accent cycles from two meters that share one sixteenth-note subdivision grid but use different loop lengths.
 
 The mode does not generate separate trigger outputs. Instead, every subdivision emits a short CV contour whose amplitude reflects whether the primary meter, secondary meter, both or neither begin on that step. There is no Quinn Freedman Polymeter mode to preserve.
 
@@ -67,7 +67,7 @@ For the four choices:
 | 7 | 28 |
 | 9 | 36 |
 
-Each step launches a short decay contour scaled by $V_n$.
+Each step launches a short decay contour scaled by $V_n$. The implemented decay duration is exactly one half of a sixteenth-note step.
 
 ## 3. Reference algorithm
 
@@ -82,7 +82,7 @@ At each processing sample:
 7. restart the fixed decay envelope at that amplitude;
 8. output the current 12-bit envelope value.
 
-When Texture changes secondary meter, the new meter should take effect on the next primary four-step boundary rather than changing cycle length mid-beat.
+When Texture changes secondary meter, the new meter takes effect on the next primary four-step boundary. The new secondary cycle is restarted on that boundary, making the change deterministic and explicitly aligned to the four-step anchor.
 
 ## 4. Relationship to prior art and upstream Drift
 

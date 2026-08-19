@@ -41,7 +41,11 @@ enum class Algorithm : uint8_t {
   Current = 12,   ///< Ambient: deterministic quasi-periodic-inspired long motion.
   Anchor = 13,    ///< Ambient: bounded mean-reverting stochastic modulation.
   Breath = 14,    ///< Ambient: recurrent smooth swells with cycle variation.
-  Fog = 15        ///< Ambient: overlapping smooth bipolar stochastic cloudlets.
+  Fog = 15,       ///< Ambient: overlapping smooth bipolar stochastic cloudlets.
+  Pump = 16,      ///< Electronica: free-running duck/recovery contour.
+  Acid = 17,      ///< Electronica: deterministic accented/sliding 16-step contour.
+  Shuffle = 18,   ///< Electronica: deterministic long/short timing modulation.
+  Polymeter = 19  ///< Electronica: four-against-odd-meter accent process.
 };
 
 /**

@@ -22,6 +22,8 @@
 #define FMD_BANK_GENERATIVE 2
 /** Alternative ambient bank containing Current, Anchor, Breath and Fog. */
 #define FMD_BANK_AMBIENT 3
+/** Alternative Electronica bank containing Pump, Acid, Shuffle and Polymeter. */
+#define FMD_BANK_ELECTRONICA 4
 
 #ifndef FMD_ALGORITHM_BANK
 /** Default to the original/classic bank when no compiler flag selects another bank. */
@@ -31,8 +33,9 @@
 #if FMD_ALGORITHM_BANK != FMD_BANK_CLASSIC && \
     FMD_ALGORITHM_BANK != FMD_BANK_ORGANIC && \
     FMD_ALGORITHM_BANK != FMD_BANK_GENERATIVE && \
-    FMD_ALGORITHM_BANK != FMD_BANK_AMBIENT
-#error "FMD_ALGORITHM_BANK must be Classic (0), Organic (1), Generative (2), or Ambient (3)"
+    FMD_ALGORITHM_BANK != FMD_BANK_AMBIENT && \
+    FMD_ALGORITHM_BANK != FMD_BANK_ELECTRONICA
+#error "FMD_ALGORITHM_BANK must be Classic (0), Organic (1), Generative (2), Ambient (3), or Electronica (4)"
 #endif
 
 namespace fmd {
@@ -42,7 +45,8 @@ enum class AlgorithmBank : uint8_t {
   Classic = FMD_BANK_CLASSIC,       ///< Perlin, Brownian, Bezier and LFO.
   Organic = FMD_BANK_ORGANIC,       ///< Fractal, Vector, Rain and Hénon attractor.
   Generative = FMD_BANK_GENERATIVE, ///< Turing, Markov, Motif and Urn.
-  Ambient = FMD_BANK_AMBIENT        ///< Current, Anchor, Breath and Fog.
+  Ambient = FMD_BANK_AMBIENT,       ///< Current, Anchor, Breath and Fog.
+  Electronica = FMD_BANK_ELECTRONICA ///< Pump, Acid, Shuffle and Polymeter.
 };
 
 /** Bank compiled into this firmware image. */

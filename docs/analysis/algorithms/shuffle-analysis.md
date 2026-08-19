@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-Shuffle is a proposed Electronica-bank mode that turns a straight internal subdivision grid into a deterministic long-short timing pattern. It produces a short CV decay at each onset so the timing deformation is directly patchable.
+Shuffle is the implemented Electronica-bank mode that turns a straight internal subdivision grid into a deterministic long-short timing pattern. It produces a short CV decay at each onset so the timing deformation is directly patchable.
 
 The mode was initially called Groove. **Shuffle** is retained because it specifies the intended behavior precisely and leaves random timing/velocity humanization to a separate Percussion-bank concept. There is no Quinn Freedman Shuffle mode to preserve.
 
@@ -54,7 +54,7 @@ $$
 D(u)=1-S(u),
 $$
 
-where $u\in[0,1]$ is local envelope phase and $S(u)=3u^2-2u^3$. Envelope duration must be capped to a fraction of the shorter interval so adjacent events never overlap merely because Texture is high.
+where $u\in[0,1]$ is local envelope phase and $S(u)=3u^2-2u^3$. The implementation fixes envelope duration to one eighth of the complete pair. At maximum shuffle the shorter interval is one quarter of the pair, so this decay remains safely shorter and cannot overlap an adjacent onset merely because Texture is high.
 
 ## 3. Reference algorithm
 
@@ -96,7 +96,7 @@ Live Texture modulation may move the second onset while the current pair is alre
 
 ## 7. Improvement strategy
 
-The first implementation should keep identical pulse amplitudes and vary only timing. If later listening suggests a fixed offbeat accent improves usefulness, that must be documented as a second musical dimension rather than slipped into the initial mode.
+The implementation keeps identical pulse amplitudes and varies only timing. If later listening suggests a fixed offbeat accent improves usefulness, that must be documented as a second musical dimension rather than slipped into the initial mode.
 
 A future externally clockable hardware revision could make Shuffle substantially more useful without changing its mathematical core.
 

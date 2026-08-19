@@ -710,6 +710,88 @@
           "case": "test_fog_algorithm_is_seed_deterministic_and_bounded"
         }
       ]
+    },
+    {
+      "id": "AC-48",
+      "description": "The Electronica compile-time bank maps the four rear DIP slots to Pump, Acid, Shuffle and Polymeter while preserving the shared electrical truth table.",
+      "tests": [
+        {
+          "file": "test/integration/test_selection/test_main.cpp",
+          "case": "test_selected_bank_config_pin_mapping"
+        }
+      ]
+    },
+    {
+      "id": "AC-49",
+      "description": "Pump uses the documented 30..240 BPM Electronica tempo mapping, exact 1/4..15/16 recovery range and monotonic deterministic duck/recovery contour.",
+      "tests": [
+        {
+          "file": "test/unit/test_pump_algorithm/test_main.cpp",
+          "case": "test_electronica_tempo_mapping_has_exact_endpoints"
+        },
+        {
+          "file": "test/unit/test_pump_algorithm/test_main.cpp",
+          "case": "test_pump_recovery_endpoint_has_exact_texture_endpoints"
+        },
+        {
+          "file": "test/unit/test_pump_algorithm/test_main.cpp",
+          "case": "test_pump_recovery_is_monotone_for_dense_phase_domain"
+        }
+      ]
+    },
+    {
+      "id": "AC-50",
+      "description": "Acid implements the exact project-defined 16-step permutation, accent/slide masks, Texture-zero dry sequence and bounded smooth accent/slide contours without RNG state.",
+      "tests": [
+        {
+          "file": "test/unit/test_acid_algorithm/test_main.cpp",
+          "case": "test_acid_permutation_visits_all_sixteen_codes_exactly_once"
+        },
+        {
+          "file": "test/unit/test_acid_algorithm/test_main.cpp",
+          "case": "test_acid_masks_match_documented_predicates"
+        },
+        {
+          "file": "test/unit/test_acid_algorithm/test_main.cpp",
+          "case": "test_acid_slide_has_exact_texture_and_phase_endpoints"
+        }
+      ]
+    },
+    {
+      "id": "AC-51",
+      "description": "Shuffle maps Texture monotonically from straight timing to an exact 3:1 long/short pair while preserving total pair duration and deterministic bounded output.",
+      "tests": [
+        {
+          "file": "test/unit/test_shuffle_algorithm/test_main.cpp",
+          "case": "test_shuffle_ratio_has_exact_straight_and_three_to_one_endpoints"
+        },
+        {
+          "file": "test/unit/test_shuffle_algorithm/test_main.cpp",
+          "case": "test_shuffle_intervals_always_sum_to_complete_pair"
+        },
+        {
+          "file": "test/unit/test_shuffle_algorithm/test_main.cpp",
+          "case": "test_shuffle_algorithm_is_deterministic_and_bounded"
+        }
+      ]
+    },
+    {
+      "id": "AC-52",
+      "description": "Polymeter selects exact secondary meters 3/5/7/9, preserves the documented accent amplitudes and exact 12/20/28/36-step composite recurrences.",
+      "tests": [
+        {
+          "file": "test/unit/test_polymeter_algorithm/test_main.cpp",
+          "case": "test_polymeter_texture_regions_select_exact_meter_lengths"
+        },
+        {
+          "file": "test/unit/test_polymeter_algorithm/test_main.cpp",
+          "case": "test_polymeter_amplitude_cases_are_exact"
+        },
+        {
+          "file": "test/unit/test_polymeter_algorithm/test_main.cpp",
+          "case": "test_polymeter_recurrence_lengths_are_exact_lcms"
+        }
+      ]
     }
   ]
 }

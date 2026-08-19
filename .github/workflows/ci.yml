@@ -127,6 +127,29 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_ambient -f ${{ matrix.suite }}
 
+  native-electronica-tests:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - unit/test_algorithms
+          - unit/test_pump_algorithm
+          - unit/test_acid_algorithm
+          - unit/test_shuffle_algorithm
+          - unit/test_polymeter_algorithm
+          - integration/test_selection
+          - integration/test_runtime
+          - property/test_invariants
+          - system/test_signal_path
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_electronica -f ${{ matrix.suite }}
+
   native-coverage:
     runs-on: ubuntu-24.04
     steps:
@@ -139,10 +162,10 @@ jobs:
       - run: |
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient)/.*' \
+            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica)/.*' \
             --xml-pretty --output coverage/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient)/.*' \
+            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica)/.*' \
             --txt
           python scripts/check_native_coverage.py coverage/coverage.xml
 
@@ -159,10 +182,10 @@ jobs:
       - run: |
           mkdir -p coverage-organic
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|generative|ambient)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica)/.*' \
             --xml-pretty --output coverage-organic/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|generative|ambient)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica)/.*' \
             --txt
           python scripts/check_native_coverage.py coverage-organic/coverage.xml
 
@@ -178,10 +201,10 @@ jobs:
       - run: |
           mkdir -p coverage-generative
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|ambient)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica)/.*' \
             --xml-pretty --output coverage-generative/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|ambient)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica)/.*' \
             --txt
           python scripts/check_native_coverage.py coverage-generative/coverage.xml
 
@@ -197,9 +220,25 @@ jobs:
       - run: |
           mkdir -p coverage-ambient
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|generative)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|generative|electronica)/.*' \
             --xml-pretty --output coverage-ambient/coverage.xml
           python scripts/check_native_coverage.py coverage-ambient/coverage.xml
+
+  native-electronica-coverage:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_electronica_coverage
+      - run: |
+          mkdir -p coverage-electronica
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient)/.*' \
+            --xml-pretty --output coverage-electronica/coverage.xml
+          python scripts/check_native_coverage.py coverage-electronica/coverage.xml
 
   native-sanitizers:
     runs-on: ubuntu-24.04
@@ -242,6 +281,16 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_ambient_sanitized
 
+  native-electronica-sanitizers:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_electronica_sanitized
+
   avr-build:
     runs-on: ubuntu-24.04
     strategy:
@@ -256,6 +305,8 @@ jobs:
           - nanoatmega328_generative
           - nanoatmega328new_ambient
           - nanoatmega328_ambient
+          - nanoatmega328new_electronica
+          - nanoatmega328_electronica
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0
@@ -270,7 +321,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing, nanoatmega328new_ambient_timing]
+        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing, nanoatmega328new_ambient_timing, nanoatmega328new_electronica_timing]
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0

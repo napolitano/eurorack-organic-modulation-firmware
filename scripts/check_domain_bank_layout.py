@@ -37,6 +37,13 @@ BANK_MEMBERS = {
         "FogAlgorithm",
         "AmbientAlgorithmMath",
     ),
+    "electronica": (
+        "PumpAlgorithm",
+        "AcidAlgorithm",
+        "ShuffleAlgorithm",
+        "PolymeterAlgorithm",
+        "ElectronicaAlgorithmMath",
+    ),
 }
 
 TEXT_SUFFIXES = {".h", ".hpp", ".c", ".cc", ".cpp", ".md", ".py", ".yml", ".yaml", ".ini", ".json"}
@@ -85,7 +92,7 @@ def main() -> None:
         if match:
             fail(f"stale unqualified bank include in {path.relative_to(ROOT)}: {match.group(0)}")
 
-    print("domain-bank-layout: four bank directories and qualified includes passed")
+    print("domain-bank-layout: five bank directories and qualified includes passed")
 
 
 if __name__ == "__main__":

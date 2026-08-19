@@ -91,8 +91,8 @@ Purely editorial wording/formatting changes do not need changelog entries unless
 
 Keep each pull request focused. Before submission:
 
-1. run Classic, Organic and Generative native test suites and sanitizers;
-2. build both bootloader environments for both compile-time banks;
+1. run the native test suites and sanitizers for every compile-time bank affected by the change;
+2. build both Nano bootloader environments for every compile-time bank affected by the change;
 3. update algorithm/reference tests for changed behavior;
 4. update requirement traceability;
 5. update technical documentation and `CHANGELOG.md` when release-relevant;

@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-Pump is the first proposed Electronica-bank mode. It generates the familiar **duck then recover** modulation contour associated with sidechain-heavy house and techno production.
+Pump is the implemented first Electronica-bank mode. It generates the familiar **duck then recover** modulation contour associated with sidechain-heavy house and techno production.
 
 The mode does not perform dynamics processing. Drift has no audio detector or external sidechain input, so Pump is a self-running control-voltage generator only. There is no Quinn Freedman Pump mode to preserve.
 
@@ -85,7 +85,7 @@ Because Attenuation remains analogue after the DAC, the user can independently c
 
 ## 7. Improvement strategy
 
-The first implementation should keep one curve family and one Texture macro. Adding attack, hold, depth or multi-beat patterns would either consume unavailable controls or turn Pump into a preset-heavy envelope generator.
+The implementation keeps one curve family and one Texture macro. Adding attack, hold, depth or multi-beat patterns would either consume unavailable controls or turn Pump into a preset-heavy envelope generator.
 
 If listening tests show cubic smoothstep is too soft, a fixed integer power-curve family may be evaluated later, but that would be a musical revision and requires regression/golden-vector updates.
 
@@ -99,7 +99,7 @@ Per sample:
 - one cubic smoothstep evaluation;
 - one 12-bit scaling operation.
 
-The division implied by $p/e$ should not be performed as a general AVR division on every sample. Texture changes slowly relative to the audio/control scheduler, so the reciprocal of $e$ can be cached when the control value changes.
+The division implied by $p/e$ should not be performed as a general AVR division on every sample. The implementation caches the reciprocal of $e$ as a Q28 value whenever the saturated Texture control changes, avoiding a general phase/end-point division in the per-sample path.
 
 ## 9. Optimization opportunities
 

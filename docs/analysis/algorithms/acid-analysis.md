@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-Acid is a proposed Electronica-bank modulation algorithm for creating deterministic stepped-and-sliding CV contours with accent emphasis. It is intended primarily for filter cutoff, wavefolding, oscillator timbre and effect-parameter modulation.
+Acid is the implemented Electronica-bank modulation algorithm for creating deterministic stepped-and-sliding CV contours with accent emphasis. It is intended primarily for filter cutoff, wavefolding, oscillator timbre and effect-parameter modulation.
 
 It is **not** a TB-303 synthesizer or note sequencer. The historical association is musical vocabulary only: 16-step patterns, accents and slides are characteristic TB-303 sequencing concepts documented by Roland. There is no Quinn Freedman Acid mode to preserve.
 
@@ -128,7 +128,7 @@ The sequence repeats exactly after 16 sixteenth notes. Repetition is part of the
 
 ## 7. Improvement strategy
 
-The first implementation should freeze exactly one deterministic grammar. Additional pattern sets, direction modes or randomization would make the mode more sequencer-like and should be separate future revisions.
+The implementation freezes exactly one deterministic grammar. Additional pattern sets, direction modes or randomization would make the mode more sequencer-like and should be separate future revisions.
 
 If the fixed contour proves too recognisable, the first alternative should be a second mathematically generated permutation selected at compile time or via a future bank revision—not silent per-cycle randomization.
 

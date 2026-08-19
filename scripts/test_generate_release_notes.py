@@ -60,7 +60,7 @@ Initial public release.
     )
     require("v0.1.0...v0.2.0" in notes, "compare link missing")
     require("## Artifact integrity" in notes, "integrity section missing")
-    require("Classic, Organic, Generative and Ambient firmware images" in notes, "multi-bank artifact description missing")
+    require("Classic, Organic, Generative, Ambient and Electronica firmware images" in notes, "multi-bank artifact description missing")
     require("FIRMWARE-ARTIFACTS.X.Y.Z.md" in notes, "firmware manifest description missing")
     require("frozen versioned user-manual ODT" in notes, "frozen manual source description missing")
     require("drift-footer" not in notes, "documentation footer leaked into release notes")

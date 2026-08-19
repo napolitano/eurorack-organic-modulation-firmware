@@ -22,13 +22,13 @@ def populate(root: Path, version: str, banks: tuple[str, ...]) -> None:
 
 def main() -> int:
     version = "1.2.3"
-    banks = ("classic", "organic", "generative", "ambient")
+    banks = ("classic", "organic", "generative", "ambient", "electronica")
     with tempfile.TemporaryDirectory() as temp_dir:
         root = Path(temp_dir)
         populate(root, version, banks)
         assert checker.validate_release_artifacts(root, version, banks) == []
-        assert len(checker.expected_firmware_names(version, banks)) == 16
-        assert len(checker.expected_build_info_names(version, banks)) == 8
+        assert len(checker.expected_firmware_names(version, banks)) == 20
+        assert len(checker.expected_build_info_names(version, banks)) == 10
 
         ambient_elf = root / f"fm-drift-ambient-nano-old-bootloader.{version}.elf"
         ambient_elf.unlink()
@@ -40,6 +40,18 @@ def main() -> int:
         ambient_build_info.unlink()
         errors = checker.validate_release_artifacts(root, version, banks)
         assert any("BUILD-INFO-ambient-nano-new" in error for error in errors)
+
+        populate(root, version, banks)
+        electronica_hex = root / f"fm-drift-electronica-nano-old-bootloader.{version}.hex"
+        electronica_hex.unlink()
+        errors = checker.validate_release_artifacts(root, version, banks)
+        assert any("electronica-nano-old-bootloader" in error for error in errors)
+
+        populate(root, version, banks)
+        electronica_build_info = root / f"BUILD-INFO-electronica-nano-new.{version}.txt"
+        electronica_build_info.unlink()
+        errors = checker.validate_release_artifacts(root, version, banks)
+        assert any("BUILD-INFO-electronica-nano-new" in error for error in errors)
 
         populate(root, version, banks)
         generative_hex = root / f"fm-drift-generative-nano-new-bootloader.{version}.hex"

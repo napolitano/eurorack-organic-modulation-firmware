@@ -42,6 +42,13 @@ Algorithm algorithmForBankSlot(uint8_t slotIndex) {
       Algorithm::Breath,
       Algorithm::Fog,
   };
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
+  constexpr Algorithm kAlgorithms[4] = {
+      Algorithm::Pump,
+      Algorithm::Acid,
+      Algorithm::Shuffle,
+      Algorithm::Polymeter,
+  };
 #endif
   return kAlgorithms[slotIndex < 4U ? slotIndex : 0U];
 }
@@ -85,8 +92,17 @@ DriftEngine::DriftEngine(Algorithm algorithm,
       , anchorAlgorithm_(referenceTables, randomSeed)
       , breathAlgorithm_(referenceTables, randomSeed)
       , fogAlgorithm_(referenceTables, randomSeed)
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
+      , pumpAlgorithm_(referenceTables)
+      , acidAlgorithm_(referenceTables)
+      , shuffleAlgorithm_(referenceTables)
+      , polymeterAlgorithm_(referenceTables)
 #endif
-{}
+{
+#if FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
+  (void)randomSeed;
+#endif
+}
 
 uint16_t DriftEngine::step(const ControlFrame& controls) {
   switch (selectedAlgorithm_) {
@@ -126,6 +142,15 @@ uint16_t DriftEngine::step(const ControlFrame& controls) {
       return breathAlgorithm_.step(controls);
     case Algorithm::Fog:
       return fogAlgorithm_.step(controls);
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
+    case Algorithm::Pump:
+      return pumpAlgorithm_.step(controls);
+    case Algorithm::Acid:
+      return acidAlgorithm_.step(controls);
+    case Algorithm::Shuffle:
+      return shuffleAlgorithm_.step(controls);
+    case Algorithm::Polymeter:
+      return polymeterAlgorithm_.step(controls);
 #endif
     default:
       break;

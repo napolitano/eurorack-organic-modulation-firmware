@@ -19,7 +19,7 @@ The system rig does not contain a second firmware implementation. It supplies de
 
 ## Algorithm-specific mathematical suites
 
-Each Drift mode has a dedicated suite. Classic remains the default compile-time bank; Organic, Generative and Ambient are exercised by their respective `native_organic*`, `native_generative*` and `native_ambient*` environments.
+Each Drift mode has a dedicated suite. Classic remains the default compile-time bank; Organic, Generative, Ambient and Electronica are exercised by their respective `native_organic*`, `native_generative*`, `native_ambient*` and `native_electronica*` environments.
 
 | Bank | Suite | Primary proof obligations |
 |---|---|---|
@@ -56,11 +56,11 @@ Third-party Unity/PlatformIO sources are not promoted to `-Werror`.
 
 ## Coverage policy
 
-The engineering gate is **95% line / 75% branch coverage** for `lib/fmd/src` and is applied independently to the Classic, Organic, Generative and Ambient compile-time banks. The released Classic strict-host GCC/gcov baseline measured on 2026-08-18 after the state/edge-case expansion is **99.45% lines / 82.82% branches**; CI provides the authoritative PlatformIO/gcovr result for each current bank. Coverage reports exclude inactive bank-specific algorithm wrappers and bank-only math so a bank is not penalized for source that cannot be reached in that compiled firmware image; shared production math remains in scope. gcovr source filters are regular expressions relative to the repository working directory. Coverage is a regression signal, not the definition of correctness. Mathematically meaningful branch, boundary, property and requirement coverage take precedence over artificially exercising unreachable defensive code. The floors must not be lowered merely to make a change pass. The only uncovered executable lines in the current strict-host baseline are the two defensive Perlin output-clamp assignments: the verified gradient/noise amplitude contract reaches the 12-bit endpoints but does not exceed them, so forcing those branches would require an invalid internal state rather than a meaningful input case.
+The engineering gate is **95% line / 75% branch coverage** for `lib/fmd/src` and is applied independently to the Classic, Organic, Generative, Ambient and Electronica compile-time banks. The released Classic strict-host GCC/gcov baseline measured on 2026-08-18 after the state/edge-case expansion is **99.45% lines / 82.82% branches**; CI provides the authoritative PlatformIO/gcovr result for each current bank. Coverage reports exclude inactive bank-specific algorithm wrappers and bank-only math so a bank is not penalized for source that cannot be reached in that compiled firmware image; shared production math remains in scope. gcovr source filters are regular expressions relative to the repository working directory. Coverage is a regression signal, not the definition of correctness. Mathematically meaningful branch, boundary, property and requirement coverage take precedence over artificially exercising unreachable defensive code. The floors must not be lowered merely to make a change pass. The only uncovered executable lines in the current strict-host baseline are the two defensive Perlin output-clamp assignments: the verified gradient/noise amplitude contract reaches the 12-bit endpoints but does not exceed them, so forcing those branches would require an invalid internal state rather than a meaningful input case.
 
 ## Requirements traceability
 
-`test/requirements-traceability.json` maps acceptance criteria to concrete `RUN_TEST()` cases. The current `Unreleased` source contains **47 acceptance criteria and 145 native test cases across 26 suites**; the released 0.1.0 Classic baseline remains 32 criteria / 88 cases. CI runs `scripts/check_requirement_traceability.py`; missing suites, stale test names, duplicate IDs or gaps in the AC numbering fail early.
+`test/requirements-traceability.json` maps acceptance criteria to concrete `RUN_TEST()` cases. The current `Unreleased` source contains **52 acceptance criteria and 165 native test cases across 30 suites**; the released 0.1.0 Classic baseline remains 32 criteria / 88 cases. CI runs `scripts/check_requirement_traceability.py`; missing suites, stale test names, duplicate IDs or gaps in the AC numbering fail early.
 
 See [docs/testing/requirements-traceability.md](docs/testing/requirements-traceability.md).
 

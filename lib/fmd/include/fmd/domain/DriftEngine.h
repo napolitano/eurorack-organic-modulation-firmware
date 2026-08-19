@@ -38,6 +38,11 @@
 #include "fmd/domain/ambient/BreathAlgorithm.h"
 #include "fmd/domain/ambient/CurrentAlgorithm.h"
 #include "fmd/domain/ambient/FogAlgorithm.h"
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
+#include "fmd/domain/electronica/AcidAlgorithm.h"
+#include "fmd/domain/electronica/PolymeterAlgorithm.h"
+#include "fmd/domain/electronica/PumpAlgorithm.h"
+#include "fmd/domain/electronica/ShuffleAlgorithm.h"
 #endif
 
 namespace fmd {
@@ -96,6 +101,11 @@ class DriftEngine {
   AnchorAlgorithm anchorAlgorithm_;       ///< Ambient mean-reverting stochastic motion.
   BreathAlgorithm breathAlgorithm_;       ///< Ambient recurrent swell state.
   FogAlgorithm fogAlgorithm_;             ///< Ambient bounded cloudlet process.
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
+  PumpAlgorithm pumpAlgorithm_;            ///< Electronica duck/recovery contour.
+  AcidAlgorithm acidAlgorithm_;            ///< Electronica deterministic riff contour.
+  ShuffleAlgorithm shuffleAlgorithm_;      ///< Electronica long/short timing state.
+  PolymeterAlgorithm polymeterAlgorithm_;  ///< Electronica polymetric accent state.
 #endif
 };
 
@@ -106,7 +116,7 @@ class DriftEngine {
  * @return Algorithm occupying that DIP slot in the selected AlgorithmBank.
  *
  * The electrical four-way mapping remains unchanged. Only the semantic contents
- * of each slot differ between Classic and Organic firmware images.
+ * of each slot differ between the compile-time firmware banks.
  */
 Algorithm algorithmFromConfig(bool configInput1Low, bool configInput2Low);
 

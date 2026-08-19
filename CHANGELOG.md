@@ -7,6 +7,10 @@ This changelog records release-relevant changes to the firmware and repository. 
 ### Added
 
 - Electronica-bank design specification defining Pump, Acid, Shuffle and Polymeter as four deterministic tempo/grid-oriented CV modes for house, acid, techno and adjacent electronic styles, including a duplication audit against all existing banks and the planned Percussion concepts.
+- Implemented the Electronica compile-time bank with Pump, Acid, Shuffle and Polymeter under the bank-oriented `domain/electronica/` structure, including a shared fixed-point Electronica math layer and dedicated Nano/native/coverage/sanitizer/timing environments.
+- Added four Electronica unit suites covering the exact 30–240 BPM mapping, Pump recovery contract, Acid permutation/masks, Shuffle 3:1 timing invariant and Polymeter meter/LCM contracts; current `Unreleased` coverage is 52 acceptance criteria and 165 native test cases across 30 suites.
+- Added `README-BANK-ELECTRONICA.md` with DIP mapping, implemented control semantics, mathematical contracts and build/test commands.
+- Release tooling now recognizes Electronica as a fifth bank, prepares both Nano bootloader variants with per-image provenance, and blocks Electronica publication until the frozen user manual documents Electronica, Pump, Acid, Shuffle and Polymeter.
 - Dedicated engineering analyses for all four proposed Electronica algorithms, covering mathematical contracts, provenance boundaries, ATmega328P cost, verification strategy and explicit musical assessment. The initial `Groove` working title is refined to `Shuffle` so the mode specifies deterministic long-short timing rather than an undefined combination of groove dimensions.
 - Ambient-bank design specification defining Current, Anchor, Breath and Fog as four distinct forms of long-form continuous modulation, with an explicit duplication audit against Classic, Organic and Generative.
 - Dedicated engineering analyses for all four Ambient algorithms, covering mathematical foundations, control contracts, ATmega328P feasibility, verification strategy and explicit musical assessment.
@@ -32,14 +36,14 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Dedicated Organic PlatformIO build, native-test, sanitizer, coverage and timing environments for both Nano bootloader variants where applicable.
 - Dedicated mathematical unit suites and developer analyses for all four Organic algorithms plus a bank-level architecture/control-contract document.
 - Acceptance criteria AC-33 through AC-37 introduced compile-time bank selection and the four Organic mathematical contracts.
-- Tagged-release packaging supports Classic, Organic, Generative and Ambient firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
+- Tagged-release packaging supports Classic, Organic, Generative, Ambient and Electronica firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
 - The release workflow now enforces an explicit bank-aware artifact contract before checksums/upload: every selected bank must provide non-empty new/old-bootloader HEX and ELF images plus matching build-provenance records, and unexpected firmware-bank artifacts fail the release.
 - Expanded user manual covering all four compile-time banks and all sixteen algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for the Generative and Ambient banks.
 - Nine deterministic true-vector Organic-bank documentation assets plus a generator: four bank-specific DIP-switch diagrams and five explanatory figures for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor.
 - New vector front/back manual covers that identify Classic, Organic, Generative and Ambient and the current sixteen-algorithm scope.
 
 ### Changed
-- Refactored the portable domain source tree so bank-owned algorithms and bank-specific math are grouped under matching `domain/classic`, `domain/organic`, `domain/generative` and `domain/ambient` subdirectories. Shared `DriftEngine`, types, fixed-point/frequency/RNG support and cross-bank algorithm math remain at the domain root; include paths, tests and architecture/contributor documentation were updated without changing algorithm behavior.
+- Refactored the portable domain source tree so bank-owned algorithms and bank-specific math are grouped under matching `domain/classic`, `domain/organic`, `domain/generative`, `domain/ambient` and `domain/electronica` subdirectories. Shared `DriftEngine`, types, fixed-point/frequency/RNG support and cross-bank algorithm math remain at the domain root; include paths, tests and architecture/contributor documentation were updated without changing algorithm behavior.
 - Expanded the user manual and publication documentation to cover the Ambient bank (Current, Anchor, Breath and Fog), bringing the maintained end-user scope to four banks and sixteen algorithms. Added bank-specific DIP diagrams, four deterministic Ambient explanatory SVGs, mathematical foundations, musical-value/origin entries and updated four-bank release documentation.
 
 - User manual Algorithm banks introduction now explains the expanded sixteen-algorithm potential across four banks, the unavoidable four-selector-state hardware boundary, a compact bank/slot table with DIP symbols, and a concise origin/musical-value table for all sixteen algorithms.
@@ -52,13 +56,13 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Release runs for the same tag now share a concurrency group; retriggering a tag cancels an obsolete in-progress run instead of consuming Actions time in parallel.
 - `DriftEngine` now owns and dispatches only the compile-time-selected algorithm bank, so inactive-bank algorithm state does not consume SRAM in the resulting firmware image.
 - Generic selection, integration, property and system tests are bank-aware and exercise the four slots of the active compile-time bank.
-- CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic, Organic, Generative and Ambient builds independently.
+- CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic, Organic, Generative, Ambient and Electronica builds independently.
 - Organic per-sample control mappings avoid general integer division in their hot paths where a bounded power-of-two mapping provides the documented behavior.
 - README, testing documentation and algorithm-analysis index now describe the compile-time bank model and the Organic control/DIP mapping.
 - README and release-process documentation now explain multi-bank release files, bootloader variants, bank-vs-DIP selection boundary and the versioned release manifest.
 - Tagged releases emit separate build-provenance records for every selected bank/bootloader firmware variant instead of describing only one environment per bank.
 - Release-note integrity text now derives the published multi-bank firmware set from the tag, alongside the versioned manual, firmware-artifact manifest, provenance files and checksum manifests.
-- Tagged releases now publish the frozen versioned manual ODT alongside the PDF, and release/rebuild jobs refuse to use the live development manual for tags created after the freeze mechanism was introduced. Historical pre-freeze tags retain an explicit tag-pinned legacy-source fallback. Generative and Ambient releases are additionally blocked unless the frozen manual source documents the corresponding bank and all four algorithms.
+- Tagged releases now publish the frozen versioned manual ODT alongside the PDF, and release/rebuild jobs refuse to use the live development manual for tags created after the freeze mechanism was introduced. Historical pre-freeze tags retain an explicit tag-pinned legacy-source fallback. Generative, Ambient and Electronica releases are additionally blocked unless the frozen manual source documents the corresponding bank and all four algorithms.
 
 ## 0.1.0 — 2026-08-19
 

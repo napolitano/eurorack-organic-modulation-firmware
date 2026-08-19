@@ -19,7 +19,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", required=True)
     parser.add_argument("--environment", default="nanoatmega328new")
-    parser.add_argument("--bank", choices=("classic", "organic", "generative", "ambient"), required=True)
+    parser.add_argument("--bank", choices=("classic", "organic", "generative", "ambient", "electronica"), required=True)
     parser.add_argument("--git-commit", default="")
     parser.add_argument("--git-ref", default="")
     args = parser.parse_args()
