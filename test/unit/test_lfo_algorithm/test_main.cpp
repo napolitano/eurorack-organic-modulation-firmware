@@ -15,7 +15,7 @@
 #include <cstdint>
 
 #include "fmd/domain/AlgorithmMath.h"
-#include "fmd/domain/LfoAlgorithm.h"
+#include "fmd/domain/classic/LfoAlgorithm.h"
 #include "fmd/domain/FrequencyMapping.h"
 #include "MemoryReferenceTables.h"
 

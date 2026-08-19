@@ -9,7 +9,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-#include "fmd/domain/UrnAlgorithm.h"
+#include "fmd/domain/generative/UrnAlgorithm.h"
 
 #include "fmd/domain/AlgorithmMath.h"
 #include "fmd/domain/FrequencyMapping.h"

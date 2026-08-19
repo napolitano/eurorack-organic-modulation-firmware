@@ -13,6 +13,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Added four Ambient unit suites covering Current ratio/weight contracts, Anchor mean reversion, Breath cycle topology and Fog cloudlet/occupancy behavior; current `Unreleased` coverage is 47 acceptance criteria and 145 native test cases across 26 suites.
 - Added `README-BANK-AMBIENT.md` with bank-specific DIP mapping, controls, implemented mathematical contracts and build/test commands.
 - Release tooling now recognizes Ambient as a fourth bank, packages both Nano bootloader variants with per-image provenance, and refuses an Ambient release until the frozen user manual documents Ambient, Current, Anchor, Breath and Fog.
+- Ambient release delivery is now guarded by an explicit workflow-structure regression test and artifact-set tests that require both Ambient HEX/ELF bootloader variants plus both Ambient BUILD-INFO provenance files before publication.
 - Generative-bank design specification defining Turing, Markov, Motif and Urn as four distinct forms of discrete musical memory, with a duplication audit against Classic and Organic.
 - Dedicated engineering analyses for all four Generative algorithms, including mathematical contracts, AVR cost/test strategy and explicit musical assessment.
 - Implemented the Generative compile-time bank with Turing, Markov, Motif and Urn production algorithms, shared pure integer math primitives and dedicated PlatformIO build/test/timing environments for both Nano bootloaders.
@@ -36,6 +37,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 - New vector front/back manual covers that identify Classic, Organic, Generative and Ambient and the current sixteen-algorithm scope.
 
 ### Changed
+- Refactored the portable domain source tree so bank-owned algorithms and bank-specific math are grouped under matching `domain/classic`, `domain/organic`, `domain/generative` and `domain/ambient` subdirectories. Shared `DriftEngine`, types, fixed-point/frequency/RNG support and cross-bank algorithm math remain at the domain root; include paths, tests and architecture/contributor documentation were updated without changing algorithm behavior.
 - Expanded the user manual and publication documentation to cover the Ambient bank (Current, Anchor, Breath and Fog), bringing the maintained end-user scope to four banks and sixteen algorithms. Added bank-specific DIP diagrams, four deterministic Ambient explanatory SVGs, mathematical foundations, musical-value/origin entries and updated four-bank release documentation.
 
 - User manual Algorithm banks introduction now explains the expanded sixteen-algorithm potential across four banks, the unavoidable four-selector-state hardware boundary, a compact bank/slot table with DIP symbols, and a concise origin/musical-value table for all sixteen algorithms.

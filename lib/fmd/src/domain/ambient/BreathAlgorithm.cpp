@@ -9,9 +9,9 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-#include "fmd/domain/BreathAlgorithm.h"
+#include "fmd/domain/ambient/BreathAlgorithm.h"
 
-#include "fmd/domain/AmbientAlgorithmMath.h"
+#include "fmd/domain/ambient/AmbientAlgorithmMath.h"
 #include "fmd/domain/AlgorithmMath.h"
 #include "fmd/domain/FrequencyMapping.h"
 

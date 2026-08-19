@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 
-#include "fmd/domain/AmbientAlgorithmMath.h"
+#include "fmd/domain/ambient/AmbientAlgorithmMath.h"
 #include "fmd/domain/ParallelLfsr.h"
 #include "fmd/domain/Types.h"
 #include "fmd/ports/ReferenceTables.h"

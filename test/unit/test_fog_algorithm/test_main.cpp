@@ -12,8 +12,8 @@
 #include <unity.h>
 
 #include "MemoryReferenceTables.h"
-#include "fmd/domain/AmbientAlgorithmMath.h"
-#include "fmd/domain/FogAlgorithm.h"
+#include "fmd/domain/ambient/AmbientAlgorithmMath.h"
+#include "fmd/domain/ambient/FogAlgorithm.h"
 
 void test_fog_kernel_has_exact_endpoints_peak_and_symmetry() {
   TEST_ASSERT_EQUAL_UINT16(0U, fmd::fogmath::kernelQ0F12(0U));

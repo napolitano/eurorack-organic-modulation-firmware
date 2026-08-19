@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 
-#include "fmd/domain/GenerativeAlgorithmMath.h"
+#include "fmd/domain/generative/GenerativeAlgorithmMath.h"
 #include "fmd/domain/ParallelLfsr.h"
 #include "fmd/domain/Types.h"
 #include "fmd/ports/ReferenceTables.h"

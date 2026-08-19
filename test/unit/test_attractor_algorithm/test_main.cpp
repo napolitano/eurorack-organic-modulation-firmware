@@ -14,8 +14,8 @@
 #include <cstdint>
 #include <cstdlib>
 
-#include "fmd/domain/AttractorAlgorithm.h"
-#include "fmd/domain/OrganicAlgorithmMath.h"
+#include "fmd/domain/organic/AttractorAlgorithm.h"
+#include "fmd/domain/organic/OrganicAlgorithmMath.h"
 #include "MemoryReferenceTables.h"
 
 void test_attractor_texture_maps_monotonically_to_documented_henon_parameter_range() {

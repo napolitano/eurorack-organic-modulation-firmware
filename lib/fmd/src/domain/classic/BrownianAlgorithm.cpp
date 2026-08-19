@@ -9,7 +9,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-#include "fmd/domain/BrownianAlgorithm.h"
+#include "fmd/domain/classic/BrownianAlgorithm.h"
 
 #include "fmd/domain/AlgorithmMath.h"
 

@@ -27,7 +27,21 @@ def main() -> int:
         root = Path(temp_dir)
         populate(root, version, banks)
         assert checker.validate_release_artifacts(root, version, banks) == []
+        assert len(checker.expected_firmware_names(version, banks)) == 16
+        assert len(checker.expected_build_info_names(version, banks)) == 8
 
+        ambient_elf = root / f"fm-drift-ambient-nano-old-bootloader.{version}.elf"
+        ambient_elf.unlink()
+        errors = checker.validate_release_artifacts(root, version, banks)
+        assert any("ambient-nano-old-bootloader" in error for error in errors)
+
+        populate(root, version, banks)
+        ambient_build_info = root / f"BUILD-INFO-ambient-nano-new.{version}.txt"
+        ambient_build_info.unlink()
+        errors = checker.validate_release_artifacts(root, version, banks)
+        assert any("BUILD-INFO-ambient-nano-new" in error for error in errors)
+
+        populate(root, version, banks)
         generative_hex = root / f"fm-drift-generative-nano-new-bootloader.{version}.hex"
         generative_hex.unlink()
         errors = checker.validate_release_artifacts(root, version, banks)
@@ -44,6 +58,14 @@ def main() -> int:
         classic = ("classic",)
         populate(root, "0.1.0", classic)
         assert checker.validate_release_artifacts(root, "0.1.0", classic) == []
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        root = Path(temp_dir)
+        classic_ambient = ("classic", "ambient")
+        populate(root, version, classic_ambient)
+        assert checker.validate_release_artifacts(root, version, classic_ambient) == []
+        assert len(checker.expected_firmware_names(version, classic_ambient)) == 8
+        assert len(checker.expected_build_info_names(version, classic_ambient)) == 4
 
     print("release artifact set tooling: passed")
     return 0

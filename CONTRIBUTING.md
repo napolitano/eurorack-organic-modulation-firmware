@@ -64,6 +64,7 @@ The current portable-code floor is 95% lines / 75% branches. Do not lower it mer
 
 - Use C++17 as configured by PlatformIO.
 - Keep Arduino/AVR APIs out of `lib/fmd`; hardware access belongs under `src/platform/nano_atmega328p/`.
+- Keep bank-owned algorithm classes and bank-specific math under `lib/fmd/include/fmd/domain/<bank>/` and `lib/fmd/src/domain/<bank>/`; only genuinely cross-bank domain support belongs directly under `domain/`.
 - Keep `src/main.cpp` a thin composition entry point.
 - Avoid dynamic allocation in the real-time firmware path.
 - Keep code explicit enough that state transitions, fixed-point widths and timing costs remain reviewable.

@@ -9,7 +9,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-#include "fmd/domain/LfoAlgorithm.h"
+#include "fmd/domain/classic/LfoAlgorithm.h"
 
 #include "fmd/domain/AlgorithmMath.h"
 #include "fmd/domain/FrequencyMapping.h"

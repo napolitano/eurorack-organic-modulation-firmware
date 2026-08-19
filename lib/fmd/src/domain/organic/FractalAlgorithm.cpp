@@ -9,11 +9,11 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-#include "fmd/domain/FractalAlgorithm.h"
+#include "fmd/domain/organic/FractalAlgorithm.h"
 
 #include "fmd/domain/AlgorithmMath.h"
 #include "fmd/domain/FrequencyMapping.h"
-#include "fmd/domain/OrganicAlgorithmMath.h"
+#include "fmd/domain/organic/OrganicAlgorithmMath.h"
 
 #include <stdint.h>
 

@@ -9,7 +9,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-#include "fmd/domain/GenerativeAlgorithmMath.h"
+#include "fmd/domain/generative/GenerativeAlgorithmMath.h"
 
 #include "fmd/domain/Types.h"
 

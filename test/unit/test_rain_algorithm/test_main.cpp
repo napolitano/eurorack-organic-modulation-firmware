@@ -13,8 +13,8 @@
 
 #include <cstdint>
 
-#include "fmd/domain/OrganicAlgorithmMath.h"
-#include "fmd/domain/RainAlgorithm.h"
+#include "fmd/domain/organic/OrganicAlgorithmMath.h"
+#include "fmd/domain/organic/RainAlgorithm.h"
 
 void test_rain_density_threshold_is_quadratic_monotonic_and_sparse_at_low_settings() {
   TEST_ASSERT_EQUAL_UINT16(0U, fmd::rainmath::eventCutoff(0U));

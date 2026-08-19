@@ -158,6 +158,9 @@ jobs:
           if [[ -f scripts/test_check_release_artifact_set.py ]]; then
             PYTHONPATH=scripts python scripts/test_check_release_artifact_set.py
           fi
+          if [[ -f scripts/test_release_workflow_bank_contract.py ]]; then
+            python scripts/test_release_workflow_bank_contract.py
+          fi
           if [[ -f scripts/test_freeze_user_manual.py ]]; then
             python scripts/test_freeze_user_manual.py
           fi

@@ -13,8 +13,8 @@
 
 #include <cstdint>
 
-#include "fmd/domain/FractalAlgorithm.h"
-#include "fmd/domain/OrganicAlgorithmMath.h"
+#include "fmd/domain/organic/FractalAlgorithm.h"
+#include "fmd/domain/organic/OrganicAlgorithmMath.h"
 #include "MemoryReferenceTables.h"
 
 void test_fractal_octave_weights_have_exact_constant_sum_and_documented_endpoints() {

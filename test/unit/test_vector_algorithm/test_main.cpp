@@ -13,8 +13,8 @@
 
 #include <cstdint>
 
-#include "fmd/domain/OrganicAlgorithmMath.h"
-#include "fmd/domain/VectorAlgorithm.h"
+#include "fmd/domain/organic/OrganicAlgorithmMath.h"
+#include "fmd/domain/organic/VectorAlgorithm.h"
 #include "MemoryReferenceTables.h"
 
 void test_vector_triangle_projection_has_expected_turning_points_and_branch_monotonicity() {

@@ -12,8 +12,8 @@
 #include <unity.h>
 
 #include "MemoryReferenceTables.h"
-#include "fmd/domain/AmbientAlgorithmMath.h"
-#include "fmd/domain/AnchorAlgorithm.h"
+#include "fmd/domain/ambient/AmbientAlgorithmMath.h"
+#include "fmd/domain/ambient/AnchorAlgorithm.h"
 
 void test_anchor_spread_has_exact_zero_and_full_endpoints() {
   TEST_ASSERT_EQUAL_UINT16(0U, fmd::anchormath::spreadQ1F15(0U));

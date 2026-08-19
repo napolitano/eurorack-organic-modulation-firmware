@@ -19,25 +19,25 @@
 #include "fmd/ports/ReferenceTables.h"
 
 #if FMD_ALGORITHM_BANK == FMD_BANK_CLASSIC
-#include "fmd/domain/BezierAlgorithm.h"
-#include "fmd/domain/BrownianAlgorithm.h"
-#include "fmd/domain/LfoAlgorithm.h"
-#include "fmd/domain/PerlinAlgorithm.h"
+#include "fmd/domain/classic/BezierAlgorithm.h"
+#include "fmd/domain/classic/BrownianAlgorithm.h"
+#include "fmd/domain/classic/LfoAlgorithm.h"
+#include "fmd/domain/classic/PerlinAlgorithm.h"
 #elif FMD_ALGORITHM_BANK == FMD_BANK_ORGANIC
-#include "fmd/domain/AttractorAlgorithm.h"
-#include "fmd/domain/FractalAlgorithm.h"
-#include "fmd/domain/RainAlgorithm.h"
-#include "fmd/domain/VectorAlgorithm.h"
+#include "fmd/domain/organic/AttractorAlgorithm.h"
+#include "fmd/domain/organic/FractalAlgorithm.h"
+#include "fmd/domain/organic/RainAlgorithm.h"
+#include "fmd/domain/organic/VectorAlgorithm.h"
 #elif FMD_ALGORITHM_BANK == FMD_BANK_GENERATIVE
-#include "fmd/domain/MarkovAlgorithm.h"
-#include "fmd/domain/MotifAlgorithm.h"
-#include "fmd/domain/TuringAlgorithm.h"
-#include "fmd/domain/UrnAlgorithm.h"
+#include "fmd/domain/generative/MarkovAlgorithm.h"
+#include "fmd/domain/generative/MotifAlgorithm.h"
+#include "fmd/domain/generative/TuringAlgorithm.h"
+#include "fmd/domain/generative/UrnAlgorithm.h"
 #elif FMD_ALGORITHM_BANK == FMD_BANK_AMBIENT
-#include "fmd/domain/AnchorAlgorithm.h"
-#include "fmd/domain/BreathAlgorithm.h"
-#include "fmd/domain/CurrentAlgorithm.h"
-#include "fmd/domain/FogAlgorithm.h"
+#include "fmd/domain/ambient/AnchorAlgorithm.h"
+#include "fmd/domain/ambient/BreathAlgorithm.h"
+#include "fmd/domain/ambient/CurrentAlgorithm.h"
+#include "fmd/domain/ambient/FogAlgorithm.h"
 #endif
 
 namespace fmd {

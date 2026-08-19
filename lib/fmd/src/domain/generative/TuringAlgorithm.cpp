@@ -9,11 +9,11 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-#include "fmd/domain/TuringAlgorithm.h"
+#include "fmd/domain/generative/TuringAlgorithm.h"
 
 #include "fmd/domain/AlgorithmMath.h"
 #include "fmd/domain/FrequencyMapping.h"
-#include "fmd/domain/GenerativeAlgorithmMath.h"
+#include "fmd/domain/generative/GenerativeAlgorithmMath.h"
 
 namespace fmd {
 

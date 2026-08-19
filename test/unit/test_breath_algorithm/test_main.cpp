@@ -12,8 +12,8 @@
 #include <unity.h>
 
 #include "MemoryReferenceTables.h"
-#include "fmd/domain/AmbientAlgorithmMath.h"
-#include "fmd/domain/BreathAlgorithm.h"
+#include "fmd/domain/ambient/AmbientAlgorithmMath.h"
+#include "fmd/domain/ambient/BreathAlgorithm.h"
 
 void test_breath_zero_texture_parameter_mapping_is_nominal() {
   constexpr uint16_t samples[] = {0U, 1U, 32768U, 65535U};

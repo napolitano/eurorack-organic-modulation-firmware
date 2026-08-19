@@ -13,8 +13,8 @@
 
 #include <cstdint>
 
-#include "fmd/domain/GenerativeAlgorithmMath.h"
-#include "fmd/domain/TuringAlgorithm.h"
+#include "fmd/domain/generative/GenerativeAlgorithmMath.h"
+#include "fmd/domain/generative/TuringAlgorithm.h"
 #include "MemoryReferenceTables.h"
 
 void test_turing_mutation_mapping_has_exact_zero_and_half_probability_endpoints() {

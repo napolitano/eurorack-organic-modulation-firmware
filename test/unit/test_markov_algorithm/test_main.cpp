@@ -13,8 +13,8 @@
 
 #include <cstdint>
 
-#include "fmd/domain/GenerativeAlgorithmMath.h"
-#include "fmd/domain/MarkovAlgorithm.h"
+#include "fmd/domain/generative/GenerativeAlgorithmMath.h"
+#include "fmd/domain/generative/MarkovAlgorithm.h"
 #include "MemoryReferenceTables.h"
 
 void test_markov_structured_kernel_has_exact_documented_partition() {

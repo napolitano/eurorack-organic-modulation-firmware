@@ -9,9 +9,9 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-#include "fmd/domain/RainAlgorithm.h"
+#include "fmd/domain/organic/RainAlgorithm.h"
 
-#include "fmd/domain/OrganicAlgorithmMath.h"
+#include "fmd/domain/organic/OrganicAlgorithmMath.h"
 
 #include <stdint.h>
 

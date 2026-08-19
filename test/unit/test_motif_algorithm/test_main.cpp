@@ -13,8 +13,8 @@
 
 #include <cstdint>
 
-#include "fmd/domain/GenerativeAlgorithmMath.h"
-#include "fmd/domain/MotifAlgorithm.h"
+#include "fmd/domain/generative/GenerativeAlgorithmMath.h"
+#include "fmd/domain/generative/MotifAlgorithm.h"
 #include "MemoryReferenceTables.h"
 
 namespace {

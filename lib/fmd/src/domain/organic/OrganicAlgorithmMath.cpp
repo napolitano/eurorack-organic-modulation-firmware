@@ -9,7 +9,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-#include "fmd/domain/OrganicAlgorithmMath.h"
+#include "fmd/domain/organic/OrganicAlgorithmMath.h"
 
 #include "fmd/domain/Types.h"
 

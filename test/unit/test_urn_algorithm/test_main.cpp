@@ -13,8 +13,8 @@
 
 #include <cstdint>
 
-#include "fmd/domain/GenerativeAlgorithmMath.h"
-#include "fmd/domain/UrnAlgorithm.h"
+#include "fmd/domain/generative/GenerativeAlgorithmMath.h"
+#include "fmd/domain/generative/UrnAlgorithm.h"
 #include "MemoryReferenceTables.h"
 
 void test_urn_relaxation_moves_weights_monotonically_toward_baseline() {

@@ -14,7 +14,7 @@
 #include <cstdint>
 
 #include "fmd/domain/AlgorithmMath.h"
-#include "fmd/domain/LfoAlgorithm.h"
+#include "fmd/domain/classic/LfoAlgorithm.h"
 #include "MemoryReferenceTables.h"
 
 void test_brownian_texture_mapping_no_longer_has_1020_regime_switch() {

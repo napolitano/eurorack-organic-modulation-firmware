@@ -15,7 +15,7 @@
 #include <cstdint>
 
 #include "fmd/domain/AlgorithmMath.h"
-#include "fmd/domain/BezierAlgorithm.h"
+#include "fmd/domain/classic/BezierAlgorithm.h"
 #include "fmd/domain/FrequencyMapping.h"
 #include "fmd/domain/ParallelLfsr.h"
 #include "MemoryReferenceTables.h"

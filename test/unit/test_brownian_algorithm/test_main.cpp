@@ -14,7 +14,7 @@
 #include <cstdint>
 
 #include "fmd/domain/AlgorithmMath.h"
-#include "fmd/domain/BrownianAlgorithm.h"
+#include "fmd/domain/classic/BrownianAlgorithm.h"
 
 void test_brownian_step_size_and_event_probability_follow_documented_linear_laws() {
   for (uint16_t speed = 0U; speed <= 1023U; ++speed) {

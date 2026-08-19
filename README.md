@@ -151,7 +151,9 @@ FirmwareController              src/platform/nano_atmega328p/
         |
  compile-time bank
    /    |    |    \
- four selected algorithms
+classic organic generative ambient
+   \    |    |    /
+ bank-local algorithms          lib/fmd/domain/<bank>/
         |
 minimal ports                   lib/fmd/ports/
         |
@@ -159,6 +161,8 @@ AVR ADC / DAC / LED / tables    src/platform/nano_atmega328p/
 ```
 
 The portable core never calls `analogRead()`, `digitalWrite()`, `SPI.transfer()`, AVR registers or Arduino timing functions. Hardware dependencies terminate at small ports implemented by the Nano/ATmega328P platform layer.
+
+Algorithm implementations are grouped by compile-time bank in matching public-header and source subdirectories: `domain/classic/`, `domain/organic/`, `domain/generative/` and `domain/ambient/`. Shared engine, type, fixed-point, frequency and RNG support remains directly under `domain/` because it is used across bank boundaries.
 
 ### Engineering goals
 

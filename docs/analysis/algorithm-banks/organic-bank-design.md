@@ -14,12 +14,16 @@ This constraint is especially important for future pitch-oriented banks: analog 
 
 ## Compile-time selection
 
-`lib/fmd/include/fmd/config/AlgorithmBankConfig.h` defines two banks:
+`lib/fmd/include/fmd/config/AlgorithmBankConfig.h` defines the currently supported compile-time banks:
 
 ```text
-FMD_BANK_CLASSIC = 0
-FMD_BANK_ORGANIC = 1
+FMD_BANK_CLASSIC    = 0
+FMD_BANK_ORGANIC    = 1
+FMD_BANK_GENERATIVE = 2
+FMD_BANK_AMBIENT    = 3
 ```
+
+This document focuses on the Organic bank; the later Generative and Ambient banks have their own bank-design documents.
 
 If `FMD_ALGORITHM_BANK` is not defined, the firmware compiles as Classic. PlatformIO provides explicit Organic environments, for example:
 

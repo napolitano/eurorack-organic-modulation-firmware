@@ -14,8 +14,8 @@
 #include <cmath>
 
 #include "MemoryReferenceTables.h"
-#include "fmd/domain/AmbientAlgorithmMath.h"
-#include "fmd/domain/CurrentAlgorithm.h"
+#include "fmd/domain/ambient/AmbientAlgorithmMath.h"
+#include "fmd/domain/ambient/CurrentAlgorithm.h"
 
 void test_current_weights_have_exact_endpoints_and_constant_sum() {
   const auto low = fmd::currentmath::weights(0U);

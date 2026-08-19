@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 
-#include "fmd/domain/OrganicAlgorithmMath.h"
+#include "fmd/domain/organic/OrganicAlgorithmMath.h"
 #include "fmd/domain/Types.h"
 #include "fmd/ports/ReferenceTables.h"
 
