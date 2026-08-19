@@ -20,9 +20,9 @@ void test_control_grid_preserves_12bit_output_invariant() {
       0U, 1U, 127U, 511U, 512U, 1019U, 1020U, 1023U,
   };
 
-  for (uint8_t algorithmIndex = 0U; algorithmIndex < 4U; ++algorithmIndex) {
+  for (uint8_t slotIndex = 0U; slotIndex < 4U; ++slotIndex) {
     fmd::DriftEngine engine(
-        static_cast<fmd::Algorithm>(algorithmIndex), 0xBEEFU, referenceTables);
+        fmd::algorithmForBankSlot(slotIndex), 0xBEEFU, referenceTables);
 
     for (uint16_t speedCv : boundaryValues) {
       for (uint16_t textureCv : boundaryValues) {

@@ -19,7 +19,7 @@
 
 Drift is a **4 HP Eurorack modulation source** that produces evolving 0–10 V control voltages. Its defining idea is controlled movement: instead of choosing between a conventional repeating LFO and completely uncorrelated random values, Drift offers several ways to generate motion that has **continuity, memory, shape or controlled unpredictability**.
 
-The module has two main controls — **Speed** and **Texture** — and CV inputs for both. Four algorithms give those controls different musical meanings:
+The module has two main controls — **Speed** and **Texture** — and CV inputs for both. The default **Classic bank** preserves the four Drift algorithms and gives those controls different musical meanings:
 
 | Algorithm | Character | What makes it useful musically |
 |---|---|---|
@@ -27,6 +27,8 @@ The module has two main controls — **Speed** and **Texture** — and CV inputs
 | **Brownian** | Bounded random walk with memory | Wandering modulation that tends to continue from where it already is instead of jumping to unrelated values |
 | **Bézier** | Random destinations connected by shaped transitions | Deliberate-looking rises and falls with controllable curvature and segment timing variation |
 | **LFO** | Skewable triangle through rising/falling saw | Deterministic periodic modulation when repeatability is more useful than randomness |
+
+Current `Unreleased` development also contains an optional compile-time **Organic bank** with Fractal, Vector, Rain and Attractor modes. Classic remains the default and the 0.1.0 compatibility baseline.
 
 > [!TIP]
 > With both configuration switches left open, Drift starts in **Perlin mode**, matching the original hardware default.
@@ -37,7 +39,8 @@ The upstream firmware already contains a thoughtful fixed-point implementation o
 
 The project therefore aims to:
 
-- preserve the recognisable Drift instrument and the four original algorithm concepts;
+- preserve the recognisable Drift instrument and the four original algorithm concepts as the default Classic bank;
+- allow compile-time alternative banks to explore new modulation models without changing the original hardware or consuming runtime resources in Classic builds;
 - separate portable signal-processing code from Arduino/AVR hardware access;
 - verify each algorithm against its mathematical definition, not merely against historical output bytes;
 - retain upstream behavior where it represents intentional musical design;
@@ -52,7 +55,7 @@ The project therefore aims to:
 ## Quick start
 
 > [!IMPORTANT]
-> **Choose the algorithm before power-up.** The two rear DIP switches are sampled only during startup. Changing them while the module is running does not change the active algorithm; cycle the power after changing the switch setting.
+> **Choose the algorithm before power-up.** The two rear DIP switches are sampled only during startup. Changing them while the module is running does not change the active algorithm; cycle the power after changing the switch setting. The Quick Start below describes the default **Classic bank**. Alternative compile-time banks keep the same physical switch positions but assign different algorithms to them.
 
 ### 1. Know the front panel
 
@@ -137,6 +140,8 @@ For installation details, electrical ranges, full operating notes and the mathem
   - [Brownian — a random walk with memory](#brownian--a-random-walk-with-memory)
   - [Bézier — random destinations with shaped travel](#bézier--random-destinations-with-shaped-travel)
   - [LFO — deterministic skewed triangle and saws](#lfo--deterministic-skewed-triangle-and-saws)
+- [Alternative algorithm banks](#alternative-algorithm-banks)
+  - [Organic bank](#organic-bank)
 - [Original-firmware findings](#original-firmware-findings)
 - [Release history](#release-history)
 - [Engineering architecture](#engineering-architecture)
@@ -202,6 +207,86 @@ LFO mode is the non-random member of the family. It uses the same simple control
 
 Use the LFO when the modulation must repeat predictably or when asymmetric rise/fall timing is itself the musical gesture—for example filter sweeps, PWM, amplitude motion or rhythmic parameter animation.
 
+## Alternative algorithm banks
+
+The firmware can select an entire four-algorithm bank **at compile time**. The rear DIP switches still choose one of four slots at startup; the build decides which algorithm occupies each slot. The default remains `FMD_BANK_CLASSIC`, so ordinary `nanoatmega328new`, `nanoatmega328` and `native` environments preserve the 0.1.0 Classic behavior.
+
+This design is deliberately compile-time rather than runtime. Only the selected bank is owned by `DriftEngine`, so an experimental bank does not reserve algorithm state in a Classic image. It also keeps the hardware interaction unchanged: there is no hidden bank-selection gesture and no additional persistent setting.
+
+> [!IMPORTANT]
+> **Attenuation is not a firmware input.** On the original Drift hardware it scales the analogue signal after the DAC. Alternative algorithms may therefore describe it musically as output **Depth** or **Intensity**, but they cannot read its position or use it as an internal parameter such as pitch spread.
+
+### Organic bank
+
+The first alternative bank is the **Organic bank**, currently under `Unreleased`. It explores four forms of motion that are intentionally distinct from the Classic set:
+
+| Rear DIP 1 | Rear DIP 2 | Algorithm | Speed | Texture | Attenuation | Character |
+|---|---|---|---|---|---|---|
+| **OFF** | **OFF** | **Fractal** | Traversal rate | Roughness / multi-scale detail | Depth | Correlated noise layered over three time scales |
+| **ON** | **OFF** | **Vector** | Flow rate | Cross-axis coupling | Depth | Deterministic motion through a coupled two-dimensional toroidal field |
+| **OFF** | **ON** | **Rain** | Drop-tail decay speed | **Density** | **Intensity** | Shot-noise-inspired random impulses with overlapping decays |
+| **ON** | **ON** | **Attractor** | Travel/interpolation rate | Hénon parameter $a$ | Depth | Deterministic nonlinear motion around a Hénon attractor |
+
+The physical DIP truth table is identical to Classic; only the occupants of the four slots change. Selection is still sampled only at startup.
+
+#### Fractal — self-similar motion across scales
+
+Fractal combines three continuous gradient-noise layers at 1×, 4× and 16× phase speed. Texture redistributes a constant total gain from the broad layer toward the faster layers rather than simply increasing output amplitude. At minimum Texture only the macro layer is present; at maximum Texture the fixed weights are 512/320/192 over a denominator of 1024.
+
+```math
+F(t)=w_0(T)n(t)+w_1(T)n(4t)+w_2(T)n(16t),\qquad
+w_0+w_1+w_2=1
+```
+
+The result is procedural fractal noise inspired by multi-scale/fBm construction, but the firmware does **not** claim to implement an exact fractional Brownian motion process.
+
+#### Vector — coupled two-dimensional flow
+
+Vector maintains two phase coordinates on a torus. Each axis advances continuously, while Texture introduces bounded cross-coupling from the other axis. The scalar output is a projection of both bipolar triangle coordinates.
+
+```math
+\phi_x[n+1]=\phi_x[n]+\Delta_x\bigl(1+c(T)y[n]\bigr)
+```
+
+```math
+\phi_y[n+1]=\phi_y[n]+\Delta_y\bigl(1-c(T)x[n]\bigr)
+```
+
+At zero Texture the two phases are uncoupled; increasing Texture bends the path without requiring random numbers. Cross-coupling is bounded so both axes remain forward-moving.
+
+#### Rain — density-controlled stochastic impulses
+
+Rain treats Texture as **Density** and Speed as the decay speed of the aggregate envelope. Random arrivals add finite impulses; between arrivals the envelope leaks toward zero while preserving fractional decay residual, so quiet tails do not freeze at one code.
+
+```math
+y[n+1]=(1-\alpha(S))y[n]+\sum_i A_i\,\delta[n-n_i]
+```
+
+The arrival process is a discrete Bernoulli approximation to the impulse-arrival idea associated with shot noise, not a claim of an exact continuous-time Poisson process. The front-panel Attenuation control has a particularly natural role here: because it scales the analogue result, it is the final **Intensity** control.
+
+#### Attractor — deterministic nonlinear motion
+
+Attractor uses a fixed-point Hénon map. Texture selects $a$ from 1.20 to 1.40 while $b$ remains approximately 0.30; Speed determines how quickly the output travels between successive map states. Linear interpolation prevents the discrete map from becoming an audible/control-rate sample-and-hold staircase.
+
+```math
+x_{n+1}=1-a x_n^2+y_n
+```
+
+```math
+y_{n+1}=b x_n
+```
+
+Texture should be understood as **structure**, not a guaranteed monotonic "amount of chaos": nonlinear parameter sweeps can contain qualitatively different regimes.
+
+Build the bank with the dedicated PlatformIO environments, for example:
+
+```bash
+pio run -e nanoatmega328new_organic
+pio test -e native_organic
+```
+
+The compile-time contract and mathematical design are documented in [Organic algorithm bank design](docs/analysis/algorithm-banks/organic-bank-design.md). Each mode also has its own engineering analysis under [docs/analysis/algorithms](docs/analysis/algorithms/README.md).
+
 ### Hardware-visible signal order
 
 The portable `ControlFrame` preserves the original hardware-visible ADC order:
@@ -232,7 +317,7 @@ The upstream implementation remains the design reference. The table below summar
 > [!NOTE]
 > A correction is accepted only where the intended mathematics or state behavior can be stated and tested. Differences that are part of Drift's musical character are retained even when another implementation might be possible.
 
-See the [original firmware analysis](docs/analysis/original-firmware-analysis.md) and the four [algorithm analyses](docs/analysis/algorithms/README.md) for the full evidence chain.
+See the [original firmware analysis](docs/analysis/original-firmware-analysis.md) and the [algorithm analyses](docs/analysis/algorithms/README.md) for the full evidence chain. The upstream-finding table applies to the Classic bank; the project-defined Organic algorithms have separate design analyses.
 
 ## Release history
 
@@ -252,8 +337,10 @@ FirmwareController              src/platform/nano_atmega328p/
    DriftRuntime                 lib/fmd/application/
         |
     DriftEngine                 lib/fmd/domain/
+        |
+ compile-time bank
    /    |    |    \
-Perlin Brownian Bezier LFO
+ four selected algorithms
         |
 minimal ports                   lib/fmd/ports/
         |
@@ -283,7 +370,7 @@ The test strategy distinguishes **mathematical correctness**, **state-machine be
 
 Current native coverage includes:
 
-- dedicated mathematical suites for Perlin, Brownian, Bézier and LFO;
+- dedicated mathematical suites for all four Classic algorithms and all four Organic algorithms;
 - shared fixed-point, frequency, RNG and reference-table tests;
 - edge-case and long-run state-transition tests;
 - property/invariant tests across the control domain;
@@ -292,7 +379,7 @@ Current native coverage includes:
 - machine-checked acceptance-criteria traceability;
 - sanitizer and coverage environments.
 
-The 0.1.0 host baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
+The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. The current `Unreleased` source expands the repository to **107 native test cases across 18 suites** and **37 acceptance criteria** by adding bank-selection and Organic-algorithm verification. Classic and Organic coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
 
 AVR builds also carry explicit engineering headroom: **Flash must stay at or below 85% (26,112 / 30,720 bytes)** and **static SRAM at or below 65% (1,331 / 2,048 bytes)**. These are repository guardrails, deliberately stricter than the ATmega328P hard limits.
 
@@ -306,16 +393,28 @@ Each algorithm has a dedicated developer analysis that starts from the mathemati
 - [Brownian / bounded random walk](docs/analysis/algorithms/brownian-motion-analysis.md)
 - [Bézier random segments](docs/analysis/algorithms/bezier-random-walk-analysis.md)
 - [LFO](docs/analysis/algorithms/lfo-analysis.md)
+- [Fractal](docs/analysis/algorithms/fractal-analysis.md)
+- [Vector](docs/analysis/algorithms/vector-analysis.md)
+- [Rain](docs/analysis/algorithms/rain-analysis.md)
+- [Attractor / Hénon map](docs/analysis/algorithms/attractor-analysis.md)
+- [Organic bank architecture and control contract](docs/analysis/algorithm-banks/organic-bank-design.md)
 
 The common classification policy is documented in [docs/analysis/algorithms/README.md](docs/analysis/algorithms/README.md).
 
 ## Build
 
-Firmware builds:
+Classic firmware builds:
 
 ```bash
 pio run -e nanoatmega328new
 pio run -e nanoatmega328
+```
+
+Organic firmware builds:
+
+```bash
+pio run -e nanoatmega328new_organic
+pio run -e nanoatmega328_organic
 ```
 
 Host verification:
@@ -324,13 +423,18 @@ Host verification:
 pio test -e native
 pio test -e native_sanitized
 pio test -e native_coverage
+
+pio test -e native_organic
+pio test -e native_organic_sanitized
+pio test -e native_organic_coverage
+
 python scripts/check_requirement_traceability.py
 python scripts/check_code_documentation.py
 python scripts/check_markdown_footer.py
 python scripts/check_markdown_math.py
 ```
 
-Timing qualification uses the dedicated `nanoatmega328new_timing` environment.
+Timing qualification uses `nanoatmega328new_timing` for Classic and `nanoatmega328new_organic_timing` for Organic.
 
 ## User manual
 

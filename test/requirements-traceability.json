@@ -3,11 +3,11 @@
   "acceptance_criteria": [
     {
       "id": "AC-01",
-      "description": "Original four-way configuration mapping is preserved.",
+      "description": "The rear configuration inputs preserve the four-way electrical truth table for the compile-time-selected algorithm bank.",
       "tests": [
         {
           "file": "test/integration/test_selection/test_main.cpp",
-          "case": "test_original_config_pin_mapping"
+          "case": "test_selected_bank_config_pin_mapping"
         }
       ]
     },
@@ -454,6 +454,96 @@
         {
           "file": "test/unit/test_frequency/test_main.cpp",
           "case": "test_delta_time_clamps_out_of_range_adc_inputs_to_hardware_domain"
+        }
+      ]
+    },
+    {
+      "id": "AC-33",
+      "description": "Compile-time bank selection exposes exactly four deterministic DIP slots and falls back safely for an invalid slot index.",
+      "tests": [
+        {
+          "file": "test/integration/test_selection/test_main.cpp",
+          "case": "test_selected_bank_config_pin_mapping"
+        },
+        {
+          "file": "test/integration/test_selection/test_main.cpp",
+          "case": "test_invalid_bank_slot_falls_back_to_default_slot"
+        }
+      ]
+    },
+    {
+      "id": "AC-34",
+      "description": "Fractal Texture redistributes a constant total weight across three gradient-noise scales and the algorithm remains deterministic and inside the DAC domain.",
+      "tests": [
+        {
+          "file": "test/unit/test_fractal_algorithm/test_main.cpp",
+          "case": "test_fractal_octave_weights_have_exact_constant_sum_and_documented_endpoints"
+        },
+        {
+          "file": "test/unit/test_fractal_algorithm/test_main.cpp",
+          "case": "test_fractal_octave_mixer_matches_integer_weighted_reference"
+        },
+        {
+          "file": "test/unit/test_fractal_algorithm/test_main.cpp",
+          "case": "test_fractal_algorithm_is_deterministic_and_stays_in_12bit_domain"
+        }
+      ]
+    },
+    {
+      "id": "AC-35",
+      "description": "Vector uses continuous bipolar toroidal projections, bounded cross-coupling and a deterministic 12-bit scalar projection.",
+      "tests": [
+        {
+          "file": "test/unit/test_vector_algorithm/test_main.cpp",
+          "case": "test_vector_triangle_projection_has_expected_turning_points_and_branch_monotonicity"
+        },
+        {
+          "file": "test/unit/test_vector_algorithm/test_main.cpp",
+          "case": "test_vector_zero_texture_is_uncoupled_and_full_texture_remains_forward_bounded"
+        },
+        {
+          "file": "test/unit/test_vector_algorithm/test_main.cpp",
+          "case": "test_vector_algorithm_is_deterministic_and_texture_changes_flow"
+        }
+      ]
+    },
+    {
+      "id": "AC-36",
+      "description": "Rain Density and Speed follow documented monotonic event/decay laws, fractional decay reaches zero without a truncation deadband, and fixed seeds are deterministic.",
+      "tests": [
+        {
+          "file": "test/unit/test_rain_algorithm/test_main.cpp",
+          "case": "test_rain_density_threshold_is_quadratic_monotonic_and_sparse_at_low_settings"
+        },
+        {
+          "file": "test/unit/test_rain_algorithm/test_main.cpp",
+          "case": "test_rain_decay_speed_mapping_is_monotonic_with_exact_endpoints"
+        },
+        {
+          "file": "test/unit/test_rain_algorithm/test_main.cpp",
+          "case": "test_rain_fractional_decay_eventually_moves_subcode_tail_to_zero"
+        },
+        {
+          "file": "test/unit/test_rain_algorithm/test_main.cpp",
+          "case": "test_rain_zero_density_is_silent_and_fixed_seed_sequence_is_deterministic"
+        }
+      ]
+    },
+    {
+      "id": "AC-37",
+      "description": "Attractor implements the documented fixed-point Hénon map over the complete Texture parameter range, remains bounded and emits deterministic 12-bit interpolated output.",
+      "tests": [
+        {
+          "file": "test/unit/test_attractor_algorithm/test_main.cpp",
+          "case": "test_attractor_henon_iteration_matches_canonical_equation_at_known_points"
+        },
+        {
+          "file": "test/unit/test_attractor_algorithm/test_main.cpp",
+          "case": "test_attractor_fixed_point_orbits_stay_inside_q2f14_domain_for_complete_texture_range"
+        },
+        {
+          "file": "test/unit/test_attractor_algorithm/test_main.cpp",
+          "case": "test_attractor_algorithm_is_deterministic_and_stays_in_12bit_domain"
         }
       ]
     }

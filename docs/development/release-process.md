@@ -10,7 +10,7 @@ All release-relevant work is recorded under:
 ## Unreleased
 ```
 
-Do not invent a versioned changelog heading during ordinary development. During explicit release preparation, `lib/fmd/library.json` is set to the release version and a matching versioned changelog section is created. The current prepared release is `0.1.0`.
+Do not invent a versioned changelog heading during ordinary development. During explicit release preparation, `lib/fmd/library.json` is set to the release version and a matching versioned changelog section is created. Release `0.1.0` is the current published compatibility baseline; post-0.1.0 work remains under `Unreleased` until the next release is explicitly prepared.
 
 ## 2. Prepare a release
 
@@ -24,17 +24,17 @@ When a release is explicitly approved:
 6. write one concise prose paragraph under that heading (maximum seven non-empty source lines);
 7. leave a fresh `## Unreleased` section above the release history;
 8. validate the maintained user-manual source and publication tooling;
-9. run all tests, coverage, both AVR builds, resource-budget checks and timing-probe build;
+9. run Classic and Organic native tests/coverage/sanitizers, both bootloader builds for each bank, resource-budget checks and both timing-probe builds;
 10. commit the prepared release state;
 11. create and push the version tag `vX.Y.Z`.
 
 The AVR resource-budget check reserves deliberate headroom: release builds must remain at or below **85% of the 30,720-byte application flash budget (26,112 bytes)** and **65% of the 2,048-byte static SRAM budget (1,331 bytes)**. PlatformIO still enforces the absolute MCU limits; these repository gates fail earlier by design.
 
-For the prepared first release, the final two local operations are therefore:
+For any prepared release, the final operations use the chosen version, for example:
 
 ```bash
-git tag -a v0.1.0 -m "Release 0.1.0"
-git push origin main v0.1.0
+git tag -a vX.Y.Z -m "Release X.Y.Z"
+git push origin main vX.Y.Z
 ```
 
 Do not create the tag until the prepared release commit is the exact commit intended for publication.
@@ -54,7 +54,7 @@ The workflow intentionally does not use generic GitHub auto-generated notes beca
 
 ## 4. Release workflow
 
-`.github/workflows/release.yml` validates traceability and release-note generation, runs native tests/sanitizers/coverage, builds both Nano bootloader targets, checks AVR flash/SRAM engineering budgets, compiles the timing-probe image, installs the publication toolchain and Ubuntu fonts, builds and validates the versioned user-manual PDF, creates firmware/provenance artifacts, writes SHA-256 and MD5 manifests, generates the changelog-based notes and publishes the GitHub Release for the pushed tag.
+`.github/workflows/release.yml` validates traceability and release-note generation, runs Classic and Organic native tests/sanitizers/coverage, builds both Nano bootloader targets for both compile-time banks, checks every AVR image against the flash/SRAM engineering budgets, compiles both timing-probe images, installs the publication toolchain and Ubuntu fonts, builds and validates the versioned user-manual PDF, creates bank-labelled firmware/provenance artifacts, writes SHA-256 and MD5 manifests, generates the changelog-based notes and publishes the GitHub Release for the pushed tag.
 
 The manual check is strict for release builds: the PDF must have the expected page geometry and contain embedded Ubuntu and Ubuntu Light fonts. Font substitution is not accepted for a tagged release.
 

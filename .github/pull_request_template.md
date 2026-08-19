@@ -17,6 +17,10 @@ Describe what this pull request changes and why.
 - [ ] `pio test -e native_sanitized` passes
 - [ ] `pio run -e nanoatmega328new` passes
 - [ ] `pio run -e nanoatmega328` passes
+- [ ] `pio test -e native_organic` passes
+- [ ] `pio test -e native_organic_sanitized` passes
+- [ ] `pio run -e nanoatmega328new_organic` passes
+- [ ] `pio run -e nanoatmega328_organic` passes
 - [ ] New or changed mathematical behavior has dedicated reference/property tests
 - [ ] Intentional differences from upstream behavior have regression coverage
 - [ ] Relevant timing or hardware behavior has been measured, or the remaining qualification requirement is stated below

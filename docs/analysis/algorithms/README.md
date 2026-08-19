@@ -1,6 +1,6 @@
 # Drift algorithm engineering analyses
 
-These documents analyze each original Drift algorithm independently, beginning with the mathematical model and then working through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy.
+These documents analyze each supported Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The optional **Organic** documents use the same engineering structure but describe project-defined algorithms with no upstream implementation to preserve.
 
 > [!IMPORTANT]
 > The analyses are engineering notes, not criticism of the upstream project. A finding is classified according to the available evidence. Unusual behavior is not automatically a defect. Where analysis establishes a defect and a stronger mathematical contract can be stated, the unreleased firmware may correct it directly; the intentional difference is then documented and regression-tested.
@@ -11,6 +11,14 @@ These documents analyze each original Drift algorithm independently, beginning w
 - [Brownian / random walk](brownian-motion-analysis.md)
 - [Bézier random segments](bezier-random-walk-analysis.md)
 - [LFO](lfo-analysis.md)
+
+### Optional Organic bank
+
+- [Fractal](fractal-analysis.md)
+- [Vector](vector-analysis.md)
+- [Rain](rain-analysis.md)
+- [Attractor / Hénon map](attractor-analysis.md)
+- [Organic bank architecture and control contract](../algorithm-banks/organic-bank-design.md)
 
 ## Common analysis contract
 
@@ -31,7 +39,7 @@ Equations in these analyses use GitHub's native MathJax rendering: inline expres
 
 ## Shared implementation context
 
-Three modes — Perlin, Bézier, and LFO — use the common `shared.rs::get_delta_t()` V/oct phase-increment mapping. Brownian intentionally does not. Findings in the shared path are repeated only where they materially affect the algorithm being analyzed.
+Three Classic modes — Perlin, Bézier, and LFO — use the common upstream `shared.rs::get_delta_t()` V/oct phase-increment mapping. Brownian intentionally does not. The Organic Fractal, Vector and Attractor modes reuse the corrected C++ equivalent of that Speed mapping; Rain intentionally uses direct Speed-to-decay control instead. Findings in shared paths are repeated only where they materially affect the algorithm being analyzed.
 
 The authoritative upstream references remain:
 

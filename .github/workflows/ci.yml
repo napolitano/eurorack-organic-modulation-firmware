@@ -52,6 +52,30 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native -f ${{ matrix.suite }}
 
+
+  native-organic-tests:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - unit/test_algorithms
+          - unit/test_fractal_algorithm
+          - unit/test_vector_algorithm
+          - unit/test_rain_algorithm
+          - unit/test_attractor_algorithm
+          - integration/test_selection
+          - integration/test_runtime
+          - property/test_invariants
+          - system/test_signal_path
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_organic -f ${{ matrix.suite }}
+
   native-coverage:
     runs-on: ubuntu-24.04
     steps:
@@ -63,9 +87,33 @@ jobs:
       - run: pio test -e native_coverage
       - run: |
           mkdir -p coverage
-          gcovr --root . --filter lib/fmd/src --exclude test --xml-pretty --output coverage/coverage.xml
-          gcovr --root . --filter lib/fmd/src --exclude test --txt
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
+            --xml-pretty --output coverage/coverage.xml
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
+            --txt
           python scripts/check_native_coverage.py coverage/coverage.xml
+
+
+  native-organic-coverage:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_organic_coverage
+      - run: |
+          mkdir -p coverage-organic
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm)\.cpp$' \
+            --xml-pretty --output coverage-organic/coverage.xml
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm)\.cpp$' \
+            --txt
+          python scripts/check_native_coverage.py coverage-organic/coverage.xml
 
   native-sanitizers:
     runs-on: ubuntu-24.04
@@ -77,12 +125,27 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_sanitized
 
+
+  native-organic-sanitizers:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_organic_sanitized
+
   avr-build:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
-        environment: [nanoatmega328new, nanoatmega328]
+        environment:
+          - nanoatmega328new
+          - nanoatmega328
+          - nanoatmega328new_organic
+          - nanoatmega328_organic
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0
@@ -94,10 +157,14 @@ jobs:
 
   timing-probe-build:
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing]
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio run -e nanoatmega328new_timing
+      - run: pio run -e ${{ matrix.environment }}

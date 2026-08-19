@@ -4,7 +4,25 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ## Unreleased
 
-No changes yet.
+### Added
+
+- Optional compile-time **Organic algorithm bank** for the original Drift hardware, selected at build time while leaving the Classic 0.1.0 bank as the default. The four Organic DIP slots are Fractal, Vector, Rain and Attractor.
+- Fractal modulation based on three continuous gradient-noise scales at 1x/4x/16x with constant-gain Texture redistribution.
+- Vector modulation based on a deterministic two-axis toroidal phase flow with bounded Texture-controlled cross-coupling.
+- Rain modulation using Density-controlled stochastic impulses and a fractional-residual leaky envelope; the hardware Attenuation control naturally remains final output Intensity.
+- Attractor modulation using a fixed-point Hénon map with Texture-controlled parameter `a` and interpolated travel between map states.
+- Dedicated Organic PlatformIO build, native-test, sanitizer, coverage and timing environments for both Nano bootloader variants where applicable.
+- Dedicated mathematical unit suites and developer analyses for all four Organic algorithms plus a bank-level architecture/control-contract document.
+- Acceptance criteria AC-33 through AC-37 for compile-time bank selection and the four Organic mathematical contracts, expanding the current source to 37 criteria and 107 native test cases across 18 suites.
+- Future tagged-release packaging for both Classic and Organic Nano firmware images.
+
+### Changed
+
+- `DriftEngine` now owns and dispatches only the compile-time-selected algorithm bank, so inactive-bank algorithm state does not consume SRAM in the resulting firmware image.
+- Generic selection, integration, property and system tests are bank-aware and exercise the four slots of the active compile-time bank.
+- CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic and Organic builds independently.
+- Organic per-sample control mappings avoid general integer division in their hot paths where a bounded power-of-two mapping provides the documented behavior.
+- README, testing documentation and algorithm-analysis index now describe the compile-time bank model and the Organic control/DIP mapping.
 
 ## 0.1.0 — 2026-08-19
 

@@ -1,0 +1,44 @@
+/**
+ * @file AlgorithmBankConfig.h
+ * Defines compile-time selection of the four-algorithm firmware bank.
+ *
+ * @author Axel Napolitano
+ * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
+ * @copyright Copyright (C) 2026 Axel Napolitano
+ * @license GPL-3.0-or-later
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+#ifndef FMD_CONFIG_ALGORITHM_BANK_CONFIG_H
+#define FMD_CONFIG_ALGORITHM_BANK_CONFIG_H
+
+#include <stdint.h>
+
+/** Classic bank containing the four algorithms derived from the original Drift firmware. */
+#define FMD_BANK_CLASSIC 0
+/** Alternative organic bank containing Fractal, Vector, Rain and Attractor. */
+#define FMD_BANK_ORGANIC 1
+
+#ifndef FMD_ALGORITHM_BANK
+/** Default to the original/classic bank when no compiler flag selects another bank. */
+#define FMD_ALGORITHM_BANK FMD_BANK_CLASSIC
+#endif
+
+#if FMD_ALGORITHM_BANK != FMD_BANK_CLASSIC && FMD_ALGORITHM_BANK != FMD_BANK_ORGANIC
+#error "FMD_ALGORITHM_BANK must be FMD_BANK_CLASSIC (0) or FMD_BANK_ORGANIC (1)"
+#endif
+
+namespace fmd {
+
+/** @brief Compile-time selectable set of four algorithms exposed by the rear DIP switches. */
+enum class AlgorithmBank : uint8_t {
+  Classic = FMD_BANK_CLASSIC,  ///< Perlin, Brownian, Bezier and LFO.
+  Organic = FMD_BANK_ORGANIC   ///< Fractal, Vector, Rain and Hénon attractor.
+};
+
+/** Bank compiled into this firmware image. */
+constexpr AlgorithmBank kSelectedAlgorithmBank =
+    static_cast<AlgorithmBank>(FMD_ALGORITHM_BANK);
+
+}  // namespace fmd
+#endif  // FMD_CONFIG_ALGORITHM_BANK_CONFIG_H

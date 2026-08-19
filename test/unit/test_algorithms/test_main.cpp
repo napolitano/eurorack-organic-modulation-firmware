@@ -18,9 +18,9 @@ void test_each_algorithm_stays_in_dac_range() {
   MemoryReferenceTables referenceTables;
   const fmd::ControlFrame maximumControls{1023U, 1023U, 1023U, 1023U};
 
-  for (uint8_t algorithmIndex = 0U; algorithmIndex < 4U; ++algorithmIndex) {
+  for (uint8_t slotIndex = 0U; slotIndex < 4U; ++slotIndex) {
     fmd::DriftEngine engine(
-        static_cast<fmd::Algorithm>(algorithmIndex), 0x4A51U, referenceTables);
+        fmd::algorithmForBankSlot(slotIndex), 0x4A51U, referenceTables);
     for (uint16_t sampleIndex = 0U; sampleIndex < 2000U; ++sampleIndex) {
       TEST_ASSERT_LESS_OR_EQUAL_UINT16(4095U, engine.step(maximumControls));
     }
@@ -31,8 +31,8 @@ void test_algorithms_are_deterministic_for_fixed_seed() {
   MemoryReferenceTables referenceTables;
   const fmd::ControlFrame controls{222U, 333U, 444U, 555U};
 
-  for (uint8_t algorithmIndex = 0U; algorithmIndex < 4U; ++algorithmIndex) {
-    const fmd::Algorithm algorithm = static_cast<fmd::Algorithm>(algorithmIndex);
+  for (uint8_t slotIndex = 0U; slotIndex < 4U; ++slotIndex) {
+    const fmd::Algorithm algorithm = fmd::algorithmForBankSlot(slotIndex);
     fmd::DriftEngine firstEngine(algorithm, 0x1234U, referenceTables);
     fmd::DriftEngine secondEngine(algorithm, 0x1234U, referenceTables);
 

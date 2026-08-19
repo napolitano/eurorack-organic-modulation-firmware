@@ -14,8 +14,8 @@
 #include "fmd/domain/DriftEngine.h"
 #include "DriftTestRig.h"
 void test_virtual_module_runs_all_four_algorithms() {
-  for (uint8_t algorithmIndex = 0U; algorithmIndex < 4U; ++algorithmIndex) {
-    DriftTestRig rig(static_cast<fmd::Algorithm>(algorithmIndex), 0x3344U);
+  for (uint8_t slotIndex = 0U; slotIndex < 4U; ++slotIndex) {
+    DriftTestRig rig(fmd::algorithmForBankSlot(slotIndex), 0x3344U);
     for (uint16_t sampleIndex = 0U; sampleIndex < 100U; ++sampleIndex) {
       const uint16_t outputCode = rig.tick(100U, 200U, 300U, 400U);
       TEST_ASSERT_LESS_OR_EQUAL_UINT16(4095U, outputCode);
@@ -23,17 +23,18 @@ void test_virtual_module_runs_all_four_algorithms() {
   }
 }
 void test_virtual_module_maps_adc_channels_in_upstream_order() {
-  DriftTestRig rig(fmd::Algorithm::Lfo, 1U);
+  DriftTestRig rig(fmd::algorithmForBankSlot(0U), 1U);
   const uint16_t baselineOutput = rig.tick(0U, 0U, 0U, 0U);
   const uint16_t fasterOutput = rig.tick(1023U, 0U, 1023U, 0U);
   TEST_ASSERT_NOT_EQUAL(baselineOutput, fasterOutput);
 }
 
 void test_virtual_module_matches_direct_engine_for_dynamic_control_sequence() {
-  for (uint8_t a = 0U; a < 4U; ++a) {
+  for (uint8_t slotIndex = 0U; slotIndex < 4U; ++slotIndex) {
     constexpr uint16_t seed = 0x47A1U;
-    DriftTestRig rig(static_cast<fmd::Algorithm>(a), seed);
-    fmd::DriftEngine engine(static_cast<fmd::Algorithm>(a), seed, rig.referenceTables);
+    const fmd::Algorithm algorithm = fmd::algorithmForBankSlot(slotIndex);
+    DriftTestRig rig(algorithm, seed);
+    fmd::DriftEngine engine(algorithm, seed, rig.referenceTables);
 
     for (uint32_t i = 0U; i < 2000U; ++i) {
       const uint16_t speedCv = static_cast<uint16_t>((i * 73U) & 1023U);
@@ -48,7 +49,7 @@ void test_virtual_module_matches_direct_engine_for_dynamic_control_sequence() {
 }
 
 void test_virtual_module_led_always_represents_same_sample_as_dac_over_dynamic_sequence() {
-  DriftTestRig rig(fmd::Algorithm::Perlin, 0x1969U);
+  DriftTestRig rig(fmd::algorithmForBankSlot(0U), 0x1969U);
   for (uint32_t i = 0U; i < 3000U; ++i) {
     const uint16_t output = rig.tick(static_cast<uint16_t>((i * 29U) & 1023U),
                                      static_cast<uint16_t>((i * 43U) & 1023U),

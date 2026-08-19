@@ -1,6 +1,6 @@
 /**
  * @file DriftEngine.cpp
- * Implements algorithm selection and portable Drift sample dispatch.
+ * Implements compile-time algorithm-bank selection and portable Drift sample dispatch.
  *
  * @author Axel Napolitano
  * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
@@ -13,30 +13,60 @@
 
 namespace fmd {
 
+Algorithm algorithmForBankSlot(uint8_t slotIndex) {
+#if FMD_ALGORITHM_BANK == FMD_BANK_CLASSIC
+  constexpr Algorithm kAlgorithms[4] = {
+      Algorithm::Perlin,
+      Algorithm::Brownian,
+      Algorithm::Bezier,
+      Algorithm::Lfo,
+  };
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ORGANIC
+  constexpr Algorithm kAlgorithms[4] = {
+      Algorithm::Fractal,
+      Algorithm::Vector,
+      Algorithm::Rain,
+      Algorithm::Attractor,
+  };
+#endif
+  return kAlgorithms[slotIndex < 4U ? slotIndex : 0U];
+}
+
 Algorithm algorithmFromConfig(bool configInput1Low, bool configInput2Low) {
+  // Preserve the original firmware-pin truth table. Physical rear DIP numbering
+  // is documented separately because DIP 1/2 order differs from CONFIG 1/2.
   if (!configInput1Low && !configInput2Low) {
-    return Algorithm::Perlin;
+    return algorithmForBankSlot(0U);
   }
   if (!configInput1Low && configInput2Low) {
-    return Algorithm::Brownian;
+    return algorithmForBankSlot(1U);
   }
   if (configInput1Low && !configInput2Low) {
-    return Algorithm::Bezier;
+    return algorithmForBankSlot(2U);
   }
-  return Algorithm::Lfo;
+  return algorithmForBankSlot(3U);
 }
 
 DriftEngine::DriftEngine(Algorithm algorithm,
                          uint16_t randomSeed,
                          const IReferenceTables& referenceTables)
-    : selectedAlgorithm_(algorithm),
-      perlinAlgorithm_(referenceTables, randomSeed),
-      brownianAlgorithm_(randomSeed),
-      bezierAlgorithm_(referenceTables, randomSeed),
-      lfoAlgorithm_(referenceTables) {}
+    : selectedAlgorithm_(algorithm)
+#if FMD_ALGORITHM_BANK == FMD_BANK_CLASSIC
+      , perlinAlgorithm_(referenceTables, randomSeed)
+      , brownianAlgorithm_(randomSeed)
+      , bezierAlgorithm_(referenceTables, randomSeed)
+      , lfoAlgorithm_(referenceTables)
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ORGANIC
+      , fractalAlgorithm_(referenceTables, randomSeed)
+      , vectorAlgorithm_(referenceTables)
+      , rainAlgorithm_(randomSeed)
+      , attractorAlgorithm_(referenceTables)
+#endif
+{}
 
 uint16_t DriftEngine::step(const ControlFrame& controls) {
   switch (selectedAlgorithm_) {
+#if FMD_ALGORITHM_BANK == FMD_BANK_CLASSIC
     case Algorithm::Perlin:
       return perlinAlgorithm_.step(controls);
     case Algorithm::Brownian:
@@ -45,10 +75,22 @@ uint16_t DriftEngine::step(const ControlFrame& controls) {
       return bezierAlgorithm_.step(controls);
     case Algorithm::Lfo:
       return lfoAlgorithm_.step(controls);
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ORGANIC
+    case Algorithm::Fractal:
+      return fractalAlgorithm_.step(controls);
+    case Algorithm::Vector:
+      return vectorAlgorithm_.step(controls);
+    case Algorithm::Rain:
+      return rainAlgorithm_.step(controls);
+    case Algorithm::Attractor:
+      return attractorAlgorithm_.step(controls);
+#endif
+    default:
+      break;
   }
 
-  // Defensive fallback for invalid enum values introduced through unchecked
-  // casts or memory corruption. Normal construction cannot reach this branch.
+  // Defensive fallback for invalid enum values or a valid algorithm identity
+  // from the bank that was intentionally not compiled into this firmware image.
   return 0U;
 }
 

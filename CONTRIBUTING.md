@@ -22,7 +22,10 @@ The project uses PlatformIO and C++17. Primary environments are:
 - `native` — Unity host tests;
 - `native_coverage` — host coverage;
 - `native_sanitized` — ASan/UBSan;
-- `nanoatmega328new_timing` — timing-qualification image.
+- `nanoatmega328new_timing` — Classic timing-qualification image;
+- `nanoatmega328new_organic` / `nanoatmega328_organic` — Organic-bank Nano images;
+- `native_organic`, `native_organic_coverage`, `native_organic_sanitized` — Organic host verification;
+- `nanoatmega328new_organic_timing` — Organic timing-qualification image.
 
 Normal verification:
 
@@ -31,18 +34,25 @@ pio test -e native
 pio test -e native_sanitized
 pio run -e nanoatmega328new
 pio run -e nanoatmega328
+pio test -e native_organic
+pio test -e native_organic_sanitized
+pio run -e nanoatmega328new_organic
+pio run -e nanoatmega328_organic
 python scripts/check_requirement_traceability.py
 python scripts/check_markdown_footer.py
 python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new/firmware.elf
 python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328/firmware.elf
+python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_organic/firmware.elf
+python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_organic/firmware.elf
+```
 
 The resource guards intentionally stop growth before the MCU is full: application flash must remain **<= 26,112 bytes (85% of the 30,720-byte budget)** and static SRAM **<= 1,331 bytes (65% of 2,048 bytes)**. Do not relax these limits merely to merge a feature.
-```
 
 Coverage:
 
 ```sh
 pio test -e native_coverage
+pio test -e native_organic_coverage
 mkdir -p coverage
 gcovr --root . --filter lib/fmd/src --exclude test --xml-pretty --output coverage/coverage.xml
 python scripts/check_native_coverage.py coverage/coverage.xml
@@ -80,8 +90,8 @@ Purely editorial wording/formatting changes do not need changelog entries unless
 
 Keep each pull request focused. Before submission:
 
-1. run the native test suite and sanitizers;
-2. build both Nano environments;
+1. run Classic and Organic native test suites and sanitizers;
+2. build both bootloader environments for both compile-time banks;
 3. update algorithm/reference tests for changed behavior;
 4. update requirement traceability;
 5. update technical documentation and `CHANGELOG.md` when release-relevant;

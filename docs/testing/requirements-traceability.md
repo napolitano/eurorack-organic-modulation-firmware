@@ -2,7 +2,7 @@
 
 | ID | Acceptance criterion | Primary verification |
 |---|---|---|
-| AC-01 | Original four-way configuration mapping is preserved. | `test/integration/test_selection` |
+| AC-01 | The rear configuration inputs preserve the four-way electrical truth table for the compile-time-selected algorithm bank. | `test/integration/test_selection` |
 | AC-02 | All four algorithms remain within the 12-bit DAC output domain. | `test/unit/test_algorithms` |
 | AC-03 | Fixed seeds produce deterministic algorithm sequences. | `test/unit/test_algorithms` |
 | AC-04 | The paired LFSR reproduces the upstream recurrence. | `test/unit/test_rng` |
@@ -25,17 +25,20 @@
 | AC-21 | LFO waveform evaluation matches the mathematical piecewise-linear reference, is monotonic on each branch and provides exact saw endpoints. | `test/unit/test_lfo_algorithm` |
 | AC-22 | LFO phase accumulation preserves wrap overshoot. | `test/unit/test_lfo_algorithm` |
 | AC-23 | Shared fixed-point interpolation and multiplication primitives match their integer Q-format contracts in both interpolation directions. | `test/unit/test_fixed_math` |
-
 | AC-24 | Perlin gradient selection, lattice handoff continuity and phase-wrap state transitions follow the documented gradient-noise model. | `test/unit/test_perlin_algorithm` |
-| AC-25 | Brownian smoothing converges bidirectionally without overshoot, handles residual direction changes and retains long-run centering. | `test/unit/test_brownian_algorithm` |
-| AC-26 | Bézier segment-speed variation implements the documented dead zone, symmetry, CV contribution and saturation behavior. | `test/unit/test_bezier_algorithm` |
-| AC-27 | Bézier endpoint interpolation and repeated A-to-B segment transitions remain mathematically consistent across rollovers. | `test/unit/test_bezier_algorithm` |
-| AC-28 | LFO dense phase remapping, repeated wraps and live non-saw Texture changes retain the defined continuity/state contracts. | `test/unit/test_lfo_algorithm` |
-| AC-29 | Extreme LFSR seeds avoid trivial lock-up and long runs remain deterministic with broad short-window diversity. | `test/unit/test_rng` |
-| AC-30 | Generated exponential and gamma lookup tables match their mathematical generation contracts. | `test/unit/test_reference_tables` |
-| AC-31 | Dynamic end-to-end runtime behavior matches the direct engine and LED/DAC sample coherence is retained. | `test/system/test_signal_path` |
-
-| AC-32 | Portable public boundaries return a safe output for an invalid algorithm enum and clamp out-of-domain ADC values before frequency mapping. | `test/unit/test_algorithms`, `test/unit/test_frequency` |
+| AC-25 | Brownian smoothing converges bidirectionally without overshoot, resets fractional state on direction changes and retains the intended long-run centering behavior. | `test/unit/test_brownian_algorithm` |
+| AC-26 | Bézier segment-speed variation has the documented center dead zone, symmetric knob response, monotonic CV contribution and bounded full-scale behavior. | `test/unit/test_bezier_algorithm` |
+| AC-27 | Bézier endpoint interpolation and multi-segment A-to-B state transitions remain mathematically consistent across repeated phase rollovers. | `test/unit/test_bezier_algorithm` |
+| AC-28 | LFO remapping remains output-preserving over a dense phase grid, constant-control phase accumulation survives repeated wraps and live non-saw skew changes stay continuous. | `test/unit/test_lfo_algorithm` |
+| AC-29 | The paired LFSR remains deterministic and avoids trivial lock-up for extreme seeds while retaining broad short-window output diversity. | `test/unit/test_rng` |
+| AC-30 | Generated exp2 and gamma reference tables match their mathematical generation contracts, endpoints and monotonicity properties. | `test/unit/test_reference_tables` |
+| AC-31 | Dynamic end-to-end runtime output matches the direct engine for all algorithms and LED state remains derived from the exact queued DAC sample. | `test/system/test_signal_path` |
+| AC-32 | Portable public boundaries fail safely for invalid algorithm selection and clamp out-of-domain ADC values before frequency mapping. | `test/unit/test_algorithms`, `test/unit/test_frequency` |
+| AC-33 | Compile-time bank selection exposes exactly four deterministic DIP slots and falls back safely for an invalid slot index. | `test/integration/test_selection` |
+| AC-34 | Fractal Texture redistributes a constant total weight across three gradient-noise scales and the algorithm remains deterministic and inside the DAC domain. | `test/unit/test_fractal_algorithm` |
+| AC-35 | Vector uses continuous bipolar toroidal projections, bounded cross-coupling and a deterministic 12-bit scalar projection. | `test/unit/test_vector_algorithm` |
+| AC-36 | Rain Density and Speed follow documented monotonic event/decay laws, fractional decay reaches zero without a truncation deadband, and fixed seeds are deterministic. | `test/unit/test_rain_algorithm` |
+| AC-37 | Attractor implements the documented fixed-point Hénon map over the complete Texture parameter range, remains bounded and emits deterministic 12-bit interpolated output. | `test/unit/test_attractor_algorithm` |
 
 The machine-readable mapping is `test/requirements-traceability.json` and is validated by CI. Requirement IDs must remain unique and consecutive; referenced test cases must exist as `RUN_TEST()` entries.
 

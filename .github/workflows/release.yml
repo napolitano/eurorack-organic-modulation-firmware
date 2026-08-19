@@ -67,34 +67,56 @@ jobs:
           python scripts/check_manual_assets.py
           python scripts/test_user_manual_tooling.py
 
-      - name: Run native tests
+      - name: Run Classic-bank native tests
         run: pio test -e native
+
+      - name: Run Organic-bank native tests
+        run: pio test -e native_organic
 
       - name: Run native sanitizers
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1:strict_string_checks=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: pio test -e native_sanitized
+        run: |
+          pio test -e native_sanitized
+          pio test -e native_organic_sanitized
 
-      - name: Enforce native coverage policy
+      - name: Enforce Classic-bank native coverage policy
         run: |
           pio test -e native_coverage
           mkdir -p coverage
-          gcovr --root . --filter lib/fmd/src --exclude test --xml-pretty --output coverage/coverage.xml
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
+            --xml-pretty --output coverage/coverage.xml
           python scripts/check_native_coverage.py coverage/coverage.xml
 
-      - name: Build both Nano targets
+      - name: Enforce Organic-bank native coverage policy
+        run: |
+          pio test -e native_organic_coverage
+          mkdir -p coverage-organic
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm)\.cpp$' \
+            --xml-pretty --output coverage-organic/coverage.xml
+          python scripts/check_native_coverage.py coverage-organic/coverage.xml
+
+      - name: Build both banks for both Nano bootloaders
         run: |
           pio run -e nanoatmega328new
           pio run -e nanoatmega328
+          pio run -e nanoatmega328new_organic
+          pio run -e nanoatmega328_organic
 
       - name: Enforce AVR resource budgets
         run: |
           python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new/firmware.elf
           python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328/firmware.elf
+          python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_organic/firmware.elf
+          python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_organic/firmware.elf
 
-      - name: Compile timing qualification image
-        run: pio run -e nanoatmega328new_timing
+      - name: Compile timing qualification images
+        run: |
+          pio run -e nanoatmega328new_timing
+          pio run -e nanoatmega328new_organic_timing
 
       - name: Install manual publication dependencies
         run: |
@@ -122,8 +144,13 @@ jobs:
           cp .pio/build/nanoatmega328new/firmware.elf dist/fm-drift-nano-new-bootloader.elf
           cp .pio/build/nanoatmega328/firmware.hex dist/fm-drift-nano-old-bootloader.hex
           cp .pio/build/nanoatmega328/firmware.elf dist/fm-drift-nano-old-bootloader.elf
+          cp .pio/build/nanoatmega328new_organic/firmware.hex dist/fm-drift-organic-nano-new-bootloader.hex
+          cp .pio/build/nanoatmega328new_organic/firmware.elf dist/fm-drift-organic-nano-new-bootloader.elf
+          cp .pio/build/nanoatmega328_organic/firmware.hex dist/fm-drift-organic-nano-old-bootloader.hex
+          cp .pio/build/nanoatmega328_organic/firmware.elf dist/fm-drift-organic-nano-old-bootloader.elf
           cp README.md CHANGELOG.md LICENSE dist/
           python scripts/write_build_info.py --output dist/BUILD-INFO.txt --environment nanoatmega328new
+          python scripts/write_build_info.py --output dist/BUILD-INFO-organic.txt --environment nanoatmega328new_organic
 
       - name: Generate release checksums
         working-directory: dist

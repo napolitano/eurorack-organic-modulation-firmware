@@ -14,14 +14,26 @@
 
 #include <stdint.h>
 
+#include "fmd/config/AlgorithmBankConfig.h"
+
 namespace fmd {
 
-/** @brief Modulation algorithms selectable by the rear configuration switches. */
+/**
+ * @brief Complete algorithm identity set supported by this source tree.
+ *
+ * A firmware image exposes exactly four entries from one compile-time-selected
+ * AlgorithmBank. Keeping identities distinct allows native tests and developer
+ * tooling to describe both banks without changing the hardware DIP interface.
+ */
 enum class Algorithm : uint8_t {
-  Perlin = 0,    ///< Two-octave gradient-noise modulation; hardware default.
-  Brownian = 1,  ///< Bounded random walk with first-order smoothing.
-  Bezier = 2,    ///< Random destinations joined by continuously morphed curves.
-  Lfo = 3        ///< Deterministic skewable triangle / saw LFO.
+  Perlin = 0,     ///< Classic: two-octave gradient-noise modulation; default.
+  Brownian = 1,   ///< Classic: bounded random walk with first-order smoothing.
+  Bezier = 2,     ///< Classic: random destinations joined by morphed cubic curves.
+  Lfo = 3,        ///< Classic: deterministic skewable triangle / saw LFO.
+  Fractal = 4,    ///< Organic: three-scale procedural gradient-noise fractal.
+  Vector = 5,     ///< Organic: cross-coupled two-dimensional toroidal phase flow.
+  Rain = 6,       ///< Organic: stochastic impulse / decaying-envelope process.
+  Attractor = 7   ///< Organic: smoothed Hénon-map traversal.
 };
 
 /**
