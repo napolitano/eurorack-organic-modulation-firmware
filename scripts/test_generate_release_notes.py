@@ -62,8 +62,19 @@ Initial public release.
     require("## Artifact integrity" in notes, "integrity section missing")
     require("Classic and Organic firmware images" in notes, "dual-bank artifact description missing")
     require("FIRMWARE-ARTIFACTS.X.Y.Z.md" in notes, "firmware manifest description missing")
+    require("frozen versioned user-manual ODT" in notes, "frozen manual source description missing")
     require("drift-footer" not in notes, "documentation footer leaked into release notes")
     require("From Munich with" not in notes, "documentation footer text leaked into release notes")
+
+    classic_notes = render_notes(
+        text=changelog,
+        tag="v0.1.0",
+        repository="napolitano/eurorack-organic-modulation-firmware",
+        server_url="https://github.com",
+        banks=("classic",),
+    )
+    require("versioned Classic firmware images" in classic_notes, "Classic-only artifact description missing")
+    require("Organic firmware images" not in classic_notes, "Classic-only notes mention Organic artifacts")
 
     try:
         extract_version_section(changelog, "9.9.9")

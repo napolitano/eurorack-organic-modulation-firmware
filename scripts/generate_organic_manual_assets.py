@@ -235,10 +235,35 @@ def bank_overview_asset() -> str:
 </svg>'''
 
 
+
+def switch_asset(name: str, switch1_on: bool, switch2_on: bool) -> str:
+    def slider(x: int, is_on: bool) -> str:
+        y = 61 if is_on else 103
+        color = ORANGE if is_on else GREY
+        return f'<rect x="{x+12}" y="{y}" width="54" height="30" rx="5" fill="{color}"/>'
+
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 288" role="img" aria-label="{name} configuration switches">
+<title>{name} configuration switches</title>
+<style>text{{font-family:Ubuntu,\"Ubuntu Sans\",Arial,sans-serif}}</style>
+<rect width="450" height="288" fill="white"/>
+<rect x="80" y="30" width="290" height="135" rx="12" fill="#f1f1f1" stroke="#1a1a1a" stroke-width="6"/>
+<rect x="100" y="49" width="78" height="93" rx="9" fill="white" stroke="#1a1a1a" stroke-width="5"/>
+{slider(100, switch1_on)}
+<text x="139" y="190" text-anchor="middle" font-size="25" font-weight="300" fill="#8d8d8d">1</text>
+<rect x="245" y="49" width="78" height="93" rx="9" fill="white" stroke="#1a1a1a" stroke-width="5"/>
+{slider(245, switch2_on)}
+<text x="284" y="190" text-anchor="middle" font-size="25" font-weight="300" fill="#8d8d8d">2</text>
+<text x="225" y="248" text-anchor="middle" font-size="31" font-weight="700" fill="#1a1a1a">{name}</text>
+</svg>"""
+
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     assets = {
         "organic-bank-overview.svg": bank_overview_asset(),
+        "config-fractal.svg": switch_asset("Fractal", False, False),
+        "config-vector.svg": switch_asset("Vector", True, False),
+        "config-rain.svg": switch_asset("Rain", False, True),
+        "config-attractor.svg": switch_asset("Attractor", True, True),
         "fractal-texture.svg": fractal_asset(),
         "vector-flow.svg": vector_asset(),
         "rain-density.svg": rain_asset(),

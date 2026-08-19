@@ -20,6 +20,8 @@ def main() -> int:
     parser.add_argument("--output", required=True)
     parser.add_argument("--environment", default="nanoatmega328new")
     parser.add_argument("--bank", choices=("classic", "organic"), required=True)
+    parser.add_argument("--git-commit", default="")
+    parser.add_argument("--git-ref", default="")
     args = parser.parse_args()
 
     home = Path.home()
@@ -34,8 +36,8 @@ def main() -> int:
         f"Host: {platform.platform()}",
         f"Python: {platform.python_version()}",
         f"PlatformIO: {capture(['pio', '--version'])}",
-        f"Git commit: {os.environ.get('GITHUB_SHA') or capture(['git', 'rev-parse', 'HEAD'])}",
-        f"Git ref/tag: {os.environ.get('GITHUB_REF_NAME', 'local build')}",
+        f"Git commit: {args.git_commit or os.environ.get('GITHUB_SHA') or capture(['git', 'rev-parse', 'HEAD'])}",
+        f"Git ref/tag: {args.git_ref or os.environ.get('GITHUB_REF_NAME', 'local build')}",
         "",
         "Resolved Python packages:",
         capture([sys.executable, "-m", "pip", "freeze"]),

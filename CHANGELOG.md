@@ -6,6 +6,8 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
+- Release-preparation manual freezing: the final `docs/manual/drift-user-manual.odt` is now copied byte-for-byte to `docs/manual/releases/X.Y.Z/drift-user-manual.X.Y.Z.odt` before tagging, and existing snapshots are immutable by default.
+- Historical manual backfill tooling can recover an exact pre-freeze source from an existing Git tag without moving or rewriting that tag; this provides a deterministic path for the 0.1.0 manual source.
 - Optional compile-time **Organic algorithm bank** for the original Drift hardware, selected at build time while leaving the Classic 0.1.0 bank as the default. The four Organic DIP slots are Fractal, Vector, Rain and Attractor.
 - Fractal modulation based on three continuous gradient-noise scales at 1x/4x/16x with constant-gain Texture redistribution.
 - Vector modulation based on a deterministic two-axis toroidal phase flow with bounded Texture-controlled cross-coupling.
@@ -16,11 +18,13 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Acceptance criteria AC-33 through AC-37 for compile-time bank selection and the four Organic mathematical contracts, expanding the current source to 37 criteria and 107 native test cases across 18 suites.
 - Tagged-release packaging for both Classic and Organic firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
 - Expanded user manual covering both compile-time banks and all eight algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for Fractal, Vector, Rain and Attractor.
-- Five deterministic true-vector Organic-bank documentation figures plus a generator for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor illustration.
+- Nine deterministic true-vector Organic-bank documentation assets plus a generator: four bank-specific DIP-switch diagrams and five explanatory figures for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor.
 - New vector front/back manual covers that identify the Classic and Organic banks without retaining the former Classic-only algorithm list.
 
 ### Changed
 
+- User manual bank documentation now uses a dedicated Algorithm banks introduction, separate top-level Classic and Organic sections, bank-specific DIP-switch SVGs, and identical heading/subsection styling across all eight algorithms; the former cross-bank configuration comparison is removed.
+- Root documentation is split into dedicated `README-CLASSIC.md` and `README-ORGANIC.md` bank guides, while the main README now provides a compact project overview and links to the detailed DIP, control, mathematical and graphical documentation for each bank.
 - Dependabot CI dependency updates are now consolidated across GitHub Actions and Python into one monthly multi-ecosystem pull request instead of one pull request per ecosystem.
 - Tagged-release manual dependency installation now uses only the Ubuntu package source, canonical HTTPS Ubuntu mirrors, bounded APT retry/network timeouts and the minimal `libreoffice-writer` package set.
 - The release job now has an explicit 60-minute ceiling and the manual dependency installation step a 10-minute ceiling, preventing a transient package mirror from holding a release indefinitely.
@@ -33,6 +37,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 - README and release-process documentation now explain the dual-bank release files, bootloader variants, bank-vs-DIP selection boundary and versioned release manifest.
 - Tagged releases now emit separate build-provenance records for all four bank/bootloader firmware variants instead of describing only one environment per bank.
 - Release-note integrity text now explicitly describes the dual-bank firmware set, versioned manual, firmware-artifact manifest, provenance files and checksum manifests.
+- Tagged releases now publish the frozen versioned manual ODT alongside the PDF, and release/rebuild jobs refuse to use the live development manual for tags created after the freeze mechanism was introduced. Historical pre-freeze tags retain an explicit tag-pinned legacy-source fallback.
 
 ## 0.1.0 — 2026-08-19
 

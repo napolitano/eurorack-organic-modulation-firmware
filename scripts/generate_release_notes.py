@@ -27,6 +27,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repository", required=True, help="OWNER/REPO")
     parser.add_argument("--server-url", default="https://github.com")
     parser.add_argument("--previous-tag", default="")
+    parser.add_argument("--banks", default="classic,organic", help="Comma-separated banks included in the release")
     return parser.parse_args()
 
 
@@ -84,7 +85,7 @@ def split_summary(section: list[str]) -> tuple[str, list[str]]:
     return summary, detail
 
 
-def render_notes(*, text: str, tag: str, repository: str, server_url: str, previous_tag: str = "") -> str:
+def render_notes(*, text: str, tag: str, repository: str, server_url: str, previous_tag: str = "", banks: tuple[str, ...] = ("classic", "organic")) -> str:
     version = tag[1:] if tag.startswith("v") else tag
     section = extract_version_section(text, version)
     summary, detail = split_summary(section)
@@ -92,10 +93,12 @@ def render_notes(*, text: str, tag: str, repository: str, server_url: str, previ
     output = [summary, "", "## Changelog", ""]
     if detail:
         output.extend(["\n".join(detail), ""])
+    bank_names = " and ".join(bank.title() for bank in banks)
+    bank_word = "banks" if len(banks) > 1 else "bank"
     output.extend([
         "## Artifact integrity",
         "",
-        "Release assets include versioned Classic and Organic firmware images for both Nano bootloaders, the versioned user manual, `FIRMWARE-ARTIFACTS.X.Y.Z.md`, per-image build provenance, and `SHA256SUMS.txt` / `MD5SUMS.txt` covering every generated release file. Use the SHA-256 manifest for normal integrity verification; the MD5 manifest is provided only as an additional compatibility checksum.",
+        f"Release assets include versioned {bank_names} firmware images for both Nano bootloaders for the published {bank_word}, the frozen versioned user-manual ODT plus its generated PDF, `FIRMWARE-ARTIFACTS.X.Y.Z.md`, per-image build provenance, and `SHA256SUMS.txt` / `MD5SUMS.txt` covering every generated release file. Use the SHA-256 manifest for normal integrity verification; the MD5 manifest is provided only as an additional compatibility checksum.",
         "",
         "## Diff",
         "",
@@ -112,12 +115,16 @@ def main() -> int:
     args = parse_args()
     text = Path(args.changelog).read_text(encoding="utf-8")
     try:
+        banks = tuple(part.strip().lower() for part in args.banks.split(",") if part.strip())
+        if not banks or any(bank not in ("classic", "organic") for bank in banks):
+            raise ValueError(f"invalid bank list: {args.banks!r}")
         notes = render_notes(
             text=text,
             tag=args.tag,
             repository=args.repository,
             server_url=args.server_url,
             previous_tag=args.previous_tag,
+            banks=banks,
         )
     except ValueError as exc:
         print(f"release-notes error: {exc}", file=sys.stderr)

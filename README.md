@@ -17,21 +17,21 @@
 
 ## What is Drift?
 
-Drift is a **4 HP Eurorack modulation source** that produces evolving 0–10 V control voltages. Its defining idea is controlled movement: instead of choosing between a conventional repeating LFO and completely uncorrelated random values, Drift offers several ways to generate motion that has **continuity, memory, shape or controlled unpredictability**.
+Drift is a **4 HP Eurorack modulation source** that produces evolving 0–10 V control voltages. Its defining idea is controlled movement: instead of choosing only between a conventional repeating LFO and completely uncorrelated random values, Drift offers several ways to generate motion with **continuity, memory, structure or controlled unpredictability**.
 
-The module has two main controls — **Speed** and **Texture** — and CV inputs for both. The default **Classic bank** preserves the four Drift algorithms and gives those controls different musical meanings:
+This firmware now supports two compile-time algorithm banks:
 
-| Algorithm | Character | What makes it useful musically |
-|---|---|---|
-| **Perlin** | Smooth, organic gradient noise | Slowly evolving modulation without obvious repetition; useful for timbre, filter, spatial and macro movement |
-| **Brownian** | Bounded random walk with memory | Wandering modulation that tends to continue from where it already is instead of jumping to unrelated values |
-| **Bézier** | Random destinations connected by shaped transitions | Deliberate-looking rises and falls with controllable curvature and segment timing variation |
-| **LFO** | Skewable triangle through rising/falling saw | Deterministic periodic modulation when repeatability is more useful than randomness |
+| Bank | Algorithms | Status | Detailed guide |
+|---|---|---|---|
+| **Classic** | Perlin · Brownian · Bézier · LFO | Default; 0.1.0 compatibility baseline | **[README-CLASSIC.md](README-CLASSIC.md)** |
+| **Organic** | Fractal · Vector · Rain · Attractor | Optional compile-time bank; currently `Unreleased` | **[README-ORGANIC.md](README-ORGANIC.md)** |
 
-Current `Unreleased` development also contains an optional compile-time **Organic bank** with Fractal, Vector, Rain and Attractor modes. Classic remains the default and the 0.1.0 compatibility baseline.
+<p align="center">
+  <img src="docs/manual/assets/organic-bank-overview.svg" alt="Classic and Organic banks sharing the four physical DIP slots" width="820">
+</p>
 
-> [!TIP]
-> With both configuration switches left open, Drift starts in **Perlin mode**, matching the original hardware default.
+> [!IMPORTANT]
+> **Flashing chooses the algorithm bank.** The two rear DIP switches then choose one of four algorithms inside the flashed bank. A DIP setting cannot switch between Classic and Organic.
 
 ## Why this firmware?
 
@@ -40,22 +40,18 @@ The upstream firmware already contains a thoughtful fixed-point implementation o
 The project therefore aims to:
 
 - preserve the recognisable Drift instrument and the four original algorithm concepts as the default Classic bank;
-- allow compile-time alternative banks to explore new modulation models without changing the original hardware or consuming runtime resources in Classic builds;
+- allow compile-time alternative banks to explore new modulation models without changing the original hardware or reserving runtime resources in Classic builds;
 - separate portable signal-processing code from Arduino/AVR hardware access;
 - verify each algorithm against its mathematical definition, not merely against historical output bytes;
 - retain upstream behavior where it represents intentional musical design;
 - correct verified numerical, continuity or state-handling problems transparently;
-- document upstream findings neutrally, including why a change was or was not made;
 - qualify resource use and real-time behavior on the ATmega328P;
 - provide reproducible builds, automated tests, release notes and a versioned PDF user manual.
 
 > [!IMPORTANT]
-> **Release 0.1.0 is the first official release.** Tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0) publishes the C++17/PlatformIO firmware baseline together with the generated user-manual PDF, checksums and build provenance. The release also includes the completed source-documentation pass, manual-publication fixes and the corrected Arduino entry-point linkage. New work after this tag belongs under `Unreleased` in the changelog.
+> **Release 0.1.0 is the first official release.** Tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0) establishes the Classic C++17/PlatformIO baseline. New work after this tag belongs under `Unreleased` in the changelog.
 
 ## Quick start
-
-> [!IMPORTANT]
-> **Choose the algorithm before power-up.** The two rear DIP switches are sampled only during startup. Changing them while the module is running does not change the active algorithm; cycle the power after changing the switch setting. The Quick Start below describes the default **Classic bank**. Alternative compile-time banks keep the same physical switch positions but assign different algorithms to them.
 
 ### 1. Know the front panel
 
@@ -65,84 +61,50 @@ The project therefore aims to:
 
 | Ref. | Panel element | What it does |
 |---:|---|---|
-| **1** | **Speed** | Sets the time scale or activity of the selected algorithm. Speed CV is added to the knob where applicable. |
-| **2** | **Texture** | Changes the secondary character of the algorithm: octave content, smoothing, curve/timing character or LFO skew. |
-| **3** | **Attenuation** | Scales the final output from the full 0–10 V range down to 0 V. |
-| **4** | **Speed CV** | 0–5 V control input. Approximately 1 V/oct in Perlin, Bézier and LFO; direct activity control in Brownian. |
-| **5** | **Texture CV** | 0–5 V control input, summed with Texture and clamped to the valid control range. In Bézier mode it affects timing variation, not curve shape. |
+| **1** | **Speed** | Primary time-scale or activity control. Its exact meaning depends on the selected algorithm. |
+| **2** | **Texture** | Secondary shape, structure or activity control. Its exact meaning depends on the selected algorithm. |
+| **3** | **Attenuation** | Analogue scaling of the final 0–10 V output; firmware cannot read this knob. |
+| **4** | **Speed CV** | 0–5 V control input contributing to Speed. |
+| **5** | **Texture CV** | 0–5 V control input contributing to the algorithm's secondary parameter. |
 | **6** | **Output** | Unipolar 0–10 V modulation output. |
-| **7** | **LED** | Indicates the instantaneous output level. |
+| **7** | **LED** | Indicates instantaneous output level. |
 
-The three stochastic modes create continuously evolving voltages; LFO mode produces a periodic waveform. The final **Attenuation** control acts after the algorithm and therefore does not change the internal motion itself.
+### 2. Choose the bank, then the DIP slot
 
-<p align="center">
-  <img src="docs/manual/assets/drift-output-example.svg" alt="Example of a continuously changing Drift output voltage" width="720">
-</p>
+The bank is fixed when the firmware is compiled/flashed. The rear DIP truth table is then interpreted inside that bank:
 
-### 2. Choose the algorithm with the rear DIP switches
-
-The original Drift rear PCB provides a two-position DIP switch labelled **1** and **2**. In the diagrams below, **ON is the upper position**. The switches are optional on the original hardware; leaving both positions open is electrically equivalent to `OFF / OFF` and therefore selects **Perlin**, the factory/default mode. This matches the original Free Modular configuration scheme. [The upstream assembly instructions](https://freemodular.org/modules/Drift/docs/assembly_instructions.html) likewise describe the switch as optional and Perlin as the unconnected default.
-
-<table>
-<tr>
-<td align="center" width="25%"><img src="docs/manual/assets/config-perlin.svg" alt="DIP 1 off, DIP 2 off: Perlin" width="190"><br><strong>Perlin</strong><br>DIP 1: OFF<br>DIP 2: OFF<br><em>Default</em></td>
-<td align="center" width="25%"><img src="docs/manual/assets/config-brownian.svg" alt="DIP 1 on, DIP 2 off: Brownian" width="190"><br><strong>Brownian</strong><br>DIP 1: ON<br>DIP 2: OFF</td>
-<td align="center" width="25%"><img src="docs/manual/assets/config-bezier.svg" alt="DIP 1 off, DIP 2 on: Bézier" width="190"><br><strong>Bézier</strong><br>DIP 1: OFF<br>DIP 2: ON</td>
-<td align="center" width="25%"><img src="docs/manual/assets/config-lfo.svg" alt="DIP 1 on, DIP 2 on: LFO" width="190"><br><strong>LFO</strong><br>DIP 1: ON<br>DIP 2: ON</td>
-</tr>
-</table>
-
-| Rear DIP 1 | Rear DIP 2 | Algorithm | Character |
+| Rear DIP 1 | Rear DIP 2 | Classic | Organic |
 |---|---|---|---|
-| **OFF** | **OFF** | **Perlin** | Smooth organic noise; default |
-| **ON** | **OFF** | **Brownian** | Bounded random walk with memory |
-| **OFF** | **ON** | **Bézier** | Random destinations joined by shaped transitions |
-| **ON** | **ON** | **LFO** | Periodic falling-saw ↔ triangle ↔ rising-saw modulation |
+| **OFF** | **OFF** | Perlin | Fractal |
+| **ON** | **OFF** | Brownian | Vector |
+| **OFF** | **ON** | Bézier | Rain |
+| **ON** | **ON** | LFO | Attractor |
 
-> [!NOTE]
-> The table uses the **physical switch numbers printed on the rear DIP package**, because those are what a user sees when configuring the module. Internal firmware names and Arduino pin numbers are implementation details and should not be used to configure the hardware.
+The switches are sampled only during startup. Cycle power after changing them. **ON is the upper physical switch position.**
+
+For mode-specific control semantics, mathematics, figures and use cases, use the bank guides:
+
+- **[Classic bank — Perlin, Brownian, Bézier, LFO](README-CLASSIC.md)**
+- **[Organic bank — Fractal, Vector, Rain, Attractor](README-ORGANIC.md)**
 
 ### 3. Make the first patch
 
-1. Set the rear DIP switches for the algorithm you want and power the rack normally.
-2. Patch **OUT** to a modulation destination such as filter cutoff, wavetable position, waveshaping, effect depth, panning or another CV-controlled parameter.
-3. Turn **Attenuation** fully clockwise while learning the mode, then reduce it if the destination needs a smaller modulation range.
-4. Set **Speed** around the middle and listen to the time scale of the movement.
-5. Sweep **Texture** through its range; its meaning changes substantially between algorithms.
-6. Patch a 0–5 V modulation source into **Speed CV** or **Texture CV** when you want Drift's own behavior to evolve under external control.
+1. Flash the desired bank and set the rear DIP switches for the algorithm you want.
+2. Power the rack normally.
+3. Patch **OUT** to a modulation destination such as filter cutoff, wavetable position, waveshaping, effect depth, panning or another CV-controlled parameter.
+4. Turn **Attenuation** fully clockwise while learning the mode, then reduce it if the destination needs a smaller modulation range.
+5. Start with **Speed** and **Texture** near the middle and explore their behavior using the selected bank guide.
+6. Patch 0–5 V modulation into **Speed CV** or **Texture CV** when you want Drift's behavior to evolve under external control.
 
 > [!TIP]
 > Drift outputs **0–10 V unipolar CV**. If the destination expects a smaller or bipolar range, use the Attenuation knob and, where necessary, an external attenuverter/offset stage.
-
-### 4. Controls at a glance
-
-| Mode | Speed | Texture knob | Texture CV |
-|---|---|---|---|
-| **Perlin** | Exponential time scale, approximately 1 V/oct with Speed CV | Blends in a second octave running 4× faster | Adds to octave blend |
-| **Brownian** | Raises both movement probability and step size | Controls how tightly the output follows the underlying random-walk target | Adds to smoothing control |
-| **Bézier** | Base transition/segment rate, approximately 1 V/oct with Speed CV | Morphs the transition curve **and** contributes to timing variation | Widens timing variation only |
-| **LFO** | Periodic frequency, approximately 1 V/oct with Speed CV | Moves the waveform apex from falling saw through triangle to rising saw | Adds to skew/apex position |
-
-For installation details, electrical ranges, full operating notes and the mathematical background of each mode, see the maintained [user manual](docs/manual/README.md).
 
 ## Contents
 
 - [What is Drift?](#what-is-drift)
 - [Why this firmware?](#why-this-firmware)
 - [Quick start](#quick-start)
-  - [Know the front panel](#1-know-the-front-panel)
-  - [Choose the algorithm with the rear DIP switches](#2-choose-the-algorithm-with-the-rear-dip-switches)
-  - [Make the first patch](#3-make-the-first-patch)
-  - [Controls at a glance](#4-controls-at-a-glance)
-- [Contents](#contents)
-- [Algorithms and configuration](#algorithms-and-configuration)
-  - [Perlin — smooth organic movement](#perlin--smooth-organic-movement)
-  - [Brownian — a random walk with memory](#brownian--a-random-walk-with-memory)
-  - [Bézier — random destinations with shaped travel](#bézier--random-destinations-with-shaped-travel)
-  - [LFO — deterministic skewed triangle and saws](#lfo--deterministic-skewed-triangle-and-saws)
-- [Alternative algorithm banks](#alternative-algorithm-banks)
-  - [Organic bank](#organic-bank)
-- [Original-firmware findings](#original-firmware-findings)
+- [Algorithm-bank guides](#algorithm-bank-guides)
 - [Release history](#release-history)
 - [Engineering architecture](#engineering-architecture)
 - [Code documentation](#code-documentation)
@@ -154,193 +116,16 @@ For installation details, electrical ranges, full operating notes and the mathem
 - [Release process](#release-process)
 - [Upstream and licence](#upstream-and-licence)
 
-## Algorithms and configuration
+## Algorithm-bank guides
 
-The four algorithms share the same front panel but deliberately interpret **Speed** and **Texture** differently. That is the core of Drift: the controls remain simple while the underlying motion model changes from smooth correlated noise, through a memory-bearing random walk and shaped random segments, to a conventional periodic LFO.
+The detailed user-facing algorithm documentation now lives at repository root so each bank can evolve without turning this main README into a manual of eight unrelated control models.
 
-### Perlin — smooth organic movement
+| Guide | Includes |
+|---|---|
+| **[README-CLASSIC.md](README-CLASSIC.md)** | DIP mapping, controls, Perlin/Brownian/Bézier/LFO mathematics and figures, upstream findings, Classic build commands |
+| **[README-ORGANIC.md](README-ORGANIC.md)** | DIP mapping, controls, Fractal/Vector/Rain/Attractor mathematics and figures, hardware constraints, Organic build commands |
 
-Perlin is the default mode and the closest expression of Drift's original design idea. It generates **continuous gradient noise** rather than jumping between independent random values. The result can wander for a long time without settling into an obvious repeating cycle and without the hard corners of sample-and-hold modulation.
-
-<table>
-<tr>
-<td align="center" width="50%"><img src="docs/manual/assets/perlin-low-texture.svg" alt="Perlin at low Texture" width="360"><br><strong>Low Texture</strong><br>Broad, slow and very smooth movement</td>
-<td align="center" width="50%"><img src="docs/manual/assets/perlin-medium-texture.svg" alt="Perlin at higher Texture" width="360"><br><strong>Higher Texture</strong><br>More fine movement from the faster octave</td>
-</tr>
-</table>
-
-**Speed** moves through the noise landscape with an approximately 1 V/oct exponential mapping. **Texture** blends in a second Perlin octave that advances four times faster than the base layer. Low Texture is especially useful for slowly changing timbre, stereo position, effect depth or other parameters where obvious random steps would be distracting; higher Texture keeps the broad motion but adds smaller-scale activity.
-
-### Brownian — a random walk with memory
-
-Brownian mode does not choose a new unrelated voltage on every event. It maintains a bounded target and moves that target up or down in random steps, so the next state depends on where the process already is. A proportional smoother then determines how closely the output follows that wandering target.
-
-<p align="center">
-  <img src="docs/manual/assets/brownian-texture-comparison.svg" alt="Brownian motion at different Texture settings" width="720">
-</p>
-
-**Speed is intentionally not 1 V/oct in this mode.** Raising Speed increases both the probability of a random-walk event and the possible step size. **Texture** controls the following/smoothing coefficient: low Texture creates substantial inertia and long, drifting movements; high Texture follows the underlying walk more closely and reveals more jitter. Brownian is useful when modulation should feel as though it has momentum and history rather than merely being smooth noise.
-
-### Bézier — random destinations with shaped travel
-
-Bézier mode chooses successive random destination voltages and connects them with monotone cubic transition curves. This creates modulation that has identifiable journeys from one level to the next while remaining non-repeating.
-
-<table>
-<tr>
-<td align="center" width="50%"><img src="docs/manual/assets/bezier-inverse.svg" alt="Inverse Bézier transition shape" width="360"><br><strong>Left of centre</strong><br>Transition-emphasised inverse easing</td>
-<td align="center" width="50%"><img src="docs/manual/assets/bezier-smooth.svg" alt="Smooth Bézier transition shape" width="360"><br><strong>Right of centre</strong><br>Smooth easing into and out of destinations</td>
-</tr>
-</table>
-
-**Speed** sets the base segment rate with the same approximately 1 V/oct mapping used by Perlin and LFO. The **Texture knob has two related jobs**: it continuously morphs the transition curve and, as it moves away from the centre, increases random variation in segment timing. Around 12 o'clock the curve is effectively linear and timing can become regular. **Texture CV affects timing variation only**, so external CV can make the rhythm of the segments more or less irregular without changing the selected curve shape.
-
-The timing variation uses a symmetric triangular distribution in logarithmic speed space. Musically, this means a given amount of variation remains proportional whether the segments are slow or fast rather than corresponding to a fixed number of milliseconds.
-
-### LFO — deterministic skewed triangle and saws
-
-LFO mode is the non-random member of the family. It uses the same simple controls to provide a periodic waveform whose apex can be moved continuously across the cycle.
-
-<p align="center">
-  <img src="docs/manual/assets/lfo-skew-texture.svg" alt="LFO Texture moving between falling saw, triangle and rising saw" width="720">
-</p>
-
-**Speed** controls frequency with the approximately 1 V/oct exponential mapping. **Texture** moves from a falling saw at the low end, through a symmetric triangle near the centre, to a rising saw at the high end. Live Texture changes are applied immediately; the firmware remaps phase so the present output level is retained as closely as the fixed-point representation allows. The exact saw endpoints naturally keep the ordinary sawtooth discontinuity at cycle wrap.
-
-Use the LFO when the modulation must repeat predictably or when asymmetric rise/fall timing is itself the musical gesture—for example filter sweeps, PWM, amplitude motion or rhythmic parameter animation.
-
-## Alternative algorithm banks
-
-The firmware can select an entire four-algorithm bank **at compile time**. The rear DIP switches still choose one of four slots at startup; the build decides which algorithm occupies each slot. The default remains `FMD_BANK_CLASSIC`, so ordinary `nanoatmega328new`, `nanoatmega328` and `native` environments preserve the 0.1.0 Classic behavior.
-
-This design is deliberately compile-time rather than runtime. Only the selected bank is owned by `DriftEngine`, so an experimental bank does not reserve algorithm state in a Classic image. It also keeps the hardware interaction unchanged: there is no hidden bank-selection gesture and no additional persistent setting.
-
-> [!IMPORTANT]
-> **Attenuation is not a firmware input.** On the original Drift hardware it scales the analogue signal after the DAC. Alternative algorithms may therefore describe it musically as output **Depth** or **Intensity**, but they cannot read its position or use it as an internal parameter such as pitch spread.
-
-<p align="center">
-  <img src="docs/manual/assets/organic-bank-overview.svg" alt="Classic and Organic banks using the same four rear DIP positions" width="820">
-</p>
-
-The rear DIP switches therefore select a **slot inside the flashed bank**. They never switch between Classic and Organic; changing bank means flashing the corresponding firmware image.
-
-### Organic bank
-
-The first alternative bank is the **Organic bank**, currently under `Unreleased`. It explores four forms of motion that are intentionally distinct from the Classic set:
-
-| Rear DIP 1 | Rear DIP 2 | Algorithm | Speed | Texture | Attenuation | Character |
-|---|---|---|---|---|---|---|
-| **OFF** | **OFF** | **Fractal** | Traversal rate | Roughness / multi-scale detail | Depth | Correlated noise layered over three time scales |
-| **ON** | **OFF** | **Vector** | Flow rate | Cross-axis coupling | Depth | Deterministic motion through a coupled two-dimensional toroidal field |
-| **OFF** | **ON** | **Rain** | Drop-tail decay speed | **Density** | **Intensity** | Shot-noise-inspired random impulses with overlapping decays |
-| **ON** | **ON** | **Attractor** | Travel/interpolation rate | Hénon parameter $a$ | Depth | Deterministic nonlinear motion around a Hénon attractor |
-
-The physical DIP truth table is identical to Classic; only the occupants of the four slots change. Selection is still sampled only at startup.
-
-#### Fractal — self-similar motion across scales
-
-Fractal combines three continuous gradient-noise layers at 1×, 4× and 16× phase speed. Texture redistributes a constant total gain from the broad layer toward the faster layers rather than simply increasing output amplitude. At minimum Texture only the macro layer is present; at maximum Texture the fixed weights are 512/320/192 over a denominator of 1024.
-
-```math
-F(t)=w_0(T)n(t)+w_1(T)n(4t)+w_2(T)n(16t),\qquad
-w_0+w_1+w_2=1
-```
-
-The result is procedural fractal noise inspired by multi-scale/fBm construction, but the firmware does **not** claim to implement an exact fractional Brownian motion process.
-
-<p align="center">
-  <img src="docs/manual/assets/fractal-texture.svg" alt="Fractal Texture moving gain from macro motion into finer scales" width="820">
-</p>
-
-#### Vector — coupled two-dimensional flow
-
-Vector maintains two phase coordinates on a torus. Each axis advances continuously, while Texture introduces bounded cross-coupling from the other axis. The scalar output is a projection of both bipolar triangle coordinates.
-
-```math
-\phi_x[n+1]=\phi_x[n]+\Delta_x\bigl(1+c(T)y[n]\bigr)
-```
-
-```math
-\phi_y[n+1]=\phi_y[n]+\Delta_y\bigl(1-c(T)x[n]\bigr)
-```
-
-At zero Texture the two phases are uncoupled; increasing Texture bends the path without requiring random numbers. Cross-coupling is bounded so both axes remain forward-moving.
-
-<p align="center">
-  <img src="docs/manual/assets/vector-flow.svg" alt="Vector coupled two-dimensional trajectory and output projection" width="820">
-</p>
-
-#### Rain — density-controlled stochastic impulses
-
-Rain treats Texture as **Density** and Speed as the decay speed of the aggregate envelope. Random arrivals add finite impulses; between arrivals the envelope leaks toward zero while preserving fractional decay residual, so quiet tails do not freeze at one code.
-
-```math
-y[n+1]=(1-\alpha(S))y[n]+\sum_i A_i\,\delta[n-n_i]
-```
-
-The arrival process is a discrete Bernoulli approximation to the impulse-arrival idea associated with shot noise, not a claim of an exact continuous-time Poisson process. The front-panel Attenuation control has a particularly natural role here: because it scales the analogue result, it is the final **Intensity** control.
-
-<p align="center">
-  <img src="docs/manual/assets/rain-density.svg" alt="Rain output at low medium and high Density" width="820">
-</p>
-
-#### Attractor — deterministic nonlinear motion
-
-Attractor uses a fixed-point Hénon map. Texture selects $a$ from 1.20 to 1.40 while $b$ remains approximately 0.30; Speed determines how quickly the output travels between successive map states. Linear interpolation prevents the discrete map from becoming an audible/control-rate sample-and-hold staircase.
-
-```math
-x_{n+1}=1-a x_n^2+y_n
-```
-
-```math
-y_{n+1}=b x_n
-```
-
-Texture should be understood as **structure**, not a guaranteed monotonic "amount of chaos": nonlinear parameter sweeps can contain qualitatively different regimes. The fixed-point state space is finite, so any digital trajectory is ultimately periodic; the practical question is the structure and length of the orbit at a given Texture setting, not whether the MCU can realise mathematical infinity.
-
-<p align="center">
-  <img src="docs/manual/assets/attractor-henon.svg" alt="Attractor fixed-point Hénon orbit and output projection" width="820">
-</p>
-
-Build the bank with the dedicated PlatformIO environments, for example:
-
-```bash
-pio run -e nanoatmega328new_organic
-pio test -e native_organic
-```
-
-The compile-time contract and mathematical design are documented in [Organic algorithm bank design](docs/analysis/algorithm-banks/organic-bank-design.md). Each mode also has its own engineering analysis under [docs/analysis/algorithms](docs/analysis/algorithms/README.md).
-
-### Hardware-visible signal order
-
-The portable `ControlFrame` preserves the original hardware-visible ADC order:
-
-1. Speed CV — A4
-2. Texture CV — A5
-3. Speed knob — ADC6/A6
-4. Texture knob — ADC7/A7
-
-The output remains a 12-bit MCP4922 Channel-A value; Channel B is unused. The existing single LED follows the output through an 8-bit gamma table.
-
-## Original-firmware findings
-
-The upstream implementation remains the design reference. The table below summarizes the findings that materially affected this firmware. The wording is intentionally descriptive rather than judgmental; detailed derivations and evidence are in the linked developer analyses.
-
-| Area | Upstream observation | Current treatment |
-|---|---|---|
-| **Brownian — Texture scaling** | Most of the 10-bit Texture range is interpreted directly as raw Q0.16, followed by a separate direct-tracking regime near the top of the control range. | Normalize the complete 0…1023 control range to a documented smoothing range and remove the abrupt regime change. |
-| **Brownian — convergence** | Fractional smoothing movement is discarded, so sufficiently small non-zero corrections can quantize to zero before the target is reached. | Retain fractional residual so mathematically non-zero movement continues to accumulate. |
-| **Bézier — timing distribution** | The implementation samples a triangular distribution in logarithmic speed space, although older documentation described it as Gaussian. | Keep the triangular model as the implemented musical design and document it accurately. |
-| **Bézier — inverse CDF endpoint** | 256 stored values are used for 256 interpolation intervals, causing the upper interpolation index to clamp at the final entry. | Use 257 boundary samples for 256 intervals so both mathematical endpoints are represented. |
-| **Bézier — curve selection** | Crossing the Texture midpoint switches directly between two cubic easing families while a segment is running. | Morph continuously between the cubic responses instead of changing family at a single ADC code. |
-| **LFO — live Texture changes** | Skew/Texture is latched at cycle rollover, so changes can be delayed by almost a full cycle at slow rates. | Apply Texture immediately and remap phase to preserve the current output as closely as fixed-point resolution permits. |
-| **LFO — startup state** | The constructor uses a fixed initial apex and exposes a first-cycle fixed-point edge around the peak. | Initialize and process the requested shape from the first step, removing the startup-only discontinuity. |
-| **Perlin — fade evaluation** | Repeated truncating fixed-point polynomial operations can introduce local one-code reversals in an otherwise monotone quintic fade. | Evaluate the canonical quintic with a single rounded integer expression over the effective phase domain. |
-| **Frequency mapping — cost** | Frequency-to-phase conversion uses a 64-bit division in a recurring hot path. This is primarily a performance concern rather than a functional defect. | Use reciprocal multiplication plus a bounded exact correction; tests compare the result with the exact rational reference. |
-
-> [!NOTE]
-> A correction is accepted only where the intended mathematics or state behavior can be stated and tested. Differences that are part of Drift's musical character are retained even when another implementation might be possible.
-
-See the [original firmware analysis](docs/analysis/original-firmware-analysis.md) and the [algorithm analyses](docs/analysis/algorithms/README.md) for the full evidence chain. The upstream-finding table applies to the Classic bank; the project-defined Organic algorithms have separate design analyses.
+The maintained [PDF user manual source](docs/manual/README.md) remains the complete end-user reference. The engineering derivations stay under [docs/analysis](docs/analysis/algorithms/README.md).
 
 ## Release history
 
@@ -468,28 +253,29 @@ Tagged releases publish **both compile-time banks** for both supported Arduino N
 | **Classic** | `fm-drift-classic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-classic-nano-old-bootloader.X.Y.Z.hex` |
 | **Organic** | `fm-drift-organic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-organic-nano-old-bootloader.X.Y.Z.hex` |
 
-Matching `.elf` files are included for debugging/provenance. Each release also contains `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **four build-information files** matching the bank/bootloader variants, the versioned user-manual PDF and checksum manifests.
+Matching `.elf` files are included for debugging/provenance. Each release also contains `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **four build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests.
 
 > [!IMPORTANT]
 > Flashing chooses **Classic or Organic**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.
 
 ## User manual
 
-The maintained end-user source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It now documents **both compile-time banks and all eight modes**, including the Organic control mappings, DIP table, mathematical foundations and dedicated vector figures. The source file remains deliberately unversioned; only tagged releases produce a versioned PDF artifact.
+The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It now documents **both compile-time banks and all eight modes**, including the Organic control mappings, bank-specific DIP diagrams, mathematical foundations and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
 
 The manual repository area contains:
 
 - [publication and typography notes](docs/manual/README.md);
 - [CC BY-NC 4.0 manual licence](docs/manual/LICENSE);
+- [frozen release-source archive](docs/manual/releases/README.md);
 - [reusable vector diagrams](docs/manual/assets/README.md).
 
-Only a tagged release `vX.Y.Z` produces `drift-user-manual.X.Y.Z.pdf`; ordinary pushes and pull requests do not build or upload a manual PDF. The release workflow verifies document structure and embedded Ubuntu/Ubuntu Light fonts before publishing it.
+Only a prepared/tagged release `vX.Y.Z` publishes `drift-user-manual.X.Y.Z.odt` and `drift-user-manual.X.Y.Z.pdf`; ordinary pushes and pull requests do not create release snapshots or publication PDFs. The release workflow verifies that the frozen ODT matches the prepared source, then checks document structure and embedded Ubuntu/Ubuntu Light fonts before publishing the PDF.
 
 ## Release process
 
 Ordinary development after a release remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). Release `0.1.0` is produced from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0); its changelog section contains all changes included in that tag. For future releases, preparation creates the matching versioned changelog section and package metadata before the version tag is pushed.
 
-Releases are triggered **only by pushed version tags**. `.github/workflows/release.yml` has no manual release trigger and builds Classic and Organic firmware for both Nano bootloaders, the versioned manual PDF, bank-specific provenance files and checksum manifests only for the tag being published. Release notes are generated deterministically from the matching changelog section rather than from generic commit-message aggregation.
+Normal publication is triggered by pushed version tags. `.github/workflows/release.yml` also exposes a maintainer-only `workflow_dispatch` path for refreshing or recreating an **existing** tag without moving it. The workflow builds the firmware variants present in that tag, publishes the tag-pinned frozen/manual source as a versioned ODT, generates the matching PDF, adds bank-specific provenance files and checksum manifests, and derives release notes deterministically from the tagged changelog section rather than generic commit-message aggregation.
 
 See [docs/development/release-process.md](docs/development/release-process.md).
 

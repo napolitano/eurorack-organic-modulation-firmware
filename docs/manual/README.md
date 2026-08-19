@@ -3,15 +3,22 @@
 
 # Drift User Manual
 
-`drift-user-manual.odt` is the maintained source for the end-user manual shipped with tagged firmware releases.
+`drift-user-manual.odt` is the maintained editing source for the end-user manual. During release preparation, the final source is frozen byte-for-byte under [`releases/`](releases/) before the release commit is tagged.
 
-The source file intentionally has **no release version in its filename**. Only a tagged release `vX.Y.Z` publishes a generated PDF as:
+For release `X.Y.Z` the committed snapshot is:
 
 ```text
+docs/manual/releases/X.Y.Z/drift-user-manual.X.Y.Z.odt
+```
+
+The tag-driven workflow publishes that ODT unchanged and generates the matching PDF:
+
+```text
+drift-user-manual.X.Y.Z.odt
 drift-user-manual.X.Y.Z.pdf
 ```
 
-For example, tag `v0.1.0` produces `drift-user-manual.0.1.0.pdf`.
+Normal development continues to edit only `drift-user-manual.odt`; existing frozen snapshots are release records and must not be rewritten.
 
 ## Typography
 
@@ -26,11 +33,23 @@ sudo apt-get update
 sudo apt-get install libreoffice fonts-ubuntu poppler-utils
 ```
 
-Then build and verify a local versioned PDF with:
+During explicit release preparation, freeze and verify the final source first:
 
 ```bash
-python scripts/build_user_manual.py --version 0.1.0 --output-dir dist
-python scripts/check_user_manual.py dist/drift-user-manual.0.1.0.pdf
+python scripts/freeze_user_manual.py --version X.Y.Z
+python scripts/freeze_user_manual.py --version X.Y.Z --check
+```
+
+Then build and verify a local versioned PDF from the frozen source:
+
+```bash
+python scripts/build_user_manual.py \
+  --version X.Y.Z \
+  --source docs/manual/releases/X.Y.Z/drift-user-manual.X.Y.Z.odt \
+  --output-dir dist
+python scripts/check_user_manual.py \
+  dist/drift-user-manual.X.Y.Z.pdf \
+  --source docs/manual/releases/X.Y.Z/drift-user-manual.X.Y.Z.odt
 ```
 
 A local visual smoke build may use `--allow-font-substitution` with the checker when Ubuntu is deliberately unavailable. Such a PDF is **not release-grade**.
@@ -39,13 +58,13 @@ The PDF validator intentionally does **not** treat the ODT `meta:page-count` fie
 
 ## Reusable vector assets
 
-The explanatory graphics from the manual are maintained as standalone SVGs in [`assets/`](assets/). The current inventory contains **19 true-vector assets**: the Classic-bank/front-panel material plus five deterministic Organic-bank figures. They are vector artwork rather than SVG wrappers around raster images, keeping diagrams sharp on GitHub, in generated documentation and in downstream layouts.
+The explanatory graphics from the manual are maintained as standalone SVGs in [`assets/`](assets/). The current inventory contains **23 true-vector assets**: the shared/Classic material, four bank-specific Organic DIP diagrams and five deterministic Organic algorithm figures. They are vector artwork rather than SVG wrappers around raster images, keeping diagrams sharp on GitHub, in generated documentation and in downstream layouts.
 
 <p align="center">
   <img src="assets/drift-front-panel.svg" alt="Drift front panel controls" width="220">
 </p>
 
-The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). Organic figures are regenerated deterministically with `scripts/generate_organic_manual_assets.py`; generated geometry should not be edited by hand. These SVGs are covered by the same CC BY-NC 4.0 manual licence.
+The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). Organic DIP diagrams and Organic algorithm figures are regenerated deterministically with `scripts/generate_organic_manual_assets.py`; generated geometry should not be edited by hand. These SVGs are covered by the same CC BY-NC 4.0 manual licence.
 
 ## Behavioural source of truth
 
@@ -60,7 +79,7 @@ The manual describes the behavior of the firmware in this repository, including 
 - Rain maps Texture to event **Density**, Speed to envelope-decay speed, and the physical post-DAC Attenuation control naturally acts as final output **Intensity**.
 - Attractor uses a fixed-point Hénon map with Texture-controlled parameter `a`; because the digital state space is finite, its trajectories are ultimately periodic rather than mathematically infinite chaotic orbits.
 
-The manual covers **both compile-time banks and all eight modes**. Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains the musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/) and [`../analysis/algorithm-banks/`](../analysis/algorithm-banks/).
+The manual covers **both compile-time banks and all eight modes**. A dedicated **Algorithm banks** section explains the distinction between flashing a bank and selecting an algorithm. Each bank then has its own four DIP-switch diagrams before its mode descriptions; the manual deliberately avoids a cross-bank DIP comparison. Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains the musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/) and [`../analysis/algorithm-banks/`](../analysis/algorithm-banks/).
 
 ## Source contract
 

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Collect both Drift algorithm banks into an unambiguous release artifact set.
+"""Collect the selected Drift algorithm banks into release artifacts.
+
+The collector is intentionally bank-aware so current dual-bank releases and
+older Classic-only tags can be regenerated with the same release workflow.
 
 SPDX-License-Identifier: GPL-3.0-or-later
 """
@@ -12,6 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
+VALID_BANKS = ("classic", "organic")
 
 
 @dataclass(frozen=True)
@@ -21,7 +25,7 @@ class FirmwareImage:
     environment: str
 
 
-IMAGES = (
+ALL_IMAGES = (
     FirmwareImage("classic", "new", "nanoatmega328new"),
     FirmwareImage("classic", "old", "nanoatmega328"),
     FirmwareImage("organic", "new", "nanoatmega328new_organic"),
@@ -32,9 +36,33 @@ IMAGES = (
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--version", required=True, help="Release version without leading v")
+    parser.add_argument(
+        "--banks",
+        default="classic,organic",
+        help="Comma-separated banks to package (classic, organic)",
+    )
     parser.add_argument("--build-root", default=".pio/build")
     parser.add_argument("--output-dir", default="dist")
     return parser.parse_args()
+
+
+def parse_banks(raw: str) -> tuple[str, ...]:
+    banks = tuple(dict.fromkeys(part.strip().lower() for part in raw.split(",") if part.strip()))
+    if not banks:
+        raise ValueError("at least one algorithm bank must be selected")
+    invalid = [bank for bank in banks if bank not in VALID_BANKS]
+    if invalid:
+        raise ValueError(f"unknown algorithm bank(s): {', '.join(invalid)}")
+    if "classic" not in banks:
+        raise ValueError("Classic must remain part of every published Drift release")
+    return banks
+
+
+def images_for_banks(banks: tuple[str, ...]) -> tuple[FirmwareImage, ...]:
+    selected = tuple(image for image in ALL_IMAGES if image.bank in banks)
+    if not selected:
+        raise ValueError("selected bank set produced no firmware images")
+    return selected
 
 
 def artifact_name(image: FirmwareImage, version: str, extension: str) -> str:
@@ -44,9 +72,14 @@ def artifact_name(image: FirmwareImage, version: str, extension: str) -> str:
     )
 
 
-def copy_firmware_images(build_root: Path, output_dir: Path, version: str) -> list[str]:
+def copy_firmware_images(
+    build_root: Path,
+    output_dir: Path,
+    version: str,
+    images: tuple[FirmwareImage, ...],
+) -> list[str]:
     copied: list[str] = []
-    for image in IMAGES:
+    for image in images:
         environment_dir = build_root / image.environment
         for extension in ("hex", "elf"):
             source = environment_dir / f"firmware.{extension}"
@@ -60,13 +93,20 @@ def copy_firmware_images(build_root: Path, output_dir: Path, version: str) -> li
     return copied
 
 
-def write_firmware_manifest(output_dir: Path, version: str) -> str:
+def write_firmware_manifest(
+    output_dir: Path,
+    version: str,
+    banks: tuple[str, ...],
+    images: tuple[FirmwareImage, ...],
+) -> str:
     name = f"FIRMWARE-ARTIFACTS.{version}.md"
+    bank_names = " and ".join(bank.title() for bank in banks)
     lines = [
         f"# FM Drift firmware artifacts - {version}",
         "",
-        "Each release contains two independent compile-time algorithm banks. "
-        "Flash exactly one HEX image for the bank and Arduino Nano bootloader used by the module.",
+        f"This release contains the {bank_names} algorithm bank"
+        f"{'s' if len(banks) > 1 else ''}. Flash exactly one HEX image for the bank "
+        "and Arduino Nano bootloader used by the module.",
         "",
         "| Bank | Nano bootloader | HEX image | ELF image | Rear DIP slots |",
         "|---|---|---|---|---|",
@@ -75,20 +115,21 @@ def write_firmware_manifest(output_dir: Path, version: str) -> str:
         "classic": "OFF/OFF Perlin; ON/OFF Brownian; OFF/ON Bezier; ON/ON LFO",
         "organic": "OFF/OFF Fractal; ON/OFF Vector; OFF/ON Rain; ON/ON Attractor",
     }
-    for image in IMAGES:
+    for image in images:
         hex_name = artifact_name(image, version, "hex")
         elf_name = artifact_name(image, version, "elf")
         lines.append(
             f"| **{image.bank.title()}** | {image.bootloader} | `{hex_name}` | "
             f"`{elf_name}` | {dip[image.bank]} |"
         )
+
+    lines.extend(["", "## Which file should I flash?", ""])
+    if "classic" in banks:
+        lines.append("- **Classic** contains Perlin, Brownian, Bezier and LFO.")
+    if "organic" in banks:
+        lines.append("- **Organic** contains Fractal, Vector, Rain and Attractor.")
     lines.extend(
         [
-            "",
-            "## Which file should I flash?",
-            "",
-            "- **Classic** preserves the four Drift algorithms derived from the original firmware.",
-            "- **Organic** provides Fractal, Vector, Rain and Attractor in the same four physical DIP slots.",
             "- Choose **new bootloader** for a current Arduino Nano bootloader and **old bootloader** for the legacy Nano bootloader.",
             "- The rear DIP switches select an algorithm **inside the flashed bank**; they do not switch banks.",
             "",
@@ -96,11 +137,17 @@ def write_firmware_manifest(output_dir: Path, version: str) -> str:
             "",
             "## Companion release files",
             "",
-            f"- `drift-user-manual.{version}.pdf` — versioned user manual covering both banks.",
-            f"- `BUILD-INFO-classic-nano-new.{version}.txt` — Classic/new-bootloader build provenance.",
-            f"- `BUILD-INFO-classic-nano-old.{version}.txt` — Classic/old-bootloader build provenance.",
-            f"- `BUILD-INFO-organic-nano-new.{version}.txt` — Organic/new-bootloader build provenance.",
-            f"- `BUILD-INFO-organic-nano-old.{version}.txt` — Organic/old-bootloader build provenance.",
+            f"- `drift-user-manual.{version}.odt` — frozen user-manual source for this release.",
+            f"- `drift-user-manual.{version}.pdf` — PDF generated from that frozen source.",
+        ]
+    )
+    for image in images:
+        lines.append(
+            f"- `BUILD-INFO-{image.bank}-nano-{image.bootloader}.{version}.txt` — "
+            f"{image.bank.title()}/{image.bootloader}-bootloader build provenance."
+        )
+    lines.extend(
+        [
             "- `SHA256SUMS.txt` and `MD5SUMS.txt` — checksums for all release files.",
             "",
         ]
@@ -109,24 +156,47 @@ def write_firmware_manifest(output_dir: Path, version: str) -> str:
     return name
 
 
-def main() -> int:
-    args = parse_args()
-    if not VERSION_RE.fullmatch(args.version):
-        raise SystemExit(f"release-artifact error: invalid version {args.version!r}")
-
-    build_root = Path(args.build_root)
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    copied = copy_firmware_images(build_root, output_dir, args.version)
-    for documentation in ("README.md", "CHANGELOG.md", "LICENSE"):
+def copy_release_documentation(output_dir: Path, banks: tuple[str, ...]) -> list[str]:
+    required = ("README.md", "CHANGELOG.md", "LICENSE")
+    copied: list[str] = []
+    for documentation in required:
         source = Path(documentation)
         if not source.is_file():
             raise FileNotFoundError(f"missing release documentation: {source}")
         shutil.copy2(source, output_dir / source.name)
+        copied.append(source.name)
 
-    manifest = write_firmware_manifest(output_dir, args.version)
-    print(f"release artifacts: {len(copied)} firmware files + {manifest}")
+    # Bank guides were introduced after the first Classic-only release. Copy
+    # them when the source tag contains them, but remain compatible with older
+    # tags that predate the split documentation.
+    for bank in banks:
+        source = Path(f"README-BANK-{bank.upper()}.md")
+        if source.is_file():
+            shutil.copy2(source, output_dir / source.name)
+            copied.append(source.name)
+    return copied
+
+
+def main() -> int:
+    args = parse_args()
+    if not VERSION_RE.fullmatch(args.version):
+        raise SystemExit(f"release-artifact error: invalid version {args.version!r}")
+    try:
+        banks = parse_banks(args.banks)
+    except ValueError as exc:
+        raise SystemExit(f"release-artifact error: {exc}") from exc
+
+    images = images_for_banks(banks)
+    build_root = Path(args.build_root)
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    copied = copy_firmware_images(build_root, output_dir, args.version, images)
+    documentation = copy_release_documentation(output_dir, banks)
+    manifest = write_firmware_manifest(output_dir, args.version, banks, images)
+    print(
+        f"release artifacts: {len(copied)} firmware files + {len(documentation)} documentation files + {manifest}"
+    )
     return 0
 
 

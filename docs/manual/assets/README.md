@@ -18,6 +18,10 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 | `config-brownian.svg` | `Pictures/10000000000001C200000120799504B3.png` | Brownian configuration-switch position |
 | `config-bezier.svg` | `Pictures/10000000000001C200000120E424DA35.png` | Bézier configuration-switch position |
 | `config-lfo.svg` | `Pictures/10000000000001C20000012006867D0F.png` | LFO configuration-switch position |
+| `config-fractal.svg` | Generated from the Organic bank DIP mapping | Fractal configuration-switch position |
+| `config-vector.svg` | Generated from the Organic bank DIP mapping | Vector configuration-switch position |
+| `config-rain.svg` | Generated from the Organic bank DIP mapping | Rain configuration-switch position |
+| `config-attractor.svg` | Generated from the Organic bank DIP mapping | Attractor configuration-switch position |
 | `perlin-low-texture.svg` | `Pictures/1000000000000420000001686E61D248.png` | Low-texture Perlin example |
 | `perlin-medium-texture.svg` | `Pictures/1000000000000420000001683DE711E2.png` | Medium-texture Perlin example |
 | `bezier-smooth.svg` | `Pictures/1000000000000420000001680A4A5BF2.png` | Smooth Bézier easing example |
@@ -31,7 +35,7 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 | `rain-density.svg` | Generated from the production Bernoulli/decay control laws with the paired LFSR | Rain Density comparison |
 | `attractor-henon.svg` | Generated from the production Q2.14 Hénon iteration | Attractor fixed-point orbit and output projection |
 
-The five Organic-bank figures are generated deterministically by `scripts/generate_organic_manual_assets.py`. They are explanatory visualisations of the implemented control laws rather than oscilloscope captures.
+The Organic-bank configuration diagrams and the five Organic-bank explanatory figures are generated deterministically by `scripts/generate_organic_manual_assets.py`. They are explanatory visualisations of the implemented control laws rather than oscilloscope captures.
 
 The ODT now embeds the reusable vector front/back covers from this directory. Creative Commons marks, callout-number circles and small decorative symbols remain embedded document artwork because they do not add reusable technical information outside the composed manual pages.
 
