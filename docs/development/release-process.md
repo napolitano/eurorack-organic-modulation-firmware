@@ -50,11 +50,13 @@ Do not create the tag until the prepared release commit is the exact commit inte
 
 The release assets include a PDF generated from the maintained `docs/manual/drift-user-manual.odt` source. The repository source remains unversioned; only tag `vX.Y.Z` produces `drift-user-manual.X.Y.Z.pdf`. Normal pushes, pull requests and manually started CI runs do not generate publication PDFs.
 
+Every tagged release packages **four independently flashable firmware images** as both HEX and ELF: Classic and Organic, each for the new and old Arduino Nano bootloader. Filenames encode bank, bootloader and release version, for example `fm-drift-organic-nano-new-bootloader.X.Y.Z.hex`. `FIRMWARE-ARTIFACTS.X.Y.Z.md` is generated with the release and maps each filename to its bank, bootloader and rear-DIP algorithm slots. A separate `BUILD-INFO-*.X.Y.Z.txt` accompanies each of the four bank/bootloader variants and records its exact PlatformIO environment and toolchain provenance.
+
 The workflow intentionally does not use generic GitHub auto-generated notes because the changelog is the reviewed release narrative.
 
 ## 4. Release workflow
 
-`.github/workflows/release.yml` validates traceability and release-note generation, runs Classic and Organic native tests/sanitizers/coverage, builds both Nano bootloader targets for both compile-time banks, checks every AVR image against the flash/SRAM engineering budgets, compiles both timing-probe images, installs the publication toolchain and Ubuntu fonts, builds and validates the versioned user-manual PDF, creates bank-labelled firmware/provenance artifacts, writes SHA-256 and MD5 manifests, generates the changelog-based notes and publishes the GitHub Release for the pushed tag.
+`.github/workflows/release.yml` validates traceability and release-note generation, runs Classic and Organic native tests/sanitizers/coverage, builds both Nano bootloader targets for both compile-time banks, checks every AVR image against the flash/SRAM engineering budgets, compiles both timing-probe images, installs the publication toolchain and Ubuntu fonts, builds and validates the versioned user-manual PDF, packages all four bank/bootloader firmware variants with unambiguous versioned filenames, generates `FIRMWARE-ARTIFACTS.X.Y.Z.md` plus per-image build provenance, writes SHA-256 and MD5 manifests, generates the changelog-based notes and publishes the GitHub Release for the pushed tag.
 
 The manual check is strict for release builds: the PDF must have the expected page geometry and contain embedded Ubuntu and Ubuntu Light fonts. Font substitution is not accepted for a tagged release.
 

@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIR = ROOT / "docs" / "manual" / "assets"
 
 REQUIRED = {
+    "drift-front-cover.svg",
+    "drift-back-cover.svg",
     "drift-front-panel.svg",
     "config-perlin.svg",
     "config-brownian.svg",
@@ -23,6 +25,11 @@ REQUIRED = {
     "brownian-texture-comparison.svg",
     "lfo-skew-texture.svg",
     "drift-output-example.svg",
+    "organic-bank-overview.svg",
+    "fractal-texture.svg",
+    "vector-flow.svg",
+    "rain-density.svg",
+    "attractor-henon.svg",
 }
 
 SVG_NS = "http://www.w3.org/2000/svg"

@@ -11,6 +11,8 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 
 | SVG | Manual source | Purpose |
 |---|---|---|
+| `drift-front-cover.svg` | Vector replacement for the original composed cover raster | User-manual cover covering both firmware banks |
+| `drift-back-cover.svg` | Vector replacement for the original composed back-cover raster | Credits, licence and Classic/Organic bank summary |
 | `drift-front-panel.svg` | `Pictures/10000000000004D000000764D6EF55BF.png` | Numbered front-panel control reference |
 | `config-perlin.svg` | `Pictures/10000000000001C2000001203D7620D3.png` | Perlin configuration-switch position |
 | `config-brownian.svg` | `Pictures/10000000000001C200000120799504B3.png` | Brownian configuration-switch position |
@@ -23,8 +25,15 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 | `brownian-texture-comparison.svg` | `Pictures/100000000000042000000193C5D884ED.png` | Brownian full-texture vs. smoothed comparison |
 | `lfo-skew-texture.svg` | `Pictures/10000000000004200000019356D9371B.png` | Skewed-triangle LFO texture comparison |
 | `drift-output-example.svg` | `Pictures/10000000000003A800000186D21A4305.png` | Generic Drift output trace |
+| `organic-bank-overview.svg` | Generated from the compile-time bank/DIP mapping | Classic vs Organic bank slot overview |
+| `fractal-texture.svg` | Generated from the documented 1x/4x/16x gradient-noise mix | Fractal Texture comparison |
+| `vector-flow.svg` | Generated from the documented coupled toroidal phase model | Vector internal trajectory and scalar projection |
+| `rain-density.svg` | Generated from the production Bernoulli/decay control laws with the paired LFSR | Rain Density comparison |
+| `attractor-henon.svg` | Generated from the production Q2.14 Hénon iteration | Attractor fixed-point orbit and output projection |
 
-The ODT also contains cover artwork, Creative Commons marks, callout-number circles and decorative symbols. Those are not duplicated here because they do not add reusable technical information outside the composed manual pages.
+The five Organic-bank figures are generated deterministically by `scripts/generate_organic_manual_assets.py`. They are explanatory visualisations of the implemented control laws rather than oscilloscope captures.
+
+The ODT now embeds the reusable vector front/back covers from this directory. Creative Commons marks, callout-number circles and small decorative symbols remain embedded document artwork because they do not add reusable technical information outside the composed manual pages.
 
 ## Editing rules
 
@@ -34,6 +43,7 @@ The ODT also contains cover artwork, Creative Commons marks, callout-number circ
 - Prefer the manual palette and Ubuntu-family typography.
 - Do not add generated release-version strings to asset filenames.
 - If the corresponding figure in the ODT changes materially, update the SVG and this source mapping together.
+- Regenerate the Organic figures with `python scripts/generate_organic_manual_assets.py`; do not hand-edit generated geometry.
 
 Run `python scripts/check_manual_assets.py` to verify the vector-asset contract.
 

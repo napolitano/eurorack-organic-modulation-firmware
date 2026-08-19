@@ -60,6 +60,8 @@ Initial public release.
     )
     require("v0.1.0...v0.2.0" in notes, "compare link missing")
     require("## Artifact integrity" in notes, "integrity section missing")
+    require("Classic and Organic firmware images" in notes, "dual-bank artifact description missing")
+    require("FIRMWARE-ARTIFACTS.X.Y.Z.md" in notes, "firmware manifest description missing")
     require("drift-footer" not in notes, "documentation footer leaked into release notes")
     require("From Munich with" not in notes, "documentation footer text leaked into release notes")
 

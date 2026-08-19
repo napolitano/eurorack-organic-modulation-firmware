@@ -19,6 +19,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", required=True)
     parser.add_argument("--environment", default="nanoatmega328new")
+    parser.add_argument("--bank", choices=("classic", "organic"), required=True)
     args = parser.parse_args()
 
     home = Path.home()
@@ -28,6 +29,8 @@ def main() -> int:
     lines = [
         "FM Drift release build information",
         "==================================",
+        f"Algorithm bank: {args.bank.title()}",
+        f"PlatformIO environment: {args.environment}",
         f"Host: {platform.platform()}",
         f"Python: {platform.python_version()}",
         f"PlatformIO: {capture(['pio', '--version'])}",

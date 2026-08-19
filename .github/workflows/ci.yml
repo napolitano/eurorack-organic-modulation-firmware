@@ -23,6 +23,7 @@ jobs:
       - run: python scripts/check_markdown_math.py
       - run: python scripts/test_generate_release_notes.py
       - run: python scripts/test_avr_resource_budget.py
+      - run: python scripts/test_prepare_release_artifacts.py
 
   native-tests:
     runs-on: ubuntu-24.04

@@ -63,6 +63,7 @@ jobs:
           python scripts/check_markdown_math.py
           python scripts/test_generate_release_notes.py
           python scripts/test_avr_resource_budget.py
+          python scripts/test_prepare_release_artifacts.py
           python scripts/check_user_manual_source.py
           python scripts/check_manual_assets.py
           python scripts/test_user_manual_tooling.py
@@ -137,20 +138,29 @@ jobs:
           pdffonts "dist/drift-user-manual.${MANUAL_VERSION}.pdf"
           python scripts/check_user_manual.py "dist/drift-user-manual.${MANUAL_VERSION}.pdf"
 
-      - name: Prepare release artifacts
+      - name: Prepare dual-bank release artifacts
+        shell: bash
         run: |
-          mkdir -p dist
-          cp .pio/build/nanoatmega328new/firmware.hex dist/fm-drift-nano-new-bootloader.hex
-          cp .pio/build/nanoatmega328new/firmware.elf dist/fm-drift-nano-new-bootloader.elf
-          cp .pio/build/nanoatmega328/firmware.hex dist/fm-drift-nano-old-bootloader.hex
-          cp .pio/build/nanoatmega328/firmware.elf dist/fm-drift-nano-old-bootloader.elf
-          cp .pio/build/nanoatmega328new_organic/firmware.hex dist/fm-drift-organic-nano-new-bootloader.hex
-          cp .pio/build/nanoatmega328new_organic/firmware.elf dist/fm-drift-organic-nano-new-bootloader.elf
-          cp .pio/build/nanoatmega328_organic/firmware.hex dist/fm-drift-organic-nano-old-bootloader.hex
-          cp .pio/build/nanoatmega328_organic/firmware.elf dist/fm-drift-organic-nano-old-bootloader.elf
-          cp README.md CHANGELOG.md LICENSE dist/
-          python scripts/write_build_info.py --output dist/BUILD-INFO.txt --environment nanoatmega328new
-          python scripts/write_build_info.py --output dist/BUILD-INFO-organic.txt --environment nanoatmega328new_organic
+          RELEASE_VERSION="${GITHUB_REF_NAME#v}"
+          python scripts/prepare_release_artifacts.py \
+            --version "${RELEASE_VERSION}" \
+            --output-dir dist
+          python scripts/write_build_info.py \
+            --bank classic \
+            --environment nanoatmega328new \
+            --output "dist/BUILD-INFO-classic-nano-new.${RELEASE_VERSION}.txt"
+          python scripts/write_build_info.py \
+            --bank classic \
+            --environment nanoatmega328 \
+            --output "dist/BUILD-INFO-classic-nano-old.${RELEASE_VERSION}.txt"
+          python scripts/write_build_info.py \
+            --bank organic \
+            --environment nanoatmega328new_organic \
+            --output "dist/BUILD-INFO-organic-nano-new.${RELEASE_VERSION}.txt"
+          python scripts/write_build_info.py \
+            --bank organic \
+            --environment nanoatmega328_organic \
+            --output "dist/BUILD-INFO-organic-nano-old.${RELEASE_VERSION}.txt"
 
       - name: Generate release checksums
         working-directory: dist
@@ -180,7 +190,7 @@ jobs:
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: release-firmware
+          name: release-artifacts-${{ github.ref_name }}
           path: dist/
 
       - name: Publish GitHub release for tag

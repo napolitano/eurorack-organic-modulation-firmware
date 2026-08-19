@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 2144" role="img" aria-label="Drift user manual front cover">
+  <title>Drift user manual front cover</title>
+  <rect width="1010" height="2144" fill="#e64a2b"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M105 240 C220 285 330 360 445 275 C555 195 680 220 780 175 C845 145 895 175 925 205" stroke="#f27962" stroke-width="13"/>
+    <path d="M105 390 C220 435 330 510 445 425 C555 345 680 370 780 325 C845 295 895 325 925 355" stroke="#ffaaa0" stroke-width="13"/>
+    <path d="M105 540 C220 585 330 660 445 575 C555 495 680 520 780 475 C845 445 895 475 925 505" stroke="#ffffff" stroke-width="13"/>
+  </g>
+  <g fill="#ffffff" font-family="Ubuntu, sans-serif">
+    <text x="110" y="1015" font-size="126" font-weight="300">Drift</text>
+    <line x1="110" y1="1090" x2="900" y2="1090" stroke="#ffffff" stroke-width="5"/>
+    <text x="110" y="1215" font-size="66" font-weight="400">User Manual</text>
+    <text x="110" y="1315" font-size="35" font-weight="300">Organic modulation source · Eurorack</text>
+    <rect x="110" y="1390" width="680" height="92" rx="18" fill="none" stroke="#ffffff" stroke-width="4"/>
+    <text x="145" y="1452" font-size="32" font-weight="500">Classic + Organic · 8 algorithms</text>
+    <text x="110" y="1635" font-size="31" font-weight="300">Manual  Axel Napolitano</text>
+    <text x="110" y="1688" font-size="31" font-weight="300">Module design  Quinn Freedman · Free Modular</text>
+    <text x="110" y="1741" font-size="31" font-weight="300">Manual  CC BY-NC 4.0</text>
+    <text x="505" y="2045" text-anchor="middle" font-size="31" font-weight="500">From Munich with</text>
+    <path d="M764 2018 C750 1998 716 2006 716 2034 C716 2064 764 2095 764 2095 C764 2095 812 2064 812 2034 C812 2006 778 1998 764 2018Z" fill="#ffffff"/>
+  </g>
+</svg>

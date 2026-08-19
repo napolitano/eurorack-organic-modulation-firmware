@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 390" role="img" aria-label="Classic and Organic bank DIP mapping">
+<title>Classic and Organic bank DIP mapping</title><style>
+  text { font-family: Ubuntu, "Ubuntu Sans", Arial, sans-serif; }
+  .title { font-size: 34px; font-weight: 700; fill: #1a1a1a; }
+  .subtitle { font-size: 24px; font-weight: 300; fill: #8d8d8d; }
+  .label { font-size: 21px; font-weight: 500; fill: #1a1a1a; }
+  .small { font-size: 17px; font-weight: 300; fill: #777; }
+</style>
+<rect width="1056" height="390" fill="white"/>
+<text x="34" y="52" class="title">Same DIP positions, different compile-time bank</text>
+<text x="34" y="87" class="subtitle">The flashed firmware chooses the bank; the rear switches choose one of its four slots at startup</text>
+<text x="38" y="193" class="label">Classic</text><text x="38" y="301" class="label" fill="#e64a2b">Organic</text>
+<text x="218" y="132" text-anchor="middle" class="small">OFF / OFF</text><rect x="130" y="152" width="176" height="68" rx="9" fill="#f4f4f4"/><text x="218" y="194" text-anchor="middle" class="label">Perlin</text><rect x="130" y="260" width="176" height="68" rx="9" fill="#fff1ed"/><text x="218" y="302" text-anchor="middle" class="label">Fractal</text><text x="420" y="132" text-anchor="middle" class="small">ON / OFF</text><rect x="332" y="152" width="176" height="68" rx="9" fill="#f4f4f4"/><text x="420" y="194" text-anchor="middle" class="label">Brownian</text><rect x="332" y="260" width="176" height="68" rx="9" fill="#fff1ed"/><text x="420" y="302" text-anchor="middle" class="label">Vector</text><text x="622" y="132" text-anchor="middle" class="small">OFF / ON</text><rect x="534" y="152" width="176" height="68" rx="9" fill="#f4f4f4"/><text x="622" y="194" text-anchor="middle" class="label">Bézier</text><rect x="534" y="260" width="176" height="68" rx="9" fill="#fff1ed"/><text x="622" y="302" text-anchor="middle" class="label">Rain</text><text x="824" y="132" text-anchor="middle" class="small">ON / ON</text><rect x="736" y="152" width="176" height="68" rx="9" fill="#f4f4f4"/><text x="824" y="194" text-anchor="middle" class="label">LFO</text><rect x="736" y="260" width="176" height="68" rx="9" fill="#fff1ed"/><text x="824" y="302" text-anchor="middle" class="label">Attractor</text>
+</svg>

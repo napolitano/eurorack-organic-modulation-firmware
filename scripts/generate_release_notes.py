@@ -95,7 +95,7 @@ def render_notes(*, text: str, tag: str, repository: str, server_url: str, previ
     output.extend([
         "## Artifact integrity",
         "",
-        "Release assets include `SHA256SUMS.txt` and `MD5SUMS.txt` covering all generated firmware, user-manual and provenance files. Use the SHA-256 manifest for normal integrity verification; the MD5 manifest is provided only as an additional compatibility checksum.",
+        "Release assets include versioned Classic and Organic firmware images for both Nano bootloaders, the versioned user manual, `FIRMWARE-ARTIFACTS.X.Y.Z.md`, per-image build provenance, and `SHA256SUMS.txt` / `MD5SUMS.txt` covering every generated release file. Use the SHA-256 manifest for normal integrity verification; the MD5 manifest is provided only as an additional compatibility checksum.",
         "",
         "## Diff",
         "",

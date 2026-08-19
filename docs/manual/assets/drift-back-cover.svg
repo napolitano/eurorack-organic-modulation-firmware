@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 2144" role="img" aria-label="Drift user manual back cover">
+  <title>Drift user manual back cover</title>
+  <rect width="1010" height="2144" fill="#e64a2b"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M105 240 C220 285 330 360 445 275 C555 195 680 220 780 175 C845 145 895 175 925 205" stroke="#f27962" stroke-width="13"/>
+    <path d="M105 390 C220 435 330 510 445 425 C555 345 680 370 780 325 C845 295 895 325 925 355" stroke="#ffaaa0" stroke-width="13"/>
+    <path d="M105 540 C220 585 330 660 445 575 C555 495 680 520 780 475 C845 445 895 475 925 505" stroke="#ffffff" stroke-width="13"/>
+  </g>
+  <g fill="#ffffff" font-family="Ubuntu, sans-serif">
+    <text x="110" y="925" font-size="92" font-weight="600">DRIFT</text>
+    <text x="110" y="1010" font-size="44" font-weight="300">Organic modulation source</text>
+    <line x1="110" y1="1080" x2="900" y2="1080" stroke="#ffffff" stroke-width="5"/>
+
+    <text x="110" y="1190" font-size="31" font-weight="300">Manual</text>
+    <text x="110" y="1240" font-size="38" font-weight="600">Axel Napolitano</text>
+
+    <text x="110" y="1340" font-size="31" font-weight="300">Module design</text>
+    <text x="110" y="1390" font-size="38" font-weight="600">Quinn Freedman · Free Modular</text>
+
+    <text x="110" y="1490" font-size="31" font-weight="300">Algorithm banks</text>
+    <text x="110" y="1540" font-size="31" font-weight="600">Classic  Perlin · Brownian · Bézier · LFO</text>
+    <text x="110" y="1590" font-size="31" font-weight="600">Organic  Fractal · Vector · Rain · Attractor</text>
+
+    <text x="110" y="1690" font-size="31" font-weight="300">Manual licence</text>
+    <text x="110" y="1740" font-size="38" font-weight="600">CC BY-NC 4.0</text>
+
+    <text x="110" y="1885" font-size="31" font-weight="300">Independent, unofficial manual.</text>
+    <text x="110" y="1935" font-size="31" font-weight="300">Not affiliated with Free Modular.</text>
+
+    <text x="505" y="2070" text-anchor="middle" font-size="31" font-weight="500">From Munich with</text>
+    <path d="M764 2043 C750 2023 716 2031 716 2059 C716 2089 764 2120 764 2120 C764 2120 812 2089 812 2059 C812 2031 778 2023 764 2043Z" fill="#ffffff"/>
+  </g>
+</svg>

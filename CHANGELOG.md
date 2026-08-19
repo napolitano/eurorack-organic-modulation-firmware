@@ -14,7 +14,10 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Dedicated Organic PlatformIO build, native-test, sanitizer, coverage and timing environments for both Nano bootloader variants where applicable.
 - Dedicated mathematical unit suites and developer analyses for all four Organic algorithms plus a bank-level architecture/control-contract document.
 - Acceptance criteria AC-33 through AC-37 for compile-time bank selection and the four Organic mathematical contracts, expanding the current source to 37 criteria and 107 native test cases across 18 suites.
-- Future tagged-release packaging for both Classic and Organic Nano firmware images.
+- Tagged-release packaging for both Classic and Organic firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
+- Expanded user manual covering both compile-time banks and all eight algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for Fractal, Vector, Rain and Attractor.
+- Five deterministic true-vector Organic-bank documentation figures plus a generator for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor illustration.
+- New vector front/back manual covers that identify the Classic and Organic banks without retaining the former Classic-only algorithm list.
 
 ### Changed
 
@@ -23,6 +26,9 @@ This changelog records release-relevant changes to the firmware and repository. 
 - CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic and Organic builds independently.
 - Organic per-sample control mappings avoid general integer division in their hot paths where a bounded power-of-two mapping provides the documented behavior.
 - README, testing documentation and algorithm-analysis index now describe the compile-time bank model and the Organic control/DIP mapping.
+- README and release-process documentation now explain the dual-bank release files, bootloader variants, bank-vs-DIP selection boundary and versioned release manifest.
+- Tagged releases now emit separate build-provenance records for all four bank/bootloader firmware variants instead of describing only one environment per bank.
+- Release-note integrity text now explicitly describes the dual-bank firmware set, versioned manual, firmware-artifact manifest, provenance files and checksum manifests.
 
 ## 0.1.0 — 2026-08-19
 

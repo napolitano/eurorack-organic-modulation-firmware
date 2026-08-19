@@ -39,13 +39,13 @@ The PDF validator intentionally does **not** treat the ODT `meta:page-count` fie
 
 ## Reusable vector assets
 
-The explanatory graphics from the manual are maintained as standalone SVGs in [`assets/`](assets/). They are true vector redraws of the embedded manual artwork rather than SVG wrappers around raster images. This keeps diagrams sharp on GitHub, in generated documentation and in downstream layouts without duplicating opaque PNG assets.
+The explanatory graphics from the manual are maintained as standalone SVGs in [`assets/`](assets/). The current inventory contains **19 true-vector assets**: the Classic-bank/front-panel material plus five deterministic Organic-bank figures. They are vector artwork rather than SVG wrappers around raster images, keeping diagrams sharp on GitHub, in generated documentation and in downstream layouts.
 
 <p align="center">
   <img src="assets/drift-front-panel.svg" alt="Drift front panel controls" width="220">
 </p>
 
-The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). These SVGs are covered by the same CC BY-NC 4.0 manual licence.
+The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). Organic figures are regenerated deterministically with `scripts/generate_organic_manual_assets.py`; generated geometry should not be edited by hand. These SVGs are covered by the same CC BY-NC 4.0 manual licence.
 
 ## Behavioural source of truth
 
@@ -55,8 +55,12 @@ The manual describes the behavior of the firmware in this repository, including 
 - Bezier timing variation uses a symmetric triangular random offset in logarithmic speed space; it is not a Gaussian interval distribution.
 - Bezier curve shape morphs continuously from inverse easing through linear to smooth easing and is controlled by the Texture knob only.
 - LFO mode is periodic and morphs between falling saw, triangle and rising saw.
+- Fractal combines three continuous gradient-noise scales at 1x/4x/16x; Texture redistributes a constant total weight toward finer detail.
+- Vector is deterministic two-axis toroidal phase flow; Texture controls bounded cross-coupling rather than randomness.
+- Rain maps Texture to event **Density**, Speed to envelope-decay speed, and the physical post-DAC Attenuation control naturally acts as final output **Intensity**.
+- Attractor uses a fixed-point Hénon map with Texture-controlled parameter `a`; because the digital state space is finite, its trajectories are ultimately periodic rather than mathematically infinite chaotic orbits.
 
-Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains their musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/).
+The manual covers **both compile-time banks and all eight modes**. Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains the musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/) and [`../analysis/algorithm-banks/`](../analysis/algorithm-banks/).
 
 ## Source contract
 

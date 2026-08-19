@@ -149,6 +149,7 @@ For installation details, electrical ranges, full operating notes and the mathem
 - [Verification and tests](#verification-and-tests)
 - [Algorithm engineering analyses](#algorithm-engineering-analyses)
 - [Build](#build)
+- [Release artifacts](#release-artifacts)
 - [User manual](#user-manual)
 - [Release process](#release-process)
 - [Upstream and licence](#upstream-and-licence)
@@ -216,6 +217,12 @@ This design is deliberately compile-time rather than runtime. Only the selected 
 > [!IMPORTANT]
 > **Attenuation is not a firmware input.** On the original Drift hardware it scales the analogue signal after the DAC. Alternative algorithms may therefore describe it musically as output **Depth** or **Intensity**, but they cannot read its position or use it as an internal parameter such as pitch spread.
 
+<p align="center">
+  <img src="docs/manual/assets/organic-bank-overview.svg" alt="Classic and Organic banks using the same four rear DIP positions" width="820">
+</p>
+
+The rear DIP switches therefore select a **slot inside the flashed bank**. They never switch between Classic and Organic; changing bank means flashing the corresponding firmware image.
+
 ### Organic bank
 
 The first alternative bank is the **Organic bank**, currently under `Unreleased`. It explores four forms of motion that are intentionally distinct from the Classic set:
@@ -240,6 +247,10 @@ w_0+w_1+w_2=1
 
 The result is procedural fractal noise inspired by multi-scale/fBm construction, but the firmware does **not** claim to implement an exact fractional Brownian motion process.
 
+<p align="center">
+  <img src="docs/manual/assets/fractal-texture.svg" alt="Fractal Texture moving gain from macro motion into finer scales" width="820">
+</p>
+
 #### Vector — coupled two-dimensional flow
 
 Vector maintains two phase coordinates on a torus. Each axis advances continuously, while Texture introduces bounded cross-coupling from the other axis. The scalar output is a projection of both bipolar triangle coordinates.
@@ -254,6 +265,10 @@ Vector maintains two phase coordinates on a torus. Each axis advances continuous
 
 At zero Texture the two phases are uncoupled; increasing Texture bends the path without requiring random numbers. Cross-coupling is bounded so both axes remain forward-moving.
 
+<p align="center">
+  <img src="docs/manual/assets/vector-flow.svg" alt="Vector coupled two-dimensional trajectory and output projection" width="820">
+</p>
+
 #### Rain — density-controlled stochastic impulses
 
 Rain treats Texture as **Density** and Speed as the decay speed of the aggregate envelope. Random arrivals add finite impulses; between arrivals the envelope leaks toward zero while preserving fractional decay residual, so quiet tails do not freeze at one code.
@@ -263,6 +278,10 @@ y[n+1]=(1-\alpha(S))y[n]+\sum_i A_i\,\delta[n-n_i]
 ```
 
 The arrival process is a discrete Bernoulli approximation to the impulse-arrival idea associated with shot noise, not a claim of an exact continuous-time Poisson process. The front-panel Attenuation control has a particularly natural role here: because it scales the analogue result, it is the final **Intensity** control.
+
+<p align="center">
+  <img src="docs/manual/assets/rain-density.svg" alt="Rain output at low medium and high Density" width="820">
+</p>
 
 #### Attractor — deterministic nonlinear motion
 
@@ -276,7 +295,11 @@ x_{n+1}=1-a x_n^2+y_n
 y_{n+1}=b x_n
 ```
 
-Texture should be understood as **structure**, not a guaranteed monotonic "amount of chaos": nonlinear parameter sweeps can contain qualitatively different regimes.
+Texture should be understood as **structure**, not a guaranteed monotonic "amount of chaos": nonlinear parameter sweeps can contain qualitatively different regimes. The fixed-point state space is finite, so any digital trajectory is ultimately periodic; the practical question is the structure and length of the orbit at a given Texture setting, not whether the MCU can realise mathematical infinity.
+
+<p align="center">
+  <img src="docs/manual/assets/attractor-henon.svg" alt="Attractor fixed-point Hénon orbit and output projection" width="820">
+</p>
 
 Build the bank with the dedicated PlatformIO environments, for example:
 
@@ -436,9 +459,23 @@ python scripts/check_markdown_math.py
 
 Timing qualification uses `nanoatmega328new_timing` for Classic and `nanoatmega328new_organic_timing` for Organic.
 
+## Release artifacts
+
+Tagged releases publish **both compile-time banks** for both supported Arduino Nano bootloaders. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
+
+| Bank | New bootloader | Old bootloader |
+|---|---|---|
+| **Classic** | `fm-drift-classic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-classic-nano-old-bootloader.X.Y.Z.hex` |
+| **Organic** | `fm-drift-organic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-organic-nano-old-bootloader.X.Y.Z.hex` |
+
+Matching `.elf` files are included for debugging/provenance. Each release also contains `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **four build-information files** matching the bank/bootloader variants, the versioned user-manual PDF and checksum manifests.
+
+> [!IMPORTANT]
+> Flashing chooses **Classic or Organic**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.
+
 ## User manual
 
-The maintained end-user source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). The source file remains deliberately unversioned; only tagged releases produce a versioned PDF artifact.
+The maintained end-user source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It now documents **both compile-time banks and all eight modes**, including the Organic control mappings, DIP table, mathematical foundations and dedicated vector figures. The source file remains deliberately unversioned; only tagged releases produce a versioned PDF artifact.
 
 The manual repository area contains:
 
@@ -452,7 +489,7 @@ Only a tagged release `vX.Y.Z` produces `drift-user-manual.X.Y.Z.pdf`; ordinary 
 
 Ordinary development after a release remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). Release `0.1.0` is produced from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0); its changelog section contains all changes included in that tag. For future releases, preparation creates the matching versioned changelog section and package metadata before the version tag is pushed.
 
-Releases are triggered **only by pushed version tags**. `.github/workflows/release.yml` has no manual release trigger and builds the firmware, versioned manual PDF, provenance files and checksum manifests only for the tag being published. Release notes are generated deterministically from the matching changelog section rather than from generic commit-message aggregation.
+Releases are triggered **only by pushed version tags**. `.github/workflows/release.yml` has no manual release trigger and builds Classic and Organic firmware for both Nano bootloaders, the versioned manual PDF, bank-specific provenance files and checksum manifests only for the tag being published. Release notes are generated deterministically from the matching changelog section rather than from generic commit-message aggregation.
 
 See [docs/development/release-process.md](docs/development/release-process.md).
 
