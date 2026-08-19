@@ -4,29 +4,18 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ## Unreleased
 
-### Changed
+No changes yet.
 
-- Production C++ and native-test support were comprehensively documented using the Quantizer-style source headers, Doxygen API contracts, fixed-point/range annotations and targeted inline rationale for non-obvious numerical and AVR-specific code paths.
-- Internal identifiers were renamed where needed to express domain intent more clearly, including phase accumulators, algorithm state, hardware adapters and the control-to-phase mapping API; these are documentation/readability changes rather than intended behaviour changes.
-- Generated lookup-table fragments now carry deterministic generator provenance and a mathematical description.
-- Added a repository code-documentation convention, local `Doxyfile` and CI guardrail for source headers and readability.
-- Added the reference-table native suite to the per-suite CI matrix so every native suite is exercised individually.
-- Root README updated to reflect the published `v0.1.0` release and to remove the redundant introductory front-panel image while retaining the annotated Quick Start reference.
-
-### Fixed
-
-- Fixed the Arduino composition root linkage by including `Arduino.h` in `src/main.cpp`, so `setup()` and `loop()` use the C linkage expected by the AVR Arduino core.
-- Corrected the manual PDF font validator so `pdffonts` names containing spaces (for example `Ubuntu Light`) are parsed as a single font name instead of being truncated at the first space.
-- Use Ubuntu 24.04's current `fonts-ubuntu` package for release publication and print resolved/embedded font diagnostics before validating the manual artifact.
-
-## 0.1.0 — 2026-08-18
+## 0.1.0 — 2026-08-19
 
 ### Release summary
 
-Version 0.1.0 establishes the first verified C++17/PlatformIO firmware baseline for Free Modular Drift. It preserves Drift's four modulation concepts while correcting documented numerical and state-handling issues, adds mathematical and regression verification, AVR resource and timing guardrails, reproducible tag-driven release tooling, and a versioned PDF user manual generated only for tagged releases.
+Version 0.1.0 establishes the first C++17/PlatformIO firmware release for Free Modular Drift. It preserves Drift's four modulation concepts while correcting documented numerical and state-handling issues, adds mathematical and regression verification, comprehensive source-level Doxygen documentation, AVR resource and timing guardrails, reproducible tag-driven release tooling, and a versioned PDF user manual generated only for tagged releases.
 
 ### Added
 
+- Comprehensive Quantizer-style source documentation across production and native-test support code, including standard file headers, Doxygen API contracts, fixed-point/range annotations and targeted inline rationale for non-obvious numerical and AVR-specific paths.
+- Local `Doxyfile`, documented code-documentation conventions and an automated repository guardrail for source headers, generated-table provenance and readability.
 - Shared Drift orange-red heart asset plus automated footer validation for user-facing Markdown documentation.
 - Reusable, raster-free SVG redraws of the manual's front-panel reference, algorithm diagrams and configuration-switch illustrations under `docs/manual/assets/`, with automated vector-asset validation and selected figures reused in repository documentation.
 - Maintained end-user manual source under `docs/manual/`, with a separate CC BY-NC 4.0 licence and publication notes for the required Ubuntu/Ubuntu Light typography.
@@ -42,6 +31,10 @@ Version 0.1.0 establishes the first verified C++17/PlatformIO firmware baseline 
 
 ### Changed
 
+- Internal identifiers were renamed where needed to express domain intent more clearly, including phase accumulators, algorithm state, hardware adapters and the control-to-phase mapping API; these are readability changes rather than intended behavior changes.
+- Generated lookup-table fragments now carry deterministic generator provenance and a mathematical description.
+- The reference-table native suite is explicitly included in the per-suite CI matrix so every native suite is exercised individually.
+- Root README was updated to remove the redundant introductory front-panel image while retaining the annotated Quick Start reference and to describe the complete 0.1.0 release contents.
 - Mathematical expressions in the algorithm engineering analyses now use GitHub-native MathJax delimiters for correctly rendered inline and display equations; CI rejects legacy delimiters and unbalanced display-math blocks.
 - Dependabot version updates are grouped and reduced to a monthly cadence with at most one open version-update PR per ecosystem to avoid dependency-PR bursts; security updates remain governed separately by GitHub.
 - Root README quick-start documentation expanded with front-panel, DIP-switch and per-algorithm SVG guidance, including the physical rear-switch numbering and user-facing control behavior.
@@ -66,6 +59,9 @@ Version 0.1.0 establishes the first verified C++17/PlatformIO firmware baseline 
 
 ### Fixed
 
+- Fixed the Arduino composition-root linkage by including `Arduino.h` in `src/main.cpp`, so `setup()` and `loop()` use the linkage expected by the AVR Arduino core.
+- Corrected the manual PDF font validator so `pdffonts` names containing spaces (for example `Ubuntu Light`) are parsed as a single font name instead of being truncated at the first space.
+- Release publication now uses Ubuntu 24.04's current `fonts-ubuntu` package and prints resolved/embedded font diagnostics before validating the manual artifact.
 - Native runtime/system suites now include their production dependency explicitly, matching the Quantizer test pattern and ensuring PlatformIO LDF links `lib/fmd` even when `DriftRuntime` is otherwise reached only through `DriftTestRig.h`.
 - Native PlatformIO tests now link nested portable sources reliably.
 - Shared native reference tables are header-only so every PlatformIO test suite receives the same definitions without relying on out-of-suite support translation units.

@@ -47,7 +47,7 @@ The project therefore aims to:
 - provide reproducible builds, automated tests, release notes and a versioned PDF user manual.
 
 > [!IMPORTANT]
-> **Release 0.1.0 is published.** Tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0) is the first official release of this alternative firmware. It includes the verified firmware build, generated user-manual PDF, checksums and build provenance. New development continues under `Unreleased` in the changelog.
+> **Release 0.1.0 is the first official release.** Tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0) publishes the C++17/PlatformIO firmware baseline together with the generated user-manual PDF, checksums and build provenance. The release also includes the completed source-documentation pass, manual-publication fixes and the corrected Arduino entry-point linkage. New work after this tag belongs under `Unreleased` in the changelog.
 
 ## Quick start
 
@@ -238,9 +238,9 @@ See the [original firmware analysis](docs/analysis/original-firmware-analysis.md
 
 | Version | Summary |
 |---|---|
-| **0.1.0** | Initial verified C++17/PlatformIO firmware baseline for Free Modular Drift: four mathematically tested modulation algorithms, documented corrections to verified upstream issues, native/AVR CI, resource guardrails, engineering analyses and a tagged-release PDF user manual. |
+| **0.1.0** | Initial C++17/PlatformIO firmware release for Free Modular Drift: four mathematically tested modulation algorithms, documented corrections to verified upstream issues, comprehensive Doxygen/source documentation, native/AVR CI, resource guardrails, engineering analyses, hardened release/manual tooling and a tagged-release PDF user manual. |
 
-The authoritative detailed history is the [changelog](CHANGELOG.md). Version `0.1.0` was published from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0). Future releases follow the same rule: ordinary commits and pull requests never create a GitHub Release; only a pushed version tag does.
+The authoritative detailed history is the [changelog](CHANGELOG.md). Version `0.1.0` is published from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0). Future releases follow the same rule: ordinary commits and pull requests never create a GitHub Release; only a pushed version tag does.
 
 ## Engineering architecture
 
@@ -292,7 +292,7 @@ Current native coverage includes:
 - machine-checked acceptance-criteria traceability;
 - sanitizer and coverage environments.
 
-The current unreleased host baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
+The 0.1.0 host baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
 
 AVR builds also carry explicit engineering headroom: **Flash must stay at or below 85% (26,112 / 30,720 bytes)** and **static SRAM at or below 65% (1,331 / 2,048 bytes)**. These are repository guardrails, deliberately stricter than the ATmega328P hard limits.
 
@@ -346,7 +346,7 @@ Only a tagged release `vX.Y.Z` produces `drift-user-manual.X.Y.Z.pdf`; ordinary 
 
 ## Release process
 
-Ordinary development remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). Release `0.1.0` was published from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0). For future releases, preparation creates the matching versioned changelog section and package metadata before the version tag is pushed.
+Ordinary development after a release remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). Release `0.1.0` is produced from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0); its changelog section contains all changes included in that tag. For future releases, preparation creates the matching versioned changelog section and package metadata before the version tag is pushed.
 
 Releases are triggered **only by pushed version tags**. `.github/workflows/release.yml` has no manual release trigger and builds the firmware, versioned manual PDF, provenance files and checksum manifests only for the tag being published. Release notes are generated deterministically from the matching changelog section rather than from generic commit-message aggregation.
 
