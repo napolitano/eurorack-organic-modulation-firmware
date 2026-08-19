@@ -110,14 +110,14 @@ Unlike Markov, the probability of the next state is not determined by the identi
 - **Terminology constraint:** the model is Pólya-inspired but not the exact classical urn process.
 - **Statistical implementation concern:** weighted categorical selection must have a documented integer method and measurable bias bound.
 
-## 8. Candidate fixed-point parameterization
+## 8. Implemented fixed-point parameterization
 
-A practical AVR-oriented first contract can use small integer weights, for example:
+The first AVR implementation fixes the integer contract to:
 
 - baseline $b=32$;
 - maximum weight $w_{max}=1023$;
-- retention approximately $\rho=31/32$ per draw;
-- reinforcement $R$ mapped monotonically from 0 at minimum Texture to approximately 64 at maximum Texture.
+- retention $\rho=31/32$ per draw;
+- reinforcement $R$ mapped monotonically from exactly 0 at minimum Texture to exactly 64 at maximum Texture.
 
 The relaxation can then be implemented with shifts rather than general division:
 
@@ -125,7 +125,7 @@ $$
 w_i' = b + \left\lfloor\frac{31(w_i-b)}{32}\right\rfloor.
 $$
 
-These exact constants remain sound-design parameters until listening tests and statistical tests confirm that the preference lifetime is musically useful across Drift's Speed range.
+These constants are now part of the implemented `Unreleased` behavior. Future changes to them are sound-design changes and require updated deterministic/statistical tests plus a changelog entry.
 
 ## 9. Improvement strategy
 
@@ -154,7 +154,7 @@ The weighted draw is the only operation likely to require careful implementation
 - Choose baseline/retention parameters whose relaxation denominator is a power of two.
 - Use 16-bit weights and a bounded total that fits comfortably below 65536.
 - Perform all eight-weight work only on phase wrap.
-- Evaluate multiply-high scaling or rejection sampling for categorical selection and document the chosen bias/timing trade-off.
+- The implemented weighted draw uses multiply-high scaling. For totals that do not divide 65536, source-bucket sizes differ by at most one 16-bit random word; this bounded bias is documented and avoids runtime division.
 - Avoid 32-bit division in the 2.5 kHz hot path; event-only division may still be acceptable if timing measurements prove margin.
 
 ## 12. Verification and test strategy

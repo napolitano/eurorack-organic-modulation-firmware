@@ -7,7 +7,11 @@ This changelog records release-relevant changes to the firmware and repository. 
 ### Added
 
 - Generative-bank design specification defining Turing, Markov, Motif and Urn as four distinct forms of discrete musical memory, with a duplication audit against Classic and Organic.
-- Dedicated engineering analyses for all four proposed Generative algorithms, including mathematical contracts, AVR cost/test strategy and explicit musical assessment.
+- Dedicated engineering analyses for all four Generative algorithms, including mathematical contracts, AVR cost/test strategy and explicit musical assessment.
+- Implemented the Generative compile-time bank with Turing, Markov, Motif and Urn production algorithms, shared pure integer math primitives and dedicated PlatformIO build/test/timing environments for both Nano bootloaders.
+- Added four Generative mathematical unit suites covering exact mutation/transition/edit/reinforcement contracts, circular phrase operations, weighted categorical selection, deterministic fixed-seed behavior and DAC-domain invariants.
+- Acceptance criteria AC-38 through AC-42 cover Generative bank selection and the four algorithm contracts, expanding the current source to 42 criteria and 125 native test cases across 22 suites.
+- Added `README-BANK-GENERATIVE.md` with DIP mapping, control semantics, implemented equations, musical roles and Generative build commands.
 - Release-preparation manual freezing: the final `docs/manual/drift-user-manual.odt` is now copied byte-for-byte to `docs/manual/releases/X.Y.Z/drift-user-manual.X.Y.Z.odt` before tagging, and existing snapshots are immutable by default.
 - Historical manual backfill tooling can recover an exact pre-freeze source from an existing Git tag without moving or rewriting that tag; this provides a deterministic path for the 0.1.0 manual source.
 - Optional compile-time **Organic algorithm bank** for the original Drift hardware, selected at build time while leaving the Classic 0.1.0 bank as the default. The four Organic DIP slots are Fractal, Vector, Rain and Attractor.
@@ -17,8 +21,8 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Attractor modulation using a fixed-point Hénon map with Texture-controlled parameter `a` and interpolated travel between map states.
 - Dedicated Organic PlatformIO build, native-test, sanitizer, coverage and timing environments for both Nano bootloader variants where applicable.
 - Dedicated mathematical unit suites and developer analyses for all four Organic algorithms plus a bank-level architecture/control-contract document.
-- Acceptance criteria AC-33 through AC-37 for compile-time bank selection and the four Organic mathematical contracts, expanding the current source to 37 criteria and 107 native test cases across 18 suites.
-- Tagged-release packaging for both Classic and Organic firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
+- Acceptance criteria AC-33 through AC-37 introduced compile-time bank selection and the four Organic mathematical contracts.
+- Tagged-release packaging supports Classic, Organic and Generative firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
 - Expanded user manual covering both compile-time banks and all eight algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for Fractal, Vector, Rain and Attractor.
 - Nine deterministic true-vector Organic-bank documentation assets plus a generator: four bank-specific DIP-switch diagrams and five explanatory figures for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor.
 - New vector front/back manual covers that identify the Classic and Organic banks without retaining the former Classic-only algorithm list.
@@ -26,20 +30,20 @@ This changelog records release-relevant changes to the firmware and repository. 
 ### Changed
 
 - User manual bank documentation now uses a dedicated Algorithm banks introduction, separate top-level Classic and Organic sections, bank-specific DIP-switch SVGs, and identical heading/subsection styling across all eight algorithms; the former cross-bank configuration comparison is removed.
-- Root documentation is split into dedicated `README-CLASSIC.md` and `README-ORGANIC.md` bank guides, while the main README now provides a compact project overview and links to the detailed DIP, control, mathematical and graphical documentation for each bank.
+- Root bank documentation uses explicit `README-BANK-CLASSIC.md`, `README-BANK-ORGANIC.md` and `README-BANK-GENERATIVE.md` names, while the main README provides a compact three-bank overview and links to each detailed guide.
 - Dependabot CI dependency updates are now consolidated across GitHub Actions and Python into one monthly multi-ecosystem pull request instead of one pull request per ecosystem.
 - Tagged-release manual dependency installation now uses only the Ubuntu package source, canonical HTTPS Ubuntu mirrors, bounded APT retry/network timeouts and the minimal `libreoffice-writer` package set.
 - The release job now has an explicit 60-minute ceiling and the manual dependency installation step a 10-minute ceiling, preventing a transient package mirror from holding a release indefinitely.
 - Release runs for the same tag now share a concurrency group; retriggering a tag cancels an obsolete in-progress run instead of consuming Actions time in parallel.
 - `DriftEngine` now owns and dispatches only the compile-time-selected algorithm bank, so inactive-bank algorithm state does not consume SRAM in the resulting firmware image.
 - Generic selection, integration, property and system tests are bank-aware and exercise the four slots of the active compile-time bank.
-- CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic and Organic builds independently.
+- CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic, Organic and Generative builds independently.
 - Organic per-sample control mappings avoid general integer division in their hot paths where a bounded power-of-two mapping provides the documented behavior.
 - README, testing documentation and algorithm-analysis index now describe the compile-time bank model and the Organic control/DIP mapping.
-- README and release-process documentation now explain the dual-bank release files, bootloader variants, bank-vs-DIP selection boundary and versioned release manifest.
-- Tagged releases now emit separate build-provenance records for all four bank/bootloader firmware variants instead of describing only one environment per bank.
-- Release-note integrity text now explicitly describes the dual-bank firmware set, versioned manual, firmware-artifact manifest, provenance files and checksum manifests.
-- Tagged releases now publish the frozen versioned manual ODT alongside the PDF, and release/rebuild jobs refuse to use the live development manual for tags created after the freeze mechanism was introduced. Historical pre-freeze tags retain an explicit tag-pinned legacy-source fallback.
+- README and release-process documentation now explain multi-bank release files, bootloader variants, bank-vs-DIP selection boundary and the versioned release manifest.
+- Tagged releases emit separate build-provenance records for every selected bank/bootloader firmware variant instead of describing only one environment per bank.
+- Release-note integrity text now derives the published multi-bank firmware set from the tag, alongside the versioned manual, firmware-artifact manifest, provenance files and checksum manifests.
+- Tagged releases now publish the frozen versioned manual ODT alongside the PDF, and release/rebuild jobs refuse to use the live development manual for tags created after the freeze mechanism was introduced. Historical pre-freeze tags retain an explicit tag-pinned legacy-source fallback. A Generative release is additionally blocked until its frozen manual source actually documents the Generative bank and all four algorithms.
 
 ## 0.1.0 — 2026-08-19
 

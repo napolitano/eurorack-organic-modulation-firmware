@@ -90,7 +90,7 @@ Purely editorial wording/formatting changes do not need changelog entries unless
 
 Keep each pull request focused. Before submission:
 
-1. run Classic and Organic native test suites and sanitizers;
+1. run Classic, Organic and Generative native test suites and sanitizers;
 2. build both bootloader environments for both compile-time banks;
 3. update algorithm/reference tests for changed behavior;
 4. update requirement traceability;

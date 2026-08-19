@@ -78,6 +78,29 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_organic -f ${{ matrix.suite }}
 
+  native-generative-tests:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - unit/test_algorithms
+          - unit/test_turing_algorithm
+          - unit/test_markov_algorithm
+          - unit/test_motif_algorithm
+          - unit/test_urn_algorithm
+          - integration/test_selection
+          - integration/test_runtime
+          - property/test_invariants
+          - system/test_signal_path
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_generative -f ${{ matrix.suite }}
+
   native-coverage:
     runs-on: ubuntu-24.04
     steps:
@@ -90,10 +113,10 @@ jobs:
       - run: |
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
+            --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
             --xml-pretty --output coverage/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
+            --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
             --txt
           python scripts/check_native_coverage.py coverage/coverage.xml
 
@@ -110,12 +133,31 @@ jobs:
       - run: |
           mkdir -p coverage-organic
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm)\.cpp$' \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
             --xml-pretty --output coverage-organic/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm)\.cpp$' \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
             --txt
           python scripts/check_native_coverage.py coverage-organic/coverage.xml
+
+  native-generative-coverage:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_generative_coverage
+      - run: |
+          mkdir -p coverage-generative
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
+            --xml-pretty --output coverage-generative/coverage.xml
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
+            --txt
+          python scripts/check_native_coverage.py coverage-generative/coverage.xml
 
   native-sanitizers:
     runs-on: ubuntu-24.04
@@ -138,6 +180,16 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_organic_sanitized
 
+  native-generative-sanitizers:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_generative_sanitized
+
   avr-build:
     runs-on: ubuntu-24.04
     strategy:
@@ -148,6 +200,8 @@ jobs:
           - nanoatmega328
           - nanoatmega328new_organic
           - nanoatmega328_organic
+          - nanoatmega328new_generative
+          - nanoatmega328_generative
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0
@@ -162,7 +216,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing]
+        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing]
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0

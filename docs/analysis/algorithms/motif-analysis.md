@@ -84,10 +84,10 @@ At every processing sample:
 
 1. advance the common Speed phase;
 2. if no phase wrap occurs, keep the current output;
-3. on wrap, advance the playhead modulo 8 and output the new phrase value;
-4. if the playhead wrapped from step 7 to step 0, evaluate one Texture-controlled edit decision;
-5. if an edit is selected, choose exactly one of the four transformations and apply it once;
-6. continue playback from the transformed phrase.
+3. on wrap, determine the next playhead position modulo 8;
+4. if that position is step 0, evaluate one Texture-controlled edit decision at the completed-cycle boundary;
+5. if an edit is selected, choose exactly one of the four transformations and apply it once **before** emitting the first value of the new cycle;
+6. update the playhead and output the corresponding value from the resulting phrase.
 
 The initial phrase is generated deterministically from the algorithm seed.
 
@@ -115,6 +115,7 @@ Rotation produces phase reinterpretation, adjacent swap introduces a small rhyth
 - **Musical requirement:** at most one edit occurs per phrase, even at maximum Texture.
 - **Sound-design choice:** three of four edit types preserve the complete voltage vocabulary.
 - **Implementation requirement:** all operations must work correctly across the circular 7→0 boundary.
+- **Cycle-consistency requirement:** any selected phrase edit is committed before step 0 of the next cycle is emitted, so one audible cycle never mixes old and new phrase state.
 - **Terminology constraint:** this is a project-defined generative motif transformer, not an implementation of a particular compositional theory.
 
 ## 9. Improvement strategy

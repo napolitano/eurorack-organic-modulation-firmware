@@ -21,12 +21,19 @@ void test_selected_bank_config_pin_mapping() {
       fmd::Algorithm::Bezier,
       fmd::Algorithm::Lfo,
   };
-#else
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ORGANIC
   constexpr fmd::Algorithm expected[4] = {
       fmd::Algorithm::Fractal,
       fmd::Algorithm::Vector,
       fmd::Algorithm::Rain,
       fmd::Algorithm::Attractor,
+  };
+#else
+  constexpr fmd::Algorithm expected[4] = {
+      fmd::Algorithm::Turing,
+      fmd::Algorithm::Markov,
+      fmd::Algorithm::Motif,
+      fmd::Algorithm::Urn,
   };
 #endif
 

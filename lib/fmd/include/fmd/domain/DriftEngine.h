@@ -28,6 +28,11 @@
 #include "fmd/domain/FractalAlgorithm.h"
 #include "fmd/domain/RainAlgorithm.h"
 #include "fmd/domain/VectorAlgorithm.h"
+#elif FMD_ALGORITHM_BANK == FMD_BANK_GENERATIVE
+#include "fmd/domain/MarkovAlgorithm.h"
+#include "fmd/domain/MotifAlgorithm.h"
+#include "fmd/domain/TuringAlgorithm.h"
+#include "fmd/domain/UrnAlgorithm.h"
 #endif
 
 namespace fmd {
@@ -76,6 +81,11 @@ class DriftEngine {
   VectorAlgorithm vectorAlgorithm_;       ///< Organic-bank 2D flow state.
   RainAlgorithm rainAlgorithm_;           ///< Organic-bank shot-noise state.
   AttractorAlgorithm attractorAlgorithm_; ///< Organic-bank Hénon traversal state.
+#elif FMD_ALGORITHM_BANK == FMD_BANK_GENERATIVE
+  TuringAlgorithm turingAlgorithm_;       ///< Generative-bank shift-register state.
+  MarkovAlgorithm markovAlgorithm_;       ///< Generative-bank Markov grammar state.
+  MotifAlgorithm motifAlgorithm_;         ///< Generative-bank phrase-transform state.
+  UrnAlgorithm urnAlgorithm_;             ///< Generative-bank reinforced-state process.
 #endif
 };
 

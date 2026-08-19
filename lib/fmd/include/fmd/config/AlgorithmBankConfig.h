@@ -18,22 +18,27 @@
 #define FMD_BANK_CLASSIC 0
 /** Alternative organic bank containing Fractal, Vector, Rain and Attractor. */
 #define FMD_BANK_ORGANIC 1
+/** Alternative generative bank containing Turing, Markov, Motif and Urn. */
+#define FMD_BANK_GENERATIVE 2
 
 #ifndef FMD_ALGORITHM_BANK
 /** Default to the original/classic bank when no compiler flag selects another bank. */
 #define FMD_ALGORITHM_BANK FMD_BANK_CLASSIC
 #endif
 
-#if FMD_ALGORITHM_BANK != FMD_BANK_CLASSIC && FMD_ALGORITHM_BANK != FMD_BANK_ORGANIC
-#error "FMD_ALGORITHM_BANK must be FMD_BANK_CLASSIC (0) or FMD_BANK_ORGANIC (1)"
+#if FMD_ALGORITHM_BANK != FMD_BANK_CLASSIC && \
+    FMD_ALGORITHM_BANK != FMD_BANK_ORGANIC && \
+    FMD_ALGORITHM_BANK != FMD_BANK_GENERATIVE
+#error "FMD_ALGORITHM_BANK must be Classic (0), Organic (1), or Generative (2)"
 #endif
 
 namespace fmd {
 
 /** @brief Compile-time selectable set of four algorithms exposed by the rear DIP switches. */
 enum class AlgorithmBank : uint8_t {
-  Classic = FMD_BANK_CLASSIC,  ///< Perlin, Brownian, Bezier and LFO.
-  Organic = FMD_BANK_ORGANIC   ///< Fractal, Vector, Rain and Hénon attractor.
+  Classic = FMD_BANK_CLASSIC,       ///< Perlin, Brownian, Bezier and LFO.
+  Organic = FMD_BANK_ORGANIC,       ///< Fractal, Vector, Rain and Hénon attractor.
+  Generative = FMD_BANK_GENERATIVE  ///< Turing, Markov, Motif and Urn.
 };
 
 /** Bank compiled into this firmware image. */

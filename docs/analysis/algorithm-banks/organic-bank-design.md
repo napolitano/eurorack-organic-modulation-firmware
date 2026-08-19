@@ -28,7 +28,7 @@ pio run -e nanoatmega328new_organic
 pio test -e native_organic
 ```
 
-The `DriftEngine` member layout is conditional at compile time. This prevents four inactive-bank algorithm objects from occupying SRAM merely because both banks exist in the source tree.
+The `DriftEngine` member layout is conditional at compile time. This prevents four inactive-bank algorithm objects from occupying SRAM merely because multiple banks exist in the source tree.
 
 ## DIP mapping
 

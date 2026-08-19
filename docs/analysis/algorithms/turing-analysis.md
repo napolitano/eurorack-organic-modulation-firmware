@@ -50,7 +50,7 @@ At every 2.5 kHz processing sample:
 8. shift the register and insert the resulting bit;
 9. project the register to a 12-bit output value.
 
-A fixed seed and identical control sequence must reproduce the same register evolution.
+A fixed seed and identical control sequence must reproduce the same register evolution. The implementation initializes the register deterministically from the shared RNG and remaps only the two degenerate all-zero/all-one initial states so Texture zero does not start as a trivial constant loop.
 
 ## 4. Relationship to prior art and upstream Drift
 

@@ -546,6 +546,88 @@
           "case": "test_attractor_algorithm_is_deterministic_and_stays_in_12bit_domain"
         }
       ]
+    },
+    {
+      "id": "AC-38",
+      "description": "The Generative compile-time bank maps the four rear DIP slots to Turing, Markov, Motif and Urn while preserving the shared electrical truth table.",
+      "tests": [
+        {
+          "file": "test/integration/test_selection/test_main.cpp",
+          "case": "test_selected_bank_config_pin_mapping"
+        }
+      ]
+    },
+    {
+      "id": "AC-39",
+      "description": "Turing maps Texture exactly from zero mutation to one-half mutation probability, rotates locked state exactly and remains deterministic in the 12-bit DAC domain.",
+      "tests": [
+        {
+          "file": "test/unit/test_turing_algorithm/test_main.cpp",
+          "case": "test_turing_mutation_mapping_has_exact_zero_and_half_probability_endpoints"
+        },
+        {
+          "file": "test/unit/test_turing_algorithm/test_main.cpp",
+          "case": "test_turing_locked_register_returns_exactly_after_sixteen_rotations"
+        },
+        {
+          "file": "test/unit/test_turing_algorithm/test_main.cpp",
+          "case": "test_turing_algorithm_is_seed_deterministic_and_bounded"
+        }
+      ]
+    },
+    {
+      "id": "AC-40",
+      "description": "Markov implements the exact 4/8, 2/8, 1/8, 1/8 structured transition kernel, exact Texture endpoint behavior and a fixed stratified seed-defined 12-bit vocabulary.",
+      "tests": [
+        {
+          "file": "test/unit/test_markov_algorithm/test_main.cpp",
+          "case": "test_markov_structured_kernel_has_exact_documented_partition"
+        },
+        {
+          "file": "test/unit/test_markov_algorithm/test_main.cpp",
+          "case": "test_markov_exploration_has_exact_control_endpoints"
+        },
+        {
+          "file": "test/unit/test_markov_algorithm/test_main.cpp",
+          "case": "test_markov_stratified_vocabulary_covers_exactly_one_value_per_source_band"
+        }
+      ]
+    },
+    {
+      "id": "AC-41",
+      "description": "Motif applies at most one project-defined structural edit at a complete phrase boundary, including correct circular transformations, and remains deterministic and bounded.",
+      "tests": [
+        {
+          "file": "test/unit/test_motif_algorithm/test_main.cpp",
+          "case": "test_motif_edit_probability_has_exact_zero_and_full_endpoints"
+        },
+        {
+          "file": "test/unit/test_motif_algorithm/test_main.cpp",
+          "case": "test_motif_circular_swap_and_three_step_reversal_handle_boundary"
+        },
+        {
+          "file": "test/unit/test_motif_algorithm/test_main.cpp",
+          "case": "test_motif_algorithm_is_seed_deterministic_and_bounded"
+        }
+      ]
+    },
+    {
+      "id": "AC-42",
+      "description": "Urn uses bounded 31/32 relaxation, monotonic Texture-controlled reinforcement, correct weighted categorical selection at equal weights and the exact eight-level DAC vocabulary.",
+      "tests": [
+        {
+          "file": "test/unit/test_urn_algorithm/test_main.cpp",
+          "case": "test_urn_relaxation_moves_weights_monotonically_toward_baseline"
+        },
+        {
+          "file": "test/unit/test_urn_algorithm/test_main.cpp",
+          "case": "test_urn_equal_weights_partition_the_complete_random_domain_equally"
+        },
+        {
+          "file": "test/unit/test_urn_algorithm/test_main.cpp",
+          "case": "test_urn_output_vocabulary_is_exact_even_spacing_across_full_dac_range"
+        }
+      ]
     }
   ]
 }

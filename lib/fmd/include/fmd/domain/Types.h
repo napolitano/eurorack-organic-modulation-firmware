@@ -23,7 +23,7 @@ namespace fmd {
  *
  * A firmware image exposes exactly four entries from one compile-time-selected
  * AlgorithmBank. Keeping identities distinct allows native tests and developer
- * tooling to describe both banks without changing the hardware DIP interface.
+ * tooling to describe all banks without changing the hardware DIP interface.
  */
 enum class Algorithm : uint8_t {
   Perlin = 0,     ///< Classic: two-octave gradient-noise modulation; default.
@@ -33,7 +33,11 @@ enum class Algorithm : uint8_t {
   Fractal = 4,    ///< Organic: three-scale procedural gradient-noise fractal.
   Vector = 5,     ///< Organic: cross-coupled two-dimensional toroidal phase flow.
   Rain = 6,       ///< Organic: stochastic impulse / decaying-envelope process.
-  Attractor = 7   ///< Organic: smoothed Hénon-map traversal.
+  Attractor = 7,  ///< Organic: smoothed Hénon-map traversal.
+  Turing = 8,     ///< Generative: mutating 16-bit shift-register loop.
+  Markov = 9,     ///< Generative: finite-state stochastic transition grammar.
+  Motif = 10,     ///< Generative: explicit phrase with structural transformations.
+  Urn = 11        ///< Generative: bounded leaky reinforced-state process.
 };
 
 /**

@@ -61,7 +61,7 @@ For general Markov-chain terminology and transition-matrix treatment, see Seabro
 
 Each of the eight states maps to a 12-bit voltage that is generated once during initialization and remains fixed until reset/power cycle.
 
-A recommended construction is stratified generation: divide 0..4095 into eight 512-code bands, select one pseudorandom code from each band, then pseudorandomly permute the eight codes before assigning them to state labels.
+The implementation uses stratified generation: divide 0..4095 into eight 512-code bands, select one pseudorandom code from each band, then Fisher–Yates-shuffle the eight codes before assigning them to state labels. Startup shuffle indices use multiply-high scaling; for non-power-of-two range sizes the resulting source-bucket imbalance is bounded to one 16-bit random word.
 
 This provides three useful properties:
 

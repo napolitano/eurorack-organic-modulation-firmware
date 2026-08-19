@@ -22,11 +22,16 @@ void test_virtual_module_runs_all_four_algorithms() {
     }
   }
 }
-void test_virtual_module_maps_adc_channels_in_upstream_order() {
-  DriftTestRig rig(fmd::algorithmForBankSlot(0U), 1U);
-  const uint16_t baselineOutput = rig.tick(0U, 0U, 0U, 0U);
-  const uint16_t fasterOutput = rig.tick(1023U, 0U, 1023U, 0U);
-  TEST_ASSERT_NOT_EQUAL(baselineOutput, fasterOutput);
+void test_virtual_module_speed_inputs_change_active_bank_timing() {
+  DriftTestRig slowRig(fmd::algorithmForBankSlot(0U), 1U);
+  DriftTestRig fastRig(fmd::algorithmForBankSlot(0U), 1U);
+  bool observedDifference = false;
+  for (uint16_t sampleIndex = 0U; sampleIndex < 512U; ++sampleIndex) {
+    const uint16_t slowOutput = slowRig.tick(0U, 0U, 0U, 0U);
+    const uint16_t fastOutput = fastRig.tick(1023U, 0U, 1023U, 0U);
+    observedDifference |= slowOutput != fastOutput;
+  }
+  TEST_ASSERT_TRUE(observedDifference);
 }
 
 void test_virtual_module_matches_direct_engine_for_dynamic_control_sequence() {
@@ -62,7 +67,7 @@ void test_virtual_module_led_always_represents_same_sample_as_dac_over_dynamic_s
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_virtual_module_runs_all_four_algorithms);
-  RUN_TEST(test_virtual_module_maps_adc_channels_in_upstream_order);
+  RUN_TEST(test_virtual_module_speed_inputs_change_active_bank_timing);
   RUN_TEST(test_virtual_module_matches_direct_engine_for_dynamic_control_sequence);
   RUN_TEST(test_virtual_module_led_always_represents_same_sample_as_dac_over_dynamic_sequence);
   return UNITY_END();

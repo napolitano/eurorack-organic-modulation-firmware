@@ -1,6 +1,6 @@
 # Free Modular Drift — Classic Algorithm Bank
 
-[← Main README](README.md) · [Organic bank](README-BANK-ORGANIC.md) · [User manual](docs/manual/README.md) · [Engineering analyses](docs/analysis/algorithms/README.md)
+[← Main README](README.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [User manual](docs/manual/README.md) · [Engineering analyses](docs/analysis/algorithms/README.md)
 
 The **Classic bank** is Drift's compatibility bank and the default firmware build. It contains the four algorithm concepts of Quinn Freedman's original Drift — **Perlin, Brownian, Bézier and LFO** — implemented in the C++17/PlatformIO firmware with the verified numerical and state-handling corrections documented in this repository.
 
@@ -28,7 +28,7 @@ pio run -e nanoatmega328new
 pio run -e nanoatmega328
 ```
 
-The firmware image contains only the selected bank. The rear DIP switches choose one of the four algorithms **inside** that flashed bank; they do not switch between Classic and Organic.
+The firmware image contains only the selected bank. The rear DIP switches choose one of the four algorithms **inside** that flashed bank; they do not switch between Classic, Organic and Generative.
 
 > [!IMPORTANT]
 > **Attenuation is not a firmware input.** It sits in the analogue output path after the DAC and scales the final 0–10 V signal. The firmware reads Speed, Texture, Speed CV and Texture CV only.

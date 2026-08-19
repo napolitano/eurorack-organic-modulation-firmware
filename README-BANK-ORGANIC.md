@@ -1,6 +1,6 @@
 # Free Modular Drift — Organic Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [User manual](docs/manual/README.md) · [Organic engineering design](docs/analysis/algorithm-banks/organic-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [User manual](docs/manual/README.md) · [Organic engineering design](docs/analysis/algorithm-banks/organic-bank-design.md)
 
 The **Organic bank** is the first compile-time alternative bank for Drift. It keeps the original hardware and the same two rear DIP switches, but fills the four slots with **Fractal, Vector, Rain and Attractor**. The bank explores multi-scale correlated noise, deterministic two-dimensional flow, stochastic event density and nonlinear dynamical motion.
 
@@ -213,7 +213,7 @@ The Organic bank obeys the same physical signal path as Classic:
 6. analogue Attenuation after the DAC
 7. output-level LED derived from the generated DAC value
 
-The bank is implemented without heap allocation or floating-point arithmetic in the AVR hot path. The repository applies the same firmware guardrails to both banks: application flash at or below 85%, static SRAM at or below 65%, and dedicated timing qualification against the 2.5 kHz processing deadline.
+The bank is implemented without heap allocation or floating-point arithmetic in the AVR hot path. The repository applies the same firmware guardrails to every bank: application flash at or below 85%, static SRAM at or below 65%, and dedicated timing qualification against the 2.5 kHz processing deadline.
 
 ## Build and verification
 

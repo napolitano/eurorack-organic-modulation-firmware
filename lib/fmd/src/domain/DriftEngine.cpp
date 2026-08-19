@@ -28,6 +28,13 @@ Algorithm algorithmForBankSlot(uint8_t slotIndex) {
       Algorithm::Rain,
       Algorithm::Attractor,
   };
+#elif FMD_ALGORITHM_BANK == FMD_BANK_GENERATIVE
+  constexpr Algorithm kAlgorithms[4] = {
+      Algorithm::Turing,
+      Algorithm::Markov,
+      Algorithm::Motif,
+      Algorithm::Urn,
+  };
 #endif
   return kAlgorithms[slotIndex < 4U ? slotIndex : 0U];
 }
@@ -61,6 +68,11 @@ DriftEngine::DriftEngine(Algorithm algorithm,
       , vectorAlgorithm_(referenceTables)
       , rainAlgorithm_(randomSeed)
       , attractorAlgorithm_(referenceTables)
+#elif FMD_ALGORITHM_BANK == FMD_BANK_GENERATIVE
+      , turingAlgorithm_(referenceTables, randomSeed)
+      , markovAlgorithm_(referenceTables, randomSeed)
+      , motifAlgorithm_(referenceTables, randomSeed)
+      , urnAlgorithm_(referenceTables, randomSeed)
 #endif
 {}
 
@@ -84,6 +96,15 @@ uint16_t DriftEngine::step(const ControlFrame& controls) {
       return rainAlgorithm_.step(controls);
     case Algorithm::Attractor:
       return attractorAlgorithm_.step(controls);
+#elif FMD_ALGORITHM_BANK == FMD_BANK_GENERATIVE
+    case Algorithm::Turing:
+      return turingAlgorithm_.step(controls);
+    case Algorithm::Markov:
+      return markovAlgorithm_.step(controls);
+    case Algorithm::Motif:
+      return motifAlgorithm_.step(controls);
+    case Algorithm::Urn:
+      return urnAlgorithm_.step(controls);
 #endif
     default:
       break;

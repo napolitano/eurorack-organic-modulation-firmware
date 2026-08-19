@@ -74,12 +74,16 @@ jobs:
           RELEASE_VERSION="${RELEASE_TAG#v}"
           SOURCE_COMMIT="$(git rev-parse HEAD)"
 
+          RELEASE_BANKS="classic"
           if grep -q '^\[env:native_organic\]$' platformio.ini \
             && grep -q '^\[env:nanoatmega328new_organic\]$' platformio.ini \
             && grep -q '^\[env:nanoatmega328_organic\]$' platformio.ini; then
-            RELEASE_BANKS="classic,organic"
-          else
-            RELEASE_BANKS="classic"
+            RELEASE_BANKS="${RELEASE_BANKS},organic"
+          fi
+          if grep -q '^\[env:native_generative\]$' platformio.ini \
+            && grep -q '^\[env:nanoatmega328new_generative\]$' platformio.ini \
+            && grep -q '^\[env:nanoatmega328_generative\]$' platformio.ini; then
+            RELEASE_BANKS="${RELEASE_BANKS},generative"
           fi
 
           echo "Release source: ${RELEASE_TAG} @ ${SOURCE_COMMIT}"
@@ -157,6 +161,10 @@ jobs:
         if: contains(steps.release-context.outputs.banks, 'organic')
         run: pio test -e native_organic
 
+      - name: Run Generative-bank native tests
+        if: contains(steps.release-context.outputs.banks, 'generative')
+        run: pio test -e native_generative
+
       - name: Run native sanitizers
         shell: bash
         env:
@@ -168,6 +176,9 @@ jobs:
           if [[ "${RELEASE_BANKS}" == *organic* ]]; then
             pio test -e native_organic_sanitized
           fi
+          if [[ "${RELEASE_BANKS}" == *generative* ]]; then
+            pio test -e native_generative_sanitized
+          fi
 
       - name: Enforce Classic-bank native coverage policy
         shell: bash
@@ -175,14 +186,9 @@ jobs:
           set -euo pipefail
           pio test -e native_coverage
           mkdir -p coverage
-          if [[ "${RELEASE_BANKS}" == *organic* ]]; then
-            gcovr --root . --filter lib/fmd/src --exclude test \
-              --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
-              --xml-pretty --output coverage/coverage.xml
-          else
-            gcovr --root . --filter lib/fmd/src --exclude test \
-              --xml-pretty --output coverage/coverage.xml
-          fi
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
+            --xml-pretty --output coverage/coverage.xml
           python scripts/check_native_coverage.py coverage/coverage.xml
 
       - name: Enforce Organic-bank native coverage policy
@@ -191,9 +197,19 @@ jobs:
           pio test -e native_organic_coverage
           mkdir -p coverage-organic
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm)\.cpp$' \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
             --xml-pretty --output coverage-organic/coverage.xml
           python scripts/check_native_coverage.py coverage-organic/coverage.xml
+
+      - name: Enforce Generative-bank native coverage policy
+        if: contains(steps.release-context.outputs.banks, 'generative')
+        run: |
+          pio test -e native_generative_coverage
+          mkdir -p coverage-generative
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
+            --xml-pretty --output coverage-generative/coverage.xml
+          python scripts/check_native_coverage.py coverage-generative/coverage.xml
 
       - name: Build release firmware
         shell: bash
@@ -204,6 +220,10 @@ jobs:
           if [[ "${RELEASE_BANKS}" == *organic* ]]; then
             pio run -e nanoatmega328new_organic
             pio run -e nanoatmega328_organic
+          fi
+          if [[ "${RELEASE_BANKS}" == *generative* ]]; then
+            pio run -e nanoatmega328new_generative
+            pio run -e nanoatmega328_generative
           fi
 
       - name: Enforce AVR resource budgets
@@ -216,6 +236,10 @@ jobs:
             python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_organic/firmware.elf
             python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_organic/firmware.elf
           fi
+          if [[ "${RELEASE_BANKS}" == *generative* ]]; then
+            python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_generative/firmware.elf
+            python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_generative/firmware.elf
+          fi
 
       - name: Compile timing qualification images
         shell: bash
@@ -224,6 +248,9 @@ jobs:
           pio run -e nanoatmega328new_timing
           if [[ "${RELEASE_BANKS}" == *organic* ]]; then
             pio run -e nanoatmega328new_organic_timing
+          fi
+          if [[ "${RELEASE_BANKS}" == *generative* ]]; then
+            pio run -e nanoatmega328new_generative_timing
           fi
 
       - name: Install manual publication dependencies
@@ -321,6 +348,31 @@ jobs:
             echo "kind=${MANUAL_SOURCE_KIND}"
           } >> "${GITHUB_OUTPUT}"
 
+      - name: Require Generative content in frozen manual
+        if: contains(steps.release-context.outputs.banks, 'generative')
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANUAL_SOURCE='${{ steps.manual-source.outputs.source }}'
+          python - "${MANUAL_SOURCE}" <<'PY'
+          import sys
+          import xml.etree.ElementTree as ET
+          import zipfile
+
+          source = sys.argv[1]
+          with zipfile.ZipFile(source) as archive:
+              root = ET.fromstring(archive.read("content.xml"))
+          text = " ".join(part.strip() for part in root.itertext() if part.strip()).lower()
+          required = ("generative", "turing", "markov", "motif", "urn")
+          missing = [term for term in required if term not in text]
+          if missing:
+              raise SystemExit(
+                  "release manual does not yet document the Generative bank: missing "
+                  + ", ".join(missing)
+              )
+          print("Generative manual coverage: passed")
+          PY
+
       - name: Build and verify user manual
         shell: bash
         run: |
@@ -387,6 +439,21 @@ jobs:
               --git-commit "${SOURCE_COMMIT}" \
               --git-ref "${RELEASE_TAG}" \
               --output "dist/BUILD-INFO-organic-nano-old.${RELEASE_VERSION}.txt"
+          fi
+
+          if [[ "${RELEASE_BANKS}" == *generative* ]]; then
+            python "${TOOLING_ROOT}/write_build_info.py" \
+              --bank generative \
+              --environment nanoatmega328new_generative \
+              --git-commit "${SOURCE_COMMIT}" \
+              --git-ref "${RELEASE_TAG}" \
+              --output "dist/BUILD-INFO-generative-nano-new.${RELEASE_VERSION}.txt"
+            python "${TOOLING_ROOT}/write_build_info.py" \
+              --bank generative \
+              --environment nanoatmega328_generative \
+              --git-commit "${SOURCE_COMMIT}" \
+              --git-ref "${RELEASE_TAG}" \
+              --output "dist/BUILD-INFO-generative-nano-old.${RELEASE_VERSION}.txt"
           fi
 
       - name: Generate release checksums
