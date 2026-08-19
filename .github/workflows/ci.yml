@@ -18,6 +18,7 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python scripts/check_requirement_traceability.py
+      - run: python scripts/check_code_documentation.py
       - run: python scripts/check_markdown_footer.py
       - run: python scripts/check_markdown_math.py
       - run: python scripts/test_generate_release_notes.py
@@ -37,6 +38,7 @@ jobs:
           - unit/test_brownian_algorithm
           - unit/test_bezier_algorithm
           - unit/test_lfo_algorithm
+          - unit/test_reference_tables
           - integration/test_selection
           - integration/test_runtime
           - property/test_invariants

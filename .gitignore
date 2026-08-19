@@ -32,3 +32,6 @@ coverage.html
 # Python bytecode/cache artifacts
 __pycache__/
 *.py[cod]
+
+# Local Doxygen output
+.doxygen/

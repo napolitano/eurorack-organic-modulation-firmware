@@ -49,22 +49,66 @@ def parse_page_size(info: str) -> tuple[float, float]:
 
 def canonical_font_name(raw: str) -> str:
     # Embedded subset fonts are typically reported as ABCDEF+Ubuntu-Light.
-    return raw.split("+", 1)[-1].lower()
+    return raw.split("+", 1)[-1].strip().lower()
+
+
+def parse_pdffonts_rows(fonts: str) -> list[dict[str, str]]:
+    """Parse pdffonts output without losing font names that contain spaces.
+
+    pdffonts uses fixed-width columns. A plain ``line.split()`` is not safe:
+    ``ABCDEF+Ubuntu Light`` would be split into two tokens and the style name
+    would disappear from the field we inspect.
+    """
+    lines = [line.rstrip("\n") for line in fonts.splitlines() if line.strip()]
+    if len(lines) < 2:
+        raise ValueError("pdffonts output is incomplete")
+
+    header = lines[0]
+    try:
+        type_col = header.index("type")
+        encoding_col = header.index("encoding")
+        emb_col = header.index("emb")
+        sub_col = header.index("sub")
+        uni_col = header.index("uni")
+        object_col = header.index("object ID")
+    except ValueError as exc:
+        raise ValueError("pdffonts output does not contain the expected columns") from exc
+
+    rows: list[dict[str, str]] = []
+    for line in lines[2:]:
+        if set(line.strip()) == {"-"}:
+            continue
+        padded = line.ljust(object_col + len("object ID"))
+        rows.append(
+            {
+                "name": padded[:type_col].strip(),
+                "type": padded[type_col:encoding_col].strip(),
+                "encoding": padded[encoding_col:emb_col].strip(),
+                "emb": padded[emb_col:sub_col].strip(),
+                "sub": padded[sub_col:uni_col].strip(),
+                "uni": padded[uni_col:object_col].strip(),
+                "object_id": padded[object_col:].strip(),
+            }
+        )
+    return rows
 
 
 def validate_fonts(fonts: str, allow_substitution: bool) -> None:
-    rows = [line.split() for line in fonts.splitlines()[2:] if line.strip()]
-    ubuntu_rows = [row for row in rows if row and canonical_font_name(row[0]).startswith("ubuntu")]
-    has_ubuntu = any("light" not in canonical_font_name(row[0]) for row in ubuntu_rows)
-    has_ubuntu_light = any("light" in canonical_font_name(row[0]) for row in ubuntu_rows)
+    rows = parse_pdffonts_rows(fonts)
+    ubuntu_rows = [row for row in rows if canonical_font_name(row["name"]).startswith("ubuntu")]
+    has_ubuntu_regular = any("light" not in canonical_font_name(row["name"]) for row in ubuntu_rows)
+    has_ubuntu_light = any("light" in canonical_font_name(row["name"]) for row in ubuntu_rows)
 
-    if not allow_substitution and (not has_ubuntu or not has_ubuntu_light):
-        raise ValueError("release PDF must contain both Ubuntu and Ubuntu Light; font substitution detected")
+    if not allow_substitution and (not has_ubuntu_regular or not has_ubuntu_light):
+        detected = ", ".join(row["name"] for row in rows) or "<none>"
+        raise ValueError(
+            "release PDF must contain both Ubuntu and Ubuntu Light; "
+            f"detected PDF fonts: {detected}"
+        )
 
     for row in ubuntu_rows:
-        # pdffonts columns: name type encoding emb sub uni object-ID.
-        if len(row) >= 4 and row[3].lower() != "yes":
-            raise ValueError(f"Ubuntu-family font is not embedded: {row[0]}")
+        if row["emb"].lower() != "yes":
+            raise ValueError(f"Ubuntu-family font is not embedded: {row['name']}")
 
     if allow_substitution and not ubuntu_rows:
         print("manual PDF warning: Ubuntu fonts are absent; smoke build accepted by explicit override")

@@ -1,3 +1,14 @@
+/**
+ * @file LfoAlgorithm.cpp
+ * Implements the corrected skewable triangle / saw Drift LFO.
+ *
+ * @author Axel Napolitano
+ * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
+ * @copyright Copyright (C) 2026 Axel Napolitano
+ * @license GPL-3.0-or-later
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 #include "fmd/domain/LfoAlgorithm.h"
 
 #include "fmd/domain/AlgorithmMath.h"
@@ -6,30 +17,45 @@
 #include <stdint.h>
 
 namespace fmd {
-LfoAlgorithm::LfoAlgorithm(const IReferenceTables& tables)
-    : tables_(tables), phase_(0), apex_(0x7FFFU), initialized_(false) {}
+
+LfoAlgorithm::LfoAlgorithm(const IReferenceTables& referenceTables)
+    : referenceTables_(referenceTables),
+      phaseAccumulator_(0U),
+      apexPhaseQ0F16_(0x7FFFU),
+      textureInitialised_(false) {}
 
 uint16_t LfoAlgorithm::step(const ControlFrame& controls) {
-  const uint16_t texture = sumAdc(controls.textureKnob, controls.textureCv);
-  const uint16_t requestedApex = lfomath::apexFromTexture(texture);
+  const uint16_t combinedTexture = sumAdc(controls.textureKnob, controls.textureCv);
+  const uint16_t requestedApexQ0F16 = lfomath::apexFromTexture(combinedTexture);
 
-  if (!initialized_) {
-    apex_ = requestedApex;
-    initialized_ = true;
-  } else if (requestedApex != apex_) {
-    const uint16_t phaseQ0F16 = static_cast<uint16_t>(phase_ >> 16U);
-    const uint16_t remapped = lfomath::remapPhasePreservingOutput(phaseQ0F16,
-                                                                  apex_,
-                                                                  requestedApex);
-    phase_ = (static_cast<uint32_t>(remapped) << 16U) | (phase_ & 0xFFFFU);
-    apex_ = requestedApex;
+  if (!textureInitialised_) {
+    apexPhaseQ0F16_ = requestedApexQ0F16;
+    textureInitialised_ = true;
+  } else if (requestedApexQ0F16 != apexPhaseQ0F16_) {
+    const uint16_t currentPhaseQ0F16 =
+        static_cast<uint16_t>(phaseAccumulator_ >> 16U);
+    const uint16_t remappedPhaseQ0F16 = lfomath::remapPhasePreservingOutput(
+        currentPhaseQ0F16, apexPhaseQ0F16_, requestedApexQ0F16);
+
+    // Replace only the visible Q0.16 phase. Retaining the lower fractional
+    // accumulator bits avoids throwing away sub-sample phase progress whenever
+    // Texture is moved.
+    phaseAccumulator_ =
+        (static_cast<uint32_t>(remappedPhaseQ0F16) << 16U) |
+        (phaseAccumulator_ & 0xFFFFU);
+    apexPhaseQ0F16_ = requestedApexQ0F16;
   }
 
-  bool rollover = false;
-  phase_ = lfomath::advancePhase(phase_,
-                                getDeltaTime(tables_, controls.speedKnob, controls.speedCv, 0),
-                                rollover);
-  (void)rollover;  // Wrap is intentional; no cycle-boundary state update is required.
-  return lfomath::waveform12(static_cast<uint16_t>(phase_ >> 16U), apex_);
+  bool phaseRolledOver = false;
+  phaseAccumulator_ = lfomath::advancePhase(
+      phaseAccumulator_,
+      phaseIncrementFromControls(
+          referenceTables_, controls.speedKnob, controls.speedCv, 0),
+      phaseRolledOver);
+  (void)phaseRolledOver;  // Wrap needs no additional cycle-boundary state update.
+
+  return lfomath::waveform12(
+      static_cast<uint16_t>(phaseAccumulator_ >> 16U), apexPhaseQ0F16_);
 }
+
 }  // namespace fmd

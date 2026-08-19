@@ -4,6 +4,37 @@
 SPDX-License-Identifier: GPL-3.0-or-later
 """
 from build_user_manual import artifact_name, normalize_version
+from check_user_manual import parse_pdffonts_rows, validate_fonts
+
+
+def test_pdffonts_parser() -> None:
+    spaced = """name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+AAAAAA+Ubuntu                        TrueType          WinAnsi          yes yes yes     10  0
+BBBBBB+Ubuntu Light                  TrueType          WinAnsi          yes yes yes     11  0
+"""
+    rows = parse_pdffonts_rows(spaced)
+    assert [row["name"] for row in rows] == ["AAAAAA+Ubuntu", "BBBBBB+Ubuntu Light"]
+    validate_fonts(spaced, False)
+
+    hyphenated = """name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+AAAAAA+Ubuntu                        TrueType          WinAnsi          yes yes yes     10  0
+BBBBBB+Ubuntu-Light                  TrueType          WinAnsi          yes yes yes     11  0
+"""
+    validate_fonts(hyphenated, False)
+
+    substituted = """name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+AAAAAA+Ubuntu                        TrueType          WinAnsi          yes yes yes     10  0
+BBBBBB+LiberationSans                TrueType          WinAnsi          yes yes yes     11  0
+"""
+    try:
+        validate_fonts(substituted, False)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("expected missing Ubuntu Light to fail")
 
 
 def main() -> int:
@@ -11,6 +42,7 @@ def main() -> int:
     assert normalize_version("v0.1.0") == "0.1.0"
     assert normalize_version("1.2.3-rc.1") == "1.2.3-rc.1"
     assert artifact_name("v0.1.0") == "drift-user-manual.0.1.0.pdf"
+    test_pdffonts_parser()
 
     for invalid in ("", "0.1", "release-0.1.0", "v1", "1.2.3+build"):
         try:

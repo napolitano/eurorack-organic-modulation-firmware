@@ -140,6 +140,7 @@ For installation details, electrical ranges, full operating notes and the mathem
 - [Original-firmware findings](#original-firmware-findings)
 - [Release history](#release-history)
 - [Engineering architecture](#engineering-architecture)
+- [Code documentation](#code-documentation)
 - [Verification and tests](#verification-and-tests)
 - [Algorithm engineering analyses](#algorithm-engineering-analyses)
 - [Build](#build)
@@ -270,6 +271,12 @@ The portable core never calls `analogRead()`, `digitalWrite()`, `SPI.transfer()`
 - maintain strict compiler warnings, sanitizer runs, coverage and requirement-traceability gates;
 - measure AVR timing and resource costs before accepting performance-sensitive optimisations.
 
+## Code documentation
+
+Production C++ follows the same documentation discipline used by the Quantizer project: every source file carries a complete provenance/licence header, public and non-obvious APIs use Doxygen contracts, fixed-point units and ranges are stated explicitly, and complex numerical or AVR-specific implementation choices are explained inline. Names favour domain intent over terse implementation shorthand.
+
+The conventions and local Doxygen workflow are documented in [docs/development/code-documentation.md](docs/development/code-documentation.md). CI also runs `scripts/check_code_documentation.py` so file headers, generated-table provenance and readability constraints cannot silently regress.
+
 ## Verification and tests
 
 The test strategy distinguishes **mathematical correctness**, **state-machine behavior**, **regression protection**, **system behavior** and **hardware qualification**.
@@ -318,7 +325,9 @@ pio test -e native
 pio test -e native_sanitized
 pio test -e native_coverage
 python scripts/check_requirement_traceability.py
+python scripts/check_code_documentation.py
 python scripts/check_markdown_footer.py
+python scripts/check_markdown_math.py
 ```
 
 Timing qualification uses the dedicated `nanoatmega328new_timing` environment.

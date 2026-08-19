@@ -1,3 +1,14 @@
+/**
+ * @file test_main.cpp
+ * Implements the upstream-behaviour regression native test suite.
+ *
+ * @author Axel Napolitano
+ * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
+ * @copyright Copyright (C) 2026 Axel Napolitano
+ * @license GPL-3.0-or-later
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 #include <unity.h>
 
 #include <cstdint>
@@ -7,9 +18,9 @@
 #include "MemoryReferenceTables.h"
 
 void test_brownian_texture_mapping_no_longer_has_1020_regime_switch() {
-  const uint16_t a1019 = fmd::brownianmath::textureAlphaQ0F16(1019U);
-  const uint16_t a1020 = fmd::brownianmath::textureAlphaQ0F16(1020U);
-  const uint16_t a1021 = fmd::brownianmath::textureAlphaQ0F16(1021U);
+  const uint16_t a1019 = fmd::brownianmath::smoothingAlphaQ0F16(1019U);
+  const uint16_t a1020 = fmd::brownianmath::smoothingAlphaQ0F16(1020U);
+  const uint16_t a1021 = fmd::brownianmath::smoothingAlphaQ0F16(1021U);
   TEST_ASSERT_TRUE(a1019 < a1020);
   TEST_ASSERT_TRUE(a1020 <= a1021);
   TEST_ASSERT_UINT16_WITHIN(16U, a1019, a1020);

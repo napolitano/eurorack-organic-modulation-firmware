@@ -1,7 +1,59 @@
+/**
+ * @file test_main.cpp
+ * Implements the cross-algorithm smoke native test suite.
+ *
+ * @author Axel Napolitano
+ * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
+ * @copyright Copyright (C) 2026 Axel Napolitano
+ * @license GPL-3.0-or-later
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 #include <unity.h>
+
 #include "fmd/domain/DriftEngine.h"
 #include "MemoryReferenceTables.h"
-void test_each_algorithm_stays_in_dac_range(){MemoryReferenceTables t;const fmd::ControlFrame c{1023,1023,1023,1023};for(uint8_t a=0;a<4;++a){fmd::DriftEngine e(static_cast<fmd::Algorithm>(a),0x4A51,t);for(int i=0;i<2000;++i)TEST_ASSERT_LESS_OR_EQUAL_UINT16(4095,e.step(c));}}
-void test_algorithms_are_deterministic_for_fixed_seed(){MemoryReferenceTables t;const fmd::ControlFrame c{222,333,444,555};for(uint8_t a=0;a<4;++a){fmd::DriftEngine x(static_cast<fmd::Algorithm>(a),0x1234,t),y(static_cast<fmd::Algorithm>(a),0x1234,t);for(int i=0;i<300;++i)TEST_ASSERT_EQUAL_UINT16(x.step(c),y.step(c));}}
-void test_invalid_algorithm_enum_returns_safe_zero_output(){MemoryReferenceTables t;fmd::DriftEngine e(static_cast<fmd::Algorithm>(0xFFU),0x1234U,t);TEST_ASSERT_EQUAL_UINT16(0U,e.step({0U,0U,0U,0U}));}
-int main(int,char**){UNITY_BEGIN();RUN_TEST(test_each_algorithm_stays_in_dac_range);RUN_TEST(test_algorithms_are_deterministic_for_fixed_seed);RUN_TEST(test_invalid_algorithm_enum_returns_safe_zero_output);return UNITY_END();}
+
+void test_each_algorithm_stays_in_dac_range() {
+  MemoryReferenceTables referenceTables;
+  const fmd::ControlFrame maximumControls{1023U, 1023U, 1023U, 1023U};
+
+  for (uint8_t algorithmIndex = 0U; algorithmIndex < 4U; ++algorithmIndex) {
+    fmd::DriftEngine engine(
+        static_cast<fmd::Algorithm>(algorithmIndex), 0x4A51U, referenceTables);
+    for (uint16_t sampleIndex = 0U; sampleIndex < 2000U; ++sampleIndex) {
+      TEST_ASSERT_LESS_OR_EQUAL_UINT16(4095U, engine.step(maximumControls));
+    }
+  }
+}
+
+void test_algorithms_are_deterministic_for_fixed_seed() {
+  MemoryReferenceTables referenceTables;
+  const fmd::ControlFrame controls{222U, 333U, 444U, 555U};
+
+  for (uint8_t algorithmIndex = 0U; algorithmIndex < 4U; ++algorithmIndex) {
+    const fmd::Algorithm algorithm = static_cast<fmd::Algorithm>(algorithmIndex);
+    fmd::DriftEngine firstEngine(algorithm, 0x1234U, referenceTables);
+    fmd::DriftEngine secondEngine(algorithm, 0x1234U, referenceTables);
+
+    for (uint16_t sampleIndex = 0U; sampleIndex < 300U; ++sampleIndex) {
+      TEST_ASSERT_EQUAL_UINT16(firstEngine.step(controls), secondEngine.step(controls));
+    }
+  }
+}
+
+void test_invalid_algorithm_enum_returns_safe_zero_output() {
+  MemoryReferenceTables referenceTables;
+  fmd::DriftEngine engine(
+      static_cast<fmd::Algorithm>(0xFFU), 0x1234U, referenceTables);
+
+  TEST_ASSERT_EQUAL_UINT16(0U, engine.step({0U, 0U, 0U, 0U}));
+}
+
+int main(int, char**) {
+  UNITY_BEGIN();
+  RUN_TEST(test_each_algorithm_stays_in_dac_range);
+  RUN_TEST(test_algorithms_are_deterministic_for_fixed_seed);
+  RUN_TEST(test_invalid_algorithm_enum_returns_safe_zero_output);
+  return UNITY_END();
+}

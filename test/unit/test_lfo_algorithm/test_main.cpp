@@ -1,3 +1,14 @@
+/**
+ * @file test_main.cpp
+ * Implements the LFO mathematical verification native test suite.
+ *
+ * @author Axel Napolitano
+ * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
+ * @copyright Copyright (C) 2026 Axel Napolitano
+ * @license GPL-3.0-or-later
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 #include <unity.h>
 
 #include <cmath>
@@ -131,7 +142,7 @@ void test_lfo_constant_controls_match_phase_accumulator_across_multiple_wraps() 
   fmd::LfoAlgorithm algorithm(tables);
   const fmd::ControlFrame controls{1023U, 0U, 1023U, 1023U};
   const uint16_t apex = fmd::lfomath::apexFromTexture(1023U);
-  const uint32_t delta = fmd::getDeltaTime(tables, controls.speedKnob, controls.speedCv, 0);
+  const uint32_t delta = fmd::phaseIncrementFromControls(tables, controls.speedKnob, controls.speedCv, 0);
   uint32_t phase = 0U;
   uint32_t wraps = 0U;
 

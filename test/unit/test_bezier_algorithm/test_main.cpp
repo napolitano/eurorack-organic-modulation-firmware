@@ -1,3 +1,14 @@
+/**
+ * @file test_main.cpp
+ * Implements the Bézier mathematical verification native test suite.
+ *
+ * @author Axel Napolitano
+ * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
+ * @copyright Copyright (C) 2026 Axel Napolitano
+ * @license GPL-3.0-or-later
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 #include <unity.h>
 
 #include <cmath>
@@ -169,7 +180,7 @@ void test_bezier_algorithm_matches_independent_no_speed_variation_state_machine_
   uint16_t b = static_cast<uint16_t>(rng.next() >> 4U);
   uint32_t phase = 0U;
   const fmd::ControlFrame controls{1023U, 0U, 1023U, 511U};
-  const uint32_t delta = fmd::getDeltaTime(tables, controls.speedKnob, controls.speedCv, 0);
+  const uint32_t delta = fmd::phaseIncrementFromControls(tables, controls.speedKnob, controls.speedCv, 0);
   uint32_t rollovers = 0U;
 
   for (uint32_t i = 0U; i < 400U; ++i) {

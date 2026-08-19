@@ -1,3 +1,14 @@
+/**
+ * @file test_main.cpp
+ * Implements the paired-LFSR random-generator native test suite.
+ *
+ * @author Axel Napolitano
+ * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
+ * @copyright Copyright (C) 2026 Axel Napolitano
+ * @license GPL-3.0-or-later
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 #include <unity.h>
 
 #include <cstdint>

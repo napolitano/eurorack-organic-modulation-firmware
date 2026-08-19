@@ -58,6 +58,7 @@ jobs:
       - name: Validate repository metadata
         run: |
           python scripts/check_requirement_traceability.py
+          python scripts/check_code_documentation.py
           python scripts/check_markdown_footer.py
           python scripts/check_markdown_math.py
           python scripts/test_generate_release_notes.py
@@ -98,8 +99,11 @@ jobs:
       - name: Install manual publication dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libreoffice fonts-ubuntu-classic poppler-utils
+          sudo apt-get install -y libreoffice fonts-ubuntu poppler-utils
           fc-cache -f
+          echo "Resolved manual fonts:"
+          fc-match -f "Ubuntu Regular -> %{family} | %{style} | %{file}\n" "Ubuntu:style=Regular"
+          fc-match -f "Ubuntu Light   -> %{family} | %{style} | %{file}\n" "Ubuntu Light:style=Regular"
 
       - name: Build and verify user manual
         shell: bash
@@ -107,6 +111,8 @@ jobs:
           MANUAL_VERSION="${GITHUB_REF_NAME#v}"
           mkdir -p dist
           python scripts/build_user_manual.py --version "${MANUAL_VERSION}" --output-dir dist
+          echo "Embedded PDF fonts:"
+          pdffonts "dist/drift-user-manual.${MANUAL_VERSION}.pdf"
           python scripts/check_user_manual.py "dist/drift-user-manual.${MANUAL_VERSION}.pdf"
 
       - name: Prepare release artifacts

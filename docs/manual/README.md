@@ -17,13 +17,13 @@ For example, tag `v0.1.0` produces `drift-user-manual.0.1.0.pdf`.
 
 The manual is designed for the classic **Ubuntu** and **Ubuntu Light** typefaces. Font binaries are not stored in this repository. The Ubuntu Font Family is distributed under the Ubuntu Font Licence 1.0; the font licence permits embedding in documents without changing the licence of the document itself. See <https://ubuntu.com/legal/font-licence>.
 
-The tag-driven release workflow installs the `fonts-ubuntu-classic` package in the ephemeral CI environment before exporting the ODT source. The strict artifact check requires Ubuntu-family fonts to be present in the generated PDF and embedded in the file. A release must not silently substitute another typeface for Ubuntu.
+The tag-driven release workflow installs the `fonts-ubuntu` package in the ephemeral CI environment before exporting the ODT source. The strict artifact check requires Ubuntu-family fonts to be present in the generated PDF and embedded in the file. A release must not silently substitute another typeface for Ubuntu.
 
 For a Debian/Ubuntu workstation, the publication dependencies are:
 
 ```bash
 sudo apt-get update
-sudo apt-get install libreoffice fonts-ubuntu-classic poppler-utils
+sudo apt-get install libreoffice fonts-ubuntu poppler-utils
 ```
 
 Then build and verify a local versioned PDF with:

@@ -1,3 +1,14 @@
+/**
+ * @file test_main.cpp
+ * Implements the Brownian mathematical verification native test suite.
+ *
+ * @author Axel Napolitano
+ * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
+ * @copyright Copyright (C) 2026 Axel Napolitano
+ * @license GPL-3.0-or-later
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 #include <unity.h>
 
 #include <cstdint>
@@ -8,33 +19,33 @@
 void test_brownian_step_size_and_event_probability_follow_documented_linear_laws() {
   for (uint16_t speed = 0U; speed <= 1023U; ++speed) {
     TEST_ASSERT_EQUAL_UINT16(static_cast<uint16_t>((256U + speed) >> 1U),
-                             fmd::brownianmath::stepSize(speed));
+                             fmd::brownianmath::movementStepSize(speed));
     TEST_ASSERT_EQUAL_UINT16(static_cast<uint16_t>(speed << 6U),
-                             fmd::brownianmath::eventCutoff(speed));
+                             fmd::brownianmath::movementEventCutoff(speed));
   }
 }
 
 void test_brownian_centering_bias_has_exact_conditional_thresholds() {
-  const uint16_t cutoff = fmd::brownianmath::eventCutoff(512U);
+  const uint16_t cutoff = fmd::brownianmath::movementEventCutoff(512U);
   TEST_ASSERT_EQUAL_UINT16(static_cast<uint16_t>(cutoff / 2U - cutoff / 64U),
-                           fmd::brownianmath::directionCutoff(0U, cutoff));
+                           fmd::brownianmath::upwardDirectionCutoff(0U, cutoff));
   TEST_ASSERT_EQUAL_UINT16(static_cast<uint16_t>(cutoff / 2U),
-                           fmd::brownianmath::directionCutoff(32768U, cutoff));
+                           fmd::brownianmath::upwardDirectionCutoff(32768U, cutoff));
   TEST_ASSERT_EQUAL_UINT16(static_cast<uint16_t>(cutoff / 2U + cutoff / 64U),
-                           fmd::brownianmath::directionCutoff(65535U, cutoff));
+                           fmd::brownianmath::upwardDirectionCutoff(65535U, cutoff));
 }
 
 void test_brownian_exhaustive_uniform_random_domain_matches_event_and_direction_probabilities() {
   constexpr uint16_t speed = 512U;
   constexpr uint16_t target = 32768U;
-  const uint16_t cutoff = fmd::brownianmath::eventCutoff(speed);
-  const uint16_t split = fmd::brownianmath::directionCutoff(target, cutoff);
+  const uint16_t cutoff = fmd::brownianmath::movementEventCutoff(speed);
+  const uint16_t split = fmd::brownianmath::upwardDirectionCutoff(target, cutoff);
   uint32_t unchanged = 0U;
   uint32_t down = 0U;
   uint32_t up = 0U;
 
   for (uint32_t r = 0U; r <= 0xFFFFU; ++r) {
-    const uint16_t next = fmd::brownianmath::nextTarget(target, static_cast<uint16_t>(r), speed);
+    const uint16_t next = fmd::brownianmath::nextTargetValue(target, static_cast<uint16_t>(r), speed);
     if (next == target) {
       ++unchanged;
     } else if (next < target) {
@@ -50,22 +61,22 @@ void test_brownian_exhaustive_uniform_random_domain_matches_event_and_direction_
 }
 
 void test_brownian_target_update_saturates_at_numeric_boundaries() {
-  TEST_ASSERT_EQUAL_UINT16(0U, fmd::brownianmath::nextTarget(1U, 0U, 1023U));
-  const uint16_t cutoff = fmd::brownianmath::eventCutoff(1023U);
-  const uint16_t split = fmd::brownianmath::directionCutoff(65534U, cutoff);
+  TEST_ASSERT_EQUAL_UINT16(0U, fmd::brownianmath::nextTargetValue(1U, 0U, 1023U));
+  const uint16_t cutoff = fmd::brownianmath::movementEventCutoff(1023U);
+  const uint16_t split = fmd::brownianmath::upwardDirectionCutoff(65534U, cutoff);
   TEST_ASSERT_EQUAL_UINT16(65535U,
-                           fmd::brownianmath::nextTarget(65534U, split, 1023U));
+                           fmd::brownianmath::nextTargetValue(65534U, split, 1023U));
 }
 
 void test_brownian_texture_alpha_spans_declared_range_monotonically() {
   TEST_ASSERT_EQUAL_UINT16(fmd::brownianmath::kMinAlphaQ0F16,
-                           fmd::brownianmath::textureAlphaQ0F16(0U));
+                           fmd::brownianmath::smoothingAlphaQ0F16(0U));
   TEST_ASSERT_EQUAL_UINT16(fmd::brownianmath::kMaxAlphaQ0F16,
-                           fmd::brownianmath::textureAlphaQ0F16(1023U));
+                           fmd::brownianmath::smoothingAlphaQ0F16(1023U));
 
   uint16_t previous = 0U;
   for (uint16_t texture = 0U; texture <= 1023U; ++texture) {
-    const uint16_t alpha = fmd::brownianmath::textureAlphaQ0F16(texture);
+    const uint16_t alpha = fmd::brownianmath::smoothingAlphaQ0F16(texture);
     TEST_ASSERT_GREATER_OR_EQUAL_UINT16(previous, alpha);
     previous = alpha;
   }
@@ -78,23 +89,23 @@ void test_brownian_texture_alpha_matches_full_range_linear_interpolation() {
   for (const uint16_t texture : points) {
     const uint16_t expected = static_cast<uint16_t>(fmd::brownianmath::kMinAlphaQ0F16
         + ((static_cast<uint32_t>(texture) * range + 511U) / 1023U));
-    TEST_ASSERT_EQUAL_UINT16(expected, fmd::brownianmath::textureAlphaQ0F16(texture));
+    TEST_ASSERT_EQUAL_UINT16(expected, fmd::brownianmath::smoothingAlphaQ0F16(texture));
   }
 }
 
 void test_brownian_texture_alpha_clamps_out_of_range_input() {
-  TEST_ASSERT_EQUAL_UINT16(fmd::brownianmath::textureAlphaQ0F16(1023U),
-                           fmd::brownianmath::textureAlphaQ0F16(0xFFFFU));
+  TEST_ASSERT_EQUAL_UINT16(fmd::brownianmath::smoothingAlphaQ0F16(1023U),
+                           fmd::brownianmath::smoothingAlphaQ0F16(0xFFFFU));
 }
 
 void test_brownian_fractional_residual_eliminates_one_code_deadband() {
   uint16_t current = 0U;
   uint16_t residual = 0U;
   int8_t direction = 0;
-  const uint16_t alpha = fmd::brownianmath::textureAlphaQ0F16(0U);
+  const uint16_t alpha = fmd::brownianmath::smoothingAlphaQ0F16(0U);
 
   for (uint32_t i = 0U; i < 5000U && current == 0U; ++i) {
-    fmd::brownianmath::smoothToward(1U, alpha, current, residual, direction);
+    fmd::brownianmath::smoothTowardTarget(1U, alpha, current, residual, direction);
   }
   TEST_ASSERT_EQUAL_UINT16(1U, current);
   TEST_ASSERT_EQUAL_UINT16(0U, residual);
@@ -106,10 +117,10 @@ void test_brownian_smoother_matches_first_order_step_before_fractional_carry() {
   uint16_t residual = 0U;
   int8_t direction = 0;
   constexpr uint16_t target = 50000U;
-  const uint16_t alpha = fmd::brownianmath::textureAlphaQ0F16(512U);
+  const uint16_t alpha = fmd::brownianmath::smoothingAlphaQ0F16(512U);
   const uint16_t delta = static_cast<uint16_t>(target - current);
   const uint16_t expectedMove = static_cast<uint16_t>((static_cast<uint32_t>(alpha) * delta) >> 16U);
-  fmd::brownianmath::smoothToward(target, alpha, current, residual, direction);
+  fmd::brownianmath::smoothTowardTarget(target, alpha, current, residual, direction);
   TEST_ASSERT_EQUAL_UINT16(static_cast<uint16_t>(1000U + expectedMove), current);
   TEST_ASSERT_EQUAL_INT8(1, direction);
 }
@@ -124,11 +135,11 @@ void test_brownian_centering_zones_change_only_outside_exact_boundaries() {
   const uint16_t highBiased = static_cast<uint16_t>(neutral + cutoff / fmd::brownianmath::kCenteringStrength);
 
   TEST_ASSERT_EQUAL_UINT16(lowBiased,
-                           fmd::brownianmath::directionCutoff(static_cast<uint16_t>(lowBoundary - 1U), cutoff));
-  TEST_ASSERT_EQUAL_UINT16(neutral, fmd::brownianmath::directionCutoff(lowBoundary, cutoff));
-  TEST_ASSERT_EQUAL_UINT16(neutral, fmd::brownianmath::directionCutoff(highBoundary, cutoff));
+                           fmd::brownianmath::upwardDirectionCutoff(static_cast<uint16_t>(lowBoundary - 1U), cutoff));
+  TEST_ASSERT_EQUAL_UINT16(neutral, fmd::brownianmath::upwardDirectionCutoff(lowBoundary, cutoff));
+  TEST_ASSERT_EQUAL_UINT16(neutral, fmd::brownianmath::upwardDirectionCutoff(highBoundary, cutoff));
   TEST_ASSERT_EQUAL_UINT16(highBiased,
-                           fmd::brownianmath::directionCutoff(static_cast<uint16_t>(highBoundary + 1U), cutoff));
+                           fmd::brownianmath::upwardDirectionCutoff(static_cast<uint16_t>(highBoundary + 1U), cutoff));
 }
 
 void test_brownian_smoother_matches_first_order_step_in_descending_direction() {
@@ -136,10 +147,10 @@ void test_brownian_smoother_matches_first_order_step_in_descending_direction() {
   uint16_t residual = 0U;
   int8_t direction = 0;
   constexpr uint16_t target = 1000U;
-  const uint16_t alpha = fmd::brownianmath::textureAlphaQ0F16(512U);
+  const uint16_t alpha = fmd::brownianmath::smoothingAlphaQ0F16(512U);
   const uint16_t delta = static_cast<uint16_t>(current - target);
   const uint16_t expectedMove = static_cast<uint16_t>((static_cast<uint32_t>(alpha) * delta) >> 16U);
-  fmd::brownianmath::smoothToward(target, alpha, current, residual, direction);
+  fmd::brownianmath::smoothTowardTarget(target, alpha, current, residual, direction);
   TEST_ASSERT_EQUAL_UINT16(static_cast<uint16_t>(50000U - expectedMove), current);
   TEST_ASSERT_EQUAL_INT8(-1, direction);
 }
@@ -148,11 +159,11 @@ void test_brownian_smoother_resets_fractional_residual_when_direction_reverses()
   uint16_t current = 10000U;
   uint16_t residual = 60000U;
   int8_t direction = 1;
-  const uint16_t alpha = fmd::brownianmath::textureAlphaQ0F16(256U);
+  const uint16_t alpha = fmd::brownianmath::smoothingAlphaQ0F16(256U);
   const uint16_t delta = 5000U;
   const uint16_t expectedMove = static_cast<uint16_t>((static_cast<uint32_t>(alpha) * delta) >> 16U);
 
-  fmd::brownianmath::smoothToward(5000U, alpha, current, residual, direction);
+  fmd::brownianmath::smoothTowardTarget(5000U, alpha, current, residual, direction);
   TEST_ASSERT_EQUAL_INT8(-1, direction);
   TEST_ASSERT_EQUAL_UINT16(static_cast<uint16_t>(10000U - expectedMove), current);
 }
@@ -162,11 +173,11 @@ void test_brownian_smoother_converges_to_target_without_overshoot_and_clears_res
   uint16_t residual = 0U;
   int8_t direction = 0;
   constexpr uint16_t target = 12345U;
-  const uint16_t alpha = fmd::brownianmath::textureAlphaQ0F16(1023U);
+  const uint16_t alpha = fmd::brownianmath::smoothingAlphaQ0F16(1023U);
   uint16_t previous = current;
 
   for (uint32_t i = 0U; i < 20000U && current != target; ++i) {
-    fmd::brownianmath::smoothToward(target, alpha, current, residual, direction);
+    fmd::brownianmath::smoothTowardTarget(target, alpha, current, residual, direction);
     TEST_ASSERT_LESS_OR_EQUAL_UINT16(previous, current);
     TEST_ASSERT_GREATER_OR_EQUAL_UINT16(target, current);
     previous = current;

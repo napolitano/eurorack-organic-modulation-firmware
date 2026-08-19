@@ -1,5 +1,45 @@
+/**
+ * @file test_main.cpp
+ * Implements the portable-domain invariant/property native test suite.
+ *
+ * @author Axel Napolitano
+ * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
+ * @copyright Copyright (C) 2026 Axel Napolitano
+ * @license GPL-3.0-or-later
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 #include <unity.h>
+
 #include "fmd/domain/DriftEngine.h"
 #include "MemoryReferenceTables.h"
-void test_control_grid_preserves_12bit_output_invariant(){MemoryReferenceTables t;const uint16_t p[]={0,1,127,511,512,1019,1020,1023};for(uint8_t a=0;a<4;++a){fmd::DriftEngine e(static_cast<fmd::Algorithm>(a),0xBEEF,t);for(uint16_t sc:p)for(uint16_t tc:p)for(uint16_t sk:p)for(uint16_t tk:p){TEST_ASSERT_LESS_OR_EQUAL_UINT16(4095,e.step({sc,tc,sk,tk}));}}}
-int main(int,char**){UNITY_BEGIN();RUN_TEST(test_control_grid_preserves_12bit_output_invariant);return UNITY_END();}
+
+void test_control_grid_preserves_12bit_output_invariant() {
+  MemoryReferenceTables referenceTables;
+  const uint16_t boundaryValues[] = {
+      0U, 1U, 127U, 511U, 512U, 1019U, 1020U, 1023U,
+  };
+
+  for (uint8_t algorithmIndex = 0U; algorithmIndex < 4U; ++algorithmIndex) {
+    fmd::DriftEngine engine(
+        static_cast<fmd::Algorithm>(algorithmIndex), 0xBEEFU, referenceTables);
+
+    for (uint16_t speedCv : boundaryValues) {
+      for (uint16_t textureCv : boundaryValues) {
+        for (uint16_t speedKnob : boundaryValues) {
+          for (uint16_t textureKnob : boundaryValues) {
+            const fmd::ControlFrame controls{
+                speedCv, textureCv, speedKnob, textureKnob};
+            TEST_ASSERT_LESS_OR_EQUAL_UINT16(4095U, engine.step(controls));
+          }
+        }
+      }
+    }
+  }
+}
+
+int main(int, char**) {
+  UNITY_BEGIN();
+  RUN_TEST(test_control_grid_preserves_12bit_output_invariant);
+  return UNITY_END();
+}
