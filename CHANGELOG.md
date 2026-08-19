@@ -23,6 +23,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Dedicated mathematical unit suites and developer analyses for all four Organic algorithms plus a bank-level architecture/control-contract document.
 - Acceptance criteria AC-33 through AC-37 introduced compile-time bank selection and the four Organic mathematical contracts.
 - Tagged-release packaging supports Classic, Organic and Generative firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
+- The release workflow now enforces an explicit bank-aware artifact contract before checksums/upload: every selected bank must provide non-empty new/old-bootloader HEX and ELF images plus matching build-provenance records, and unexpected firmware-bank artifacts fail the release.
 - Expanded user manual covering all three compile-time banks and all twelve algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for the Generative bank.
 - Nine deterministic true-vector Organic-bank documentation assets plus a generator: four bank-specific DIP-switch diagrams and five explanatory figures for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor.
 - New vector front/back manual covers that identify Classic, Organic and Generative and the current twelve-algorithm scope.

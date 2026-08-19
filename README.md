@@ -252,7 +252,7 @@ Timing qualification uses `nanoatmega328new_timing` for Classic, `nanoatmega328n
 
 ## Release artifacts
 
-Tagged releases publish **both compile-time banks** for both supported Arduino Nano bootloaders. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
+Tagged releases publish **every compile-time bank present in the tagged source** for both supported Arduino Nano bootloaders. The current source therefore publishes Classic, Organic and Generative. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
 
 | Bank | New bootloader | Old bootloader |
 |---|---|---|
@@ -260,14 +260,14 @@ Tagged releases publish **both compile-time banks** for both supported Arduino N
 | **Organic** | `fm-drift-organic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-organic-nano-old-bootloader.X.Y.Z.hex` |
 | **Generative** | `fm-drift-generative-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-generative-nano-old-bootloader.X.Y.Z.hex` |
 
-Matching `.elf` files are included for debugging/provenance. Each release also contains `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **four build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests.
+Matching `.elf` files are included for debugging/provenance. Each current three-bank release also contains `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **six build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests.
 
 > [!IMPORTANT]
-> Flashing chooses **Classic or Organic**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.
+> Flashing chooses **Classic, Organic or Generative**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.
 
 ## User manual
 
-The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It now documents **both compile-time banks and all eight modes**, including the Organic control mappings, bank-specific DIP diagrams, mathematical foundations and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
+The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It now documents **all three compile-time banks and all twelve algorithms**, including bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
 
 The manual repository area contains:
 

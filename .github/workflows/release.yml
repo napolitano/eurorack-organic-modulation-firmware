@@ -150,6 +150,9 @@ jobs:
           if [[ -f scripts/test_prepare_release_artifacts.py ]]; then
             python scripts/test_prepare_release_artifacts.py
           fi
+          if [[ -f scripts/test_check_release_artifact_set.py ]]; then
+            PYTHONPATH=scripts python scripts/test_check_release_artifact_set.py
+          fi
           if [[ -f scripts/test_freeze_user_manual.py ]]; then
             python scripts/test_freeze_user_manual.py
           fi
@@ -310,6 +313,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         run: |
           python .release-tooling/scripts/test_prepare_release_artifacts.py
+          PYTHONPATH=.release-tooling/scripts python .release-tooling/scripts/test_check_release_artifact_set.py
           python .release-tooling/scripts/test_generate_release_notes.py
           python .release-tooling/scripts/test_user_manual_tooling.py
           if [[ -f .release-tooling/scripts/test_freeze_user_manual.py ]]; then
@@ -455,6 +459,19 @@ jobs:
               --git-ref "${RELEASE_TAG}" \
               --output "dist/BUILD-INFO-generative-nano-old.${RELEASE_VERSION}.txt"
           fi
+
+      - name: Validate exact release artifact set
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOLING_ROOT="scripts"
+          if [[ -d .release-tooling/scripts ]]; then
+            TOOLING_ROOT=".release-tooling/scripts"
+          fi
+          python "${TOOLING_ROOT}/check_release_artifact_set.py" \
+            --version "${RELEASE_VERSION}" \
+            --banks "${RELEASE_BANKS}" \
+            --output-dir dist
 
       - name: Generate release checksums
         working-directory: dist

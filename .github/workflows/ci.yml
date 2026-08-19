@@ -24,6 +24,7 @@ jobs:
       - run: python scripts/test_generate_release_notes.py
       - run: python scripts/test_avr_resource_budget.py
       - run: python scripts/test_prepare_release_artifacts.py
+      - run: PYTHONPATH=scripts python scripts/test_check_release_artifact_set.py
       - run: python scripts/test_freeze_user_manual.py
 
   native-tests:
