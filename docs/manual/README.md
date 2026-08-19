@@ -58,13 +58,13 @@ The PDF validator intentionally does **not** treat the ODT `meta:page-count` fie
 
 ## Reusable vector assets
 
-The explanatory graphics from the manual are maintained as standalone SVGs in [`assets/`](assets/). The current inventory contains **35 true-vector assets**: the shared/Classic material, bank-specific Organic and Generative DIP diagrams, four compact DIP-slot symbols for the bank overview, and deterministic explanatory figures for both added banks. They are vector artwork rather than SVG wrappers around raster images, keeping diagrams sharp on GitHub, in generated documentation and in downstream layouts.
+The explanatory graphics from the manual are maintained as standalone SVGs in [`assets/`](assets/). The current inventory contains **51 true-vector assets**: the shared/Classic material, bank-specific Organic, Generative, Ambient and Electronica DIP diagrams, four compact DIP-slot symbols for the bank overview, and deterministic explanatory figures for all added banks. They are vector artwork rather than SVG wrappers around raster images, keeping diagrams sharp on GitHub, in generated documentation and in downstream layouts.
 
 <p align="center">
   <img src="assets/drift-front-panel.svg" alt="Drift front panel controls" width="220">
 </p>
 
-The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). Organic DIP diagrams and Organic algorithm figures are regenerated deterministically with `scripts/generate_organic_manual_assets.py`. Generative DIP diagrams, compact bank-slot symbols and Generative algorithm figures are regenerated with `scripts/generate_generative_manual_assets.py`. Ambient DIP diagrams and Ambient algorithm figures are regenerated with `scripts/generate_ambient_manual_assets.py`; generated geometry should not be edited by hand. These SVGs are covered by the same CC BY-NC 4.0 manual licence.
+The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). Organic DIP diagrams and Organic algorithm figures are regenerated deterministically with `scripts/generate_organic_manual_assets.py`. Generative DIP diagrams, compact bank-slot symbols and Generative algorithm figures are regenerated with `scripts/generate_generative_manual_assets.py`. Ambient DIP diagrams and Ambient algorithm figures are regenerated with `scripts/generate_ambient_manual_assets.py`. Electronica DIP diagrams and Electronica algorithm figures are regenerated with `scripts/generate_electronica_manual_assets.py`; generated geometry should not be edited by hand. These SVGs are covered by the same CC BY-NC 4.0 manual licence.
 
 ## Behavioural source of truth
 
@@ -86,8 +86,12 @@ The manual describes the behavior of the firmware in this repository, including 
 - Anchor is an OU-inspired bounded AR(1) mean-reverting process driven by the firmware's symmetric triangular innovation; it is deliberately not described as an exact Gaussian Ornstein-Uhlenbeck process.
 - Breath always follows baseline → one peak → baseline; Texture introduces cycle-to-cycle variation in duration, amplitude and peak position only at rollover.
 - Fog sums at most four finite-support bipolar cloudlets; Texture targets average occupancy while the static voice limit keeps CPU and SRAM bounded.
+- Pump is a free-running duck/recovery contour at an internal 30–240 BPM quarter-note reference; it is not an audio sidechain compressor and has no external trigger lock.
+- Acid is a deterministic project-defined 16-step CV grammar with accent and slide masks; it is not a TB-303 emulator or copied factory pattern.
+- Shuffle preserves each two-sixteenth pair duration while moving the second onset from 1/2 to 3/4 of the pair, giving straight through exact 3:1 timing without random humanization.
+- Polymeter keeps a four-step anchor against a Texture-selected 3/5/7/9-step cycle and realigns after exact 12/20/28/36-step least-common-multiple periods.
 
-The manual covers **all four compile-time banks and all sixteen modes**. A dedicated **Algorithm banks** section explains the distinction between flashing a bank and selecting an algorithm. Each bank then has its own four DIP-switch diagrams before its mode descriptions. The Algorithm banks introduction provides a compact four-bank slot table and a separate origin/musical-value table, while the bank sections themselves remain bank-specific rather than using a cross-bank DIP comparison. Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains the musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/) and [`../analysis/algorithm-banks/`](../analysis/algorithm-banks/).
+The manual covers **all five compile-time banks and all twenty modes**. A dedicated **Algorithm banks** section explains the distinction between flashing a bank and selecting an algorithm. Each bank then has its own four DIP-switch diagrams before its mode descriptions. The Algorithm banks introduction provides a compact five-bank slot table and a separate origin/musical-value table, while the bank sections themselves remain bank-specific rather than using a cross-bank DIP comparison. Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains the musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/) and [`../analysis/algorithm-banks/`](../analysis/algorithm-banks/).
 
 ## Source contract
 

@@ -60,6 +60,7 @@ def validate(source: Path) -> None:
         embedded_organic: dict[str, str] = {}
         embedded_generative: dict[str, str] = {}
         embedded_ambient: dict[str, str] = {}
+        embedded_electronica: dict[str, str] = {}
         embedded_bank_config: dict[str, str] = {}
         embedded_bank_slot: dict[str, str] = {}
         embedded_manual: dict[str, str] = {}
@@ -75,6 +76,8 @@ def validate(source: Path) -> None:
                 embedded_generative[frame_name.removeprefix("Generative-")] = href
             elif frame_name.startswith("Ambient-"):
                 embedded_ambient[frame_name.removeprefix("Ambient-")] = href
+            elif frame_name.startswith("Electronica-"):
+                embedded_electronica[frame_name.removeprefix("Electronica-")] = href
             elif frame_name.startswith("BankConfig-"):
                 embedded_bank_config[frame_name.removeprefix("BankConfig-")] = href
             elif frame_name.startswith("BankSlot-"):
@@ -131,6 +134,22 @@ def validate(source: Path) -> None:
             if archive.read(href) != standalone.read_bytes():
                 raise ValueError(f"manual embeds a stale copy of Ambient SVG {asset_name}")
 
+        required_electronica_assets = (
+            "pump-ducking.svg",
+            "acid-contour.svg",
+            "shuffle-timing.svg",
+            "polymeter-cycle.svg",
+        )
+        for asset_name in required_electronica_assets:
+            href = embedded_electronica.get(asset_name)
+            if href is None:
+                raise ValueError(f"manual is missing Electronica SVG figure {asset_name}")
+            standalone = Path("docs/manual/assets") / asset_name
+            if not standalone.is_file():
+                raise ValueError(f"standalone Electronica SVG is missing: {standalone}")
+            if archive.read(href) != standalone.read_bytes():
+                raise ValueError(f"manual embeds a stale copy of Electronica SVG {asset_name}")
+
         required_bank_slot_assets = (
             "dip-slot-00.svg", "dip-slot-10.svg", "dip-slot-01.svg", "dip-slot-11.svg",
         )
@@ -161,6 +180,10 @@ def validate(source: Path) -> None:
             "config-anchor.svg",
             "config-breath.svg",
             "config-fog.svg",
+            "config-pump.svg",
+            "config-acid.svg",
+            "config-shuffle.svg",
+            "config-polymeter.svg",
         )
         for asset_name in required_config_assets:
             href = embedded_bank_config.get(asset_name)
@@ -197,7 +220,8 @@ def validate(source: Path) -> None:
             "6 Organic bank",
             "7 Generative bank",
             "8 Ambient bank",
-            "9 Signals at a glance",
+            "9 Electronica bank",
+            "10 Signals at a glance",
         )
         for heading in expected_sections:
             matches = paragraph_map.get(heading, [])
@@ -212,6 +236,7 @@ def validate(source: Path) -> None:
             "Fractal mode", "Vector mode", "Rain mode", "Attractor mode",
             "Turing mode", "Markov mode", "Motif mode", "Urn mode",
             "Current mode", "Anchor mode", "Breath mode", "Fog mode",
+            "Pump mode", "Acid mode", "Shuffle mode", "Polymeter mode",
         )
         for heading in mode_headings:
             matches = paragraph_map.get(heading, [])
@@ -222,15 +247,15 @@ def validate(source: Path) -> None:
                 raise ValueError(f"algorithm heading lacks the standard T15 style: {heading}")
 
         math_headings = paragraph_map.get("Mathematical foundations", [])
-        if len(math_headings) != 16:
-            raise ValueError("manual must contain exactly sixteen Mathematical foundations subsections")
+        if len(math_headings) != 20:
+            raise ValueError("manual must contain exactly twenty Mathematical foundations subsections")
         for heading in math_headings:
             spans = heading.findall("text:span", namespaces)
             if heading.attrib.get(text_style) != "P20" or len(spans) != 1 or spans[0].attrib.get(text_style) != "T15":
                 raise ValueError("Mathematical foundations heading has inconsistent formatting")
 
         dip_headings = paragraph_map.get("DIP switch selection", [])
-        if len(dip_headings) != 4:
+        if len(dip_headings) != 5:
             raise ValueError("manual must contain one DIP switch selection subsection per bank")
         for heading in dip_headings:
             spans = heading.findall("text:span", namespaces)
@@ -251,6 +276,7 @@ def validate(source: Path) -> None:
     require("Organic bank — DIP-switch positions", content, "Organic bank DIP caption")
     require("Generative bank — DIP-switch positions", content, "Generative bank DIP caption")
     require("Ambient bank — DIP-switch positions", content, "Ambient bank DIP caption")
+    require("Electronica bank — DIP-switch positions", content, "Electronica bank DIP caption")
     require("f(t) = 6t", content, "Perlin mathematical foundation")
     require("P(move) = c / 1024", content, "Brownian mathematical foundation")
     require("C(t,", content, "Bezier mathematical foundation")
@@ -268,7 +294,11 @@ def validate(source: Path) -> None:
     require("g(a) ≈ √(6(1 − a²))", content, "Anchor innovation normalisation")
     require("S(t) = 3t² − 2t³", content, "Breath smoothstep foundation")
     require("g(u) = 16u²(1 − u)²", content, "Fog cloudlet kernel")
-    require("sixteen algorithms across four", content, "four-bank capability overview")
+    require("B(u) = 30 · 2^(3u) BPM", content, "Electronica tempo law")
+    require("qₙ = (5n + 3) mod 16", content, "Acid permutation law")
+    require("r(τ) = 1/2 + τ/4", content, "Shuffle timing law")
+    require("P = lcm(4, b)", content, "Polymeter recurrence law")
+    require("twenty algorithms across five", content, "five-bank capability overview")
     require("Software can add new banks, but it cannot create additional physical switch states", content, "hardware selector limitation")
     require("Musical character and origin", content, "musical value table section")
     require("flashed firmware image", content, "compile-time bank selection explanation")

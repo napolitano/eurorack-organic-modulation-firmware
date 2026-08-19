@@ -307,7 +307,7 @@ Matching `.elf` files are included for debugging/provenance. Once Electronica is
 
 ## User manual
 
-The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). At this implementation stage it documents Classic, Organic, Generative and Ambient; Electronica firmware is implemented but publication is intentionally blocked until the manual is expanded in the documentation step. The current manual includes bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
+The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It documents Classic, Organic, Generative, Ambient and Electronica, including all twenty current algorithms; the Electronica release-documentation guard is therefore satisfied by the maintained manual source. The current manual includes bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
 
 The manual repository area contains:
 

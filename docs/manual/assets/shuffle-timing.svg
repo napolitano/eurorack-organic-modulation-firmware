@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 455" role="img" aria-label="Shuffle straight to three-to-one timing">
+<title>Shuffle straight to three-to-one timing</title>
+<style>
+.title{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:29px;font-weight:700;fill:#1a1a1a}
+.subtitle{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:300;fill:#6e6e6e}
+.label{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:500;fill:#1a1a1a}
+.small{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:15px;font-weight:300;fill:#6e6e6e}
+</style>
+<rect width="1056" height="455" fill="white"/>
+<text x="34" y="52" class="title">Shuffle — move the second onset, not the pair</text>
+<text x="34" y="87" class="subtitle">Pair duration stays fixed while Texture delays the second sixteenth from 1/2 to 3/4 of the pair</text>
+<text x="34" y="172" class="label">Straight</text><line x1="105" y1="164" x2="925" y2="164" stroke="#dedede" stroke-width="4"/><line x1="105.0" y1="144" x2="105.0" y2="184" stroke="#8d8d8d" stroke-width="5"/><line x1="515.0" y1="144" x2="515.0" y2="184" stroke="#8d8d8d" stroke-width="5"/><line x1="925.0" y1="144" x2="925.0" y2="184" stroke="#8d8d8d" stroke-width="5"/>
+<text x="34" y="278" class="label">3:1 max</text><line x1="105" y1="270" x2="925" y2="270" stroke="#dedede" stroke-width="4"/><line x1="105.0" y1="250" x2="105.0" y2="290" stroke="#e64a2b" stroke-width="5"/><line x1="720.0" y1="250" x2="720.0" y2="290" stroke="#e64a2b" stroke-width="5"/><line x1="925.0" y1="250" x2="925.0" y2="290" stroke="#e64a2b" stroke-width="5"/>
+<path d="M 105 324 L 720 324" stroke="#e64a2b" stroke-width="5"/><path d="M 720 324 L 925 324" stroke="#8d8d8d" stroke-width="5"/>
+<text x="300" y="358" class="small">long = 3/4 pair</text><text x="765" y="358" class="small">short = 1/4 pair</text>
+<text x="105" y="414" class="small">The two intervals always sum to one complete pair, so Shuffle introduces no cumulative tempo drift.</text>
+</svg>
