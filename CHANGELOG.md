@@ -3,74 +3,46 @@
 This changelog records release-relevant changes to the firmware and repository. New work remains under `Unreleased` until a release is explicitly prepared. A versioned release section is created only as part of release preparation and must begin with a `### Release summary` prose paragraph; the release workflow uses that paragraph as the opening of the generated GitHub Release notes.
 
 ## Unreleased
-- User manual expanded to the Percussion bank with six-bank / twenty-four-algorithm overviews, Euclid/Repeat/Probability/Humanize pages, bank-specific DIP diagrams, deterministic rhythm figures and repeated 0–5 V-only clock-input safety guidance.
+
+## 0.2.0 — 2026-08-19
+
+### Release summary
+
+Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baseline into a six-bank, twenty-four-algorithm modulation platform for the original ATmega328P hardware. Organic, Generative, Ambient, Electronica and Percussion add distinct continuous, memory-based, long-form and rhythm-oriented behaviors; Percussion also supports an optional 0–5 V quarter-note clock on Speed CV with automatic Speed-knob fallback. The release adds bank-organized domain code, mathematical and system verification across all six banks, a substantially expanded user manual, immutable release-manual snapshots, and bank-aware release packaging for both supported Nano bootloaders.
 
 ### Added
 
-- Release/CI delivery is now explicitly hardened for the complete six-bank source: Percussion clock tests are part of the targeted CI matrix, current tags require all 24 HEX/ELF firmware files and 12 BUILD-INFO provenance files, and release-process documentation/manual guards cover all six banks while remaining capability-aware for historical tags.
-- Percussion Speed CV can now act as an optional **0–5 V quarter-note clock input**. Two rising edges acquire external timing; clock loss after 2.5 periods automatically falls back to the Speed-knob 30–240 BPM source without resetting the running phrase.
-- Added explicit current-hardware safety warnings to the main README, Percussion guide and user manual: the original Speed CV stage is not specified as a 10 V Eurorack trigger input, so 10 V clocks/triggers are unsupported until the input hardware is revised.
-- Corrected Humanize positive-jitter scheduling so delayed hits count their offset from the nominal grid boundary rather than from event preparation.
-- Percussion-bank design specification defining Euclid, Repeat, Probability and Humanize as four event-oriented rhythm modes, with a shared 16-step bar, 4/8/12/16-bar phrase engine and phrase-aware fills for Euclid, Repeat and Probability while Humanize preserves event count.
-- Dedicated engineering analyses for all four proposed Percussion algorithms, covering Euclidean/Bjorklund provenance, exact fill/repeat/probability/humanization contracts, ATmega328P feasibility, verification strategy and explicit musical assessment.
-- Electronica release/CI delivery is now guarded end-to-end: CI must qualify Electronica natively, under coverage and sanitizers, and build both Nano bootloader variants plus the timing image; tagged releases must package both Electronica HEX/ELF pairs and both BUILD-INFO provenance files before checksums or upload.
-- Expanded the maintained user manual to the Electronica bank (Pump, Acid, Shuffle and Polymeter), bringing the end-user scope to five banks and twenty algorithms. Added four bank-specific DIP diagrams, four deterministic Electronica explanatory SVGs, exact implemented mathematical foundations, musical-value/origin entries and free-running 30–240 BPM limitations.
-
-- Electronica-bank design specification defining Pump, Acid, Shuffle and Polymeter as four deterministic tempo/grid-oriented CV modes for house, acid, techno and adjacent electronic styles, including a duplication audit against all existing banks and the planned Percussion concepts.
-- Dedicated engineering analyses for all four proposed Electronica algorithms, covering mathematical contracts, provenance boundaries, ATmega328P cost, verification strategy and explicit musical assessment. The initial `Groove` working title is refined to `Shuffle` so the mode specifies deterministic long-short timing rather than an undefined combination of groove dimensions.
-- Ambient-bank design specification defining Current, Anchor, Breath and Fog as four distinct forms of long-form continuous modulation, with an explicit duplication audit against Classic, Organic and Generative.
-- Dedicated engineering analyses for all four Ambient algorithms, covering mathematical foundations, control contracts, ATmega328P feasibility, verification strategy and explicit musical assessment.
-- The initial Ambient working title `Tide` is replaced by `Current` to avoid confusion with Mutable Instruments Tides in the Eurorack context.
-- Implemented the Ambient compile-time bank with Current, Anchor, Breath and Fog, shared fixed-point Ambient math and dedicated new/old Nano, native, coverage, sanitizer and timing environments.
-- Added four Ambient unit suites covering Current ratio/weight contracts, Anchor mean reversion, Breath cycle topology and Fog cloudlet/occupancy behavior; current `Unreleased` coverage is 47 acceptance criteria and 145 native test cases across 26 suites.
-- Added `README-BANK-AMBIENT.md` with bank-specific DIP mapping, controls, implemented mathematical contracts and build/test commands.
-- Release tooling now recognizes Ambient as a fourth bank, packages both Nano bootloader variants with per-image provenance, and refuses an Ambient release until the frozen user manual documents Ambient, Current, Anchor, Breath and Fog.
-- Ambient release delivery is now guarded by an explicit workflow-structure regression test and artifact-set tests that require both Ambient HEX/ELF bootloader variants plus both Ambient BUILD-INFO provenance files before publication.
-- Generative-bank design specification defining Turing, Markov, Motif and Urn as four distinct forms of discrete musical memory, with a duplication audit against Classic and Organic.
-- Dedicated engineering analyses for all four Generative algorithms, including mathematical contracts, AVR cost/test strategy and explicit musical assessment.
-- Implemented the Generative compile-time bank with Turing, Markov, Motif and Urn production algorithms, shared pure integer math primitives and dedicated PlatformIO build/test/timing environments for both Nano bootloaders.
-- Added four Generative mathematical unit suites covering exact mutation/transition/edit/reinforcement contracts, circular phrase operations, weighted categorical selection, deterministic fixed-seed behavior and DAC-domain invariants.
-- Acceptance criteria AC-38 through AC-42 cover Generative bank selection and its four algorithm contracts.
-- Added `README-BANK-GENERATIVE.md` with DIP mapping, control semantics, implemented equations, musical roles and Generative build commands.
-- Release-preparation manual freezing: the final `docs/manual/drift-user-manual.odt` is now copied byte-for-byte to `docs/manual/releases/X.Y.Z/drift-user-manual.X.Y.Z.odt` before tagging, and existing snapshots are immutable by default.
-- Historical manual backfill tooling can recover an exact pre-freeze source from an existing Git tag without moving or rewriting that tag; this provides a deterministic path for the 0.1.0 manual source.
-- Optional compile-time **Organic algorithm bank** for the original Drift hardware, selected at build time while leaving the Classic 0.1.0 bank as the default. The four Organic DIP slots are Fractal, Vector, Rain and Attractor.
-- Fractal modulation based on three continuous gradient-noise scales at 1x/4x/16x with constant-gain Texture redistribution.
-- Vector modulation based on a deterministic two-axis toroidal phase flow with bounded Texture-controlled cross-coupling.
-- Rain modulation using Density-controlled stochastic impulses and a fractional-residual leaky envelope; the hardware Attenuation control naturally remains final output Intensity.
-- Attractor modulation using a fixed-point Hénon map with Texture-controlled parameter `a` and interpolated travel between map states.
-- Dedicated Organic PlatformIO build, native-test, sanitizer, coverage and timing environments for both Nano bootloader variants where applicable.
-- Dedicated mathematical unit suites and developer analyses for all four Organic algorithms plus a bank-level architecture/control-contract document.
-- Acceptance criteria AC-33 through AC-37 introduced compile-time bank selection and the four Organic mathematical contracts.
-- Tagged-release packaging supports Classic, Organic, Generative, Ambient and Electronica firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
-- The release workflow now enforces an explicit bank-aware artifact contract before checksums/upload: every selected bank must provide non-empty new/old-bootloader HEX and ELF images plus matching build-provenance records, and unexpected firmware-bank artifacts fail the release.
-- Expanded user manual covering all four compile-time banks and all sixteen algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for the Generative and Ambient banks.
-- Nine deterministic true-vector Organic-bank documentation assets plus a generator: four bank-specific DIP-switch diagrams and five explanatory figures for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor.
-- New vector front/back manual covers that identify Classic, Organic, Generative and Ambient and the current sixteen-algorithm scope.
+- **Organic bank:** Fractal, Vector, Rain and Attractor, with fixed-point implementations, bank-specific mathematical tests, engineering analyses, documentation and dedicated native/AVR qualification environments.
+- **Generative bank:** Turing, Markov, Motif and Urn, providing mutating-loop, finite-state, phrase-transformation and leaky-reinforcement behaviors with deterministic/statistical verification.
+- **Ambient bank:** Current, Anchor, Breath and Fog, covering quasiperiodic long-form motion, mean reversion, recurrent macro-gestures and smooth stochastic cloudlets on an intentionally slower musical time scale.
+- **Electronica bank:** Pump, Acid, Shuffle and Polymeter, using an internal 30–240 BPM scheduler for rhythmically legible CV aimed at house, acid, techno and related electronic styles.
+- **Percussion bank:** Euclid, Repeat, Probability and Humanize, with a shared 16-step bar model, 4/8/12/16-bar phrase structure and phrase-aware fills where appropriate.
+- **Percussion external clock mode:** Speed CV is repurposed in this bank as an optional **0–5 V quarter-note clock input**. Two valid rising edges acquire external timing; clock loss after 2.5 periods automatically falls back to the Speed-knob 30–240 BPM source without resetting the running bar/phrase counters.
+- Explicit current-hardware safety warnings in the main README, Percussion guide and user manual: **10 V Eurorack clocks/triggers are unsupported on Speed CV** until the input hardware is revised.
+- Dedicated bank-level design documents and per-algorithm engineering analyses for all twenty newly added algorithms, including mathematical contracts, duplication audits, ATmega328P feasibility, verification strategy and musical assessment.
+- Dedicated root-level bank guides for Organic, Generative, Ambient, Electronica and Percussion, alongside the Classic guide.
+- Expanded native verification to **194 test cases across 35 suites and 59 acceptance criteria**, with bank-specific mathematical, integration, property, system, sanitizer, coverage, AVR resource-budget and timing paths.
+- Expanded the maintained user manual to all **six banks and twenty-four algorithms**, including bank-specific DIP diagrams, mathematical foundations, origin/musical-value overviews, Percussion clock guidance and **59 maintained SVG assets**.
+- Release-preparation manual freezing under `docs/manual/releases/X.Y.Z/`, with immutable byte-for-byte ODT snapshots and historical tag-based backfill support for releases predating the mechanism.
+- Bank-aware release packaging for every bank present in a tag. A current six-bank release publishes both Nano bootloader variants as HEX and ELF, yielding **24 firmware files**, plus **12 per-image BUILD-INFO provenance files**, the frozen ODT/PDF manual pair, firmware manifest and checksum manifests.
+- Manual `refresh` and `recreate` maintenance modes for rebuilding an existing release tag without moving or rewriting the Git tag.
+- CI/release structural contract tests that fail if a bank silently drops out of native tests, coverage, sanitizers, AVR builds, timing qualification, manual coverage or release packaging.
 
 ### Changed
-- Added a deliberately dry note to the main README and the user-manual Algorithm banks introduction about the very real problem of choosing among 24 algorithms in six banks, and the entirely reasonable architectural response of owning more than one Drift.
-- User-manual bank overview, origin/musical-value table, cover/back-cover scope and Signals-at-a-glance now describe five compile-time banks and twenty algorithms; Electronica is presented as a free-running rhythm-first bank rather than an externally synchronized clocked source.
-- Refactored the portable domain source tree so bank-owned algorithms and bank-specific math are grouped under matching `domain/classic`, `domain/organic`, `domain/generative` and `domain/ambient` subdirectories. Shared `DriftEngine`, types, fixed-point/frequency/RNG support and cross-bank algorithm math remain at the domain root; include paths, tests and architecture/contributor documentation were updated without changing algorithm behavior.
-- Expanded the user manual and publication documentation to cover the Ambient bank (Current, Anchor, Breath and Fog), bringing the maintained end-user scope to four banks and sixteen algorithms. Added bank-specific DIP diagrams, four deterministic Ambient explanatory SVGs, mathematical foundations, musical-value/origin entries and updated four-bank release documentation.
 
-- User manual Algorithm banks introduction now explains the expanded sixteen-algorithm potential across four banks, the unavoidable four-selector-state hardware boundary, a compact bank/slot table with DIP symbols, and a concise origin/musical-value table for all sixteen algorithms.
-- Added a complete Generative bank section to the user manual with bank-specific Turing/Markov/Motif/Urn DIP diagrams, four deterministic explanatory SVGs, mathematical foundations and patch-oriented musical interpretation.
-- User manual bank documentation now uses a dedicated Algorithm banks introduction, separate top-level Classic, Organic, Generative and Ambient sections, bank-specific DIP-switch SVGs, and identical heading/subsection styling across all sixteen algorithms; the former cross-bank configuration comparison is removed.
-- Root bank documentation uses explicit `README-BANK-CLASSIC.md`, `README-BANK-ORGANIC.md`, `README-BANK-GENERATIVE.md` and `README-BANK-AMBIENT.md` names, while the main README provides a compact four-bank overview and links to each detailed guide.
-- Dependabot CI dependency updates are now consolidated across GitHub Actions and Python into one monthly multi-ecosystem pull request instead of one pull request per ecosystem.
-- Tagged-release manual dependency installation now uses only the Ubuntu package source, canonical HTTPS Ubuntu mirrors, bounded APT retry/network timeouts and the minimal `libreoffice-writer` package set.
-- The release job now has an explicit 60-minute ceiling and the manual dependency installation step a 10-minute ceiling, preventing a transient package mirror from holding a release indefinitely.
-- Release runs for the same tag now share a concurrency group; retriggering a tag cancels an obsolete in-progress run instead of consuming Actions time in parallel.
-- `DriftEngine` now owns and dispatches only the compile-time-selected algorithm bank, so inactive-bank algorithm state does not consume SRAM in the resulting firmware image.
-- Generic selection, integration, property and system tests are bank-aware and exercise the four slots of the active compile-time bank.
-- CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic, Organic, Generative, Ambient and Electronica builds independently.
-- Organic per-sample control mappings avoid general integer division in their hot paths where a bounded power-of-two mapping provides the documented behavior.
-- README, testing documentation and algorithm-analysis index now describe the compile-time bank model and the Organic control/DIP mapping.
-- README and release-process documentation now explain multi-bank release files, bootloader variants, bank-vs-DIP selection boundary and the versioned release manifest.
-- Tagged releases emit separate build-provenance records for every selected bank/bootloader firmware variant instead of describing only one environment per bank.
-- Release-note integrity text now derives the published multi-bank firmware set from the tag, alongside the versioned manual, firmware-artifact manifest, provenance files and checksum manifests.
-- Tagged releases now publish the frozen versioned manual ODT alongside the PDF, and release/rebuild jobs refuse to use the live development manual for tags created after the freeze mechanism was introduced. Historical pre-freeze tags retain an explicit tag-pinned legacy-source fallback. Generative and Ambient releases are additionally blocked unless the frozen manual source documents the corresponding bank and all four algorithms.
+- Refactored the portable domain tree into bank-owned subdirectories under `domain/classic`, `domain/organic`, `domain/generative`, `domain/ambient`, `domain/electronica` and `domain/percussion`; shared engine, fixed-point, frequency and RNG support remains at the domain root.
+- `DriftEngine` now owns and dispatches only the compile-time-selected bank, so inactive-bank algorithm state does not consume SRAM in a firmware image.
+- Generic selection, integration, property and system tests are bank-aware and exercise the four DIP slots of the active compile-time bank.
+- The user manual now treats algorithm banks as the primary navigation model, with separate bank sections, consistent per-algorithm structure and a compact six-bank overview; it also documents the unavoidable four-selector-state hardware limit and, with due seriousness, the resulting case for owning more than one Drift.
+- Release dependency installation was hardened with canonical Ubuntu mirrors, bounded APT retries/timeouts, minimal LibreOffice packages, an explicit job timeout and per-tag workflow concurrency.
+- Dependabot version updates are consolidated into a monthly multi-ecosystem update to reduce automated pull-request noise.
+- Release notes, artifact manifests, provenance records and integrity checks now derive the actual bank set from the tagged source, preserving compatibility with historical Classic-only and intermediate tags.
+
+### Fixed
+
+- Corrected the shared Electronica/Percussion tempo mapping so the documented endpoints are actually **30–240 BPM** rather than the previous factor-of-four-under-scaled 7.5–60 BPM runtime behavior.
+- Corrected Humanize positive-jitter scheduling so delayed events are offset from their nominal grid boundary rather than from event preparation, preserving the intended no-drift timing contract.
+- Corrected coverage/release metadata and workflow guards after the domain-by-bank refactor so nested bank sources remain included in the intended qualification paths.
 
 ## 0.1.0 — 2026-08-19
 

@@ -74,7 +74,7 @@ The engineering gate is **95% line / 75% branch coverage** for `lib/fmd/src` and
 
 ## Requirements traceability
 
-`test/requirements-traceability.json` maps acceptance criteria to concrete `RUN_TEST()` cases. The current `Unreleased` source contains **59 acceptance criteria and 194 native test cases across 35 suites**; the released 0.1.0 Classic baseline remains 32 criteria / 88 cases. CI runs `scripts/check_requirement_traceability.py`; missing suites, stale test names, duplicate IDs or gaps in the AC numbering fail early.
+`test/requirements-traceability.json` maps acceptance criteria to concrete `RUN_TEST()` cases. Release **0.2.0** contains **59 acceptance criteria and 194 native test cases across 35 suites**; the released 0.1.0 Classic baseline remains 32 criteria / 88 cases. CI runs `scripts/check_requirement_traceability.py`; missing suites, stale test names, duplicate IDs or gaps in the AC numbering fail early.
 
 See [docs/testing/requirements-traceability.md](docs/testing/requirements-traceability.md).
 

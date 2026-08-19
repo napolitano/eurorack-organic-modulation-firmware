@@ -24,11 +24,11 @@ This firmware now supports six compile-time algorithm banks:
 | Bank | Algorithms | Status | Detailed guide |
 |---|---|---|---|
 | **Classic** | Perlin · Brownian · Bézier · LFO | Default; 0.1.0 compatibility baseline | **[README-BANK-CLASSIC.md](README-BANK-CLASSIC.md)** |
-| **Organic** | Fractal · Vector · Rain · Attractor | Optional compile-time bank; currently `Unreleased` | **[README-BANK-ORGANIC.md](README-BANK-ORGANIC.md)** |
-| **Generative** | Turing · Markov · Motif · Urn | Optional compile-time bank; currently `Unreleased` | **[README-BANK-GENERATIVE.md](README-BANK-GENERATIVE.md)** |
-| **Ambient** | Current · Anchor · Breath · Fog | Optional compile-time bank; currently `Unreleased` | **[README-BANK-AMBIENT.md](README-BANK-AMBIENT.md)** |
-| **Electronica** | Pump · Acid · Shuffle · Polymeter | Optional compile-time bank; currently `Unreleased` | **[README-BANK-ELECTRONICA.md](README-BANK-ELECTRONICA.md)** |
-| **Percussion** | Euclid · Repeat · Probability · Humanize | Optional compile-time bank; currently `Unreleased` | **[README-BANK-PERCUSSION.md](README-BANK-PERCUSSION.md)** |
+| **Organic** | Fractal · Vector · Rain · Attractor | Included in 0.2.0 | **[README-BANK-ORGANIC.md](README-BANK-ORGANIC.md)** |
+| **Generative** | Turing · Markov · Motif · Urn | Included in 0.2.0 | **[README-BANK-GENERATIVE.md](README-BANK-GENERATIVE.md)** |
+| **Ambient** | Current · Anchor · Breath · Fog | Included in 0.2.0 | **[README-BANK-AMBIENT.md](README-BANK-AMBIENT.md)** |
+| **Electronica** | Pump · Acid · Shuffle · Polymeter | Included in 0.2.0 | **[README-BANK-ELECTRONICA.md](README-BANK-ELECTRONICA.md)** |
+| **Percussion** | Euclid · Repeat · Probability · Humanize | Included in 0.2.0 | **[README-BANK-PERCUSSION.md](README-BANK-PERCUSSION.md)** |
 
 > [!TIP]
 > ### A small problem of abundance
@@ -53,7 +53,7 @@ The project therefore aims to:
 - provide reproducible builds, automated tests, release notes and a versioned PDF user manual.
 
 > [!IMPORTANT]
-> **Release 0.1.0 is the first official release.** Tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0) establishes the Classic C++17/PlatformIO baseline. New work after this tag belongs under `Unreleased` in the changelog.
+> **Release 0.2.0 is the first six-bank release.** It packages all 24 algorithms for both supported Nano bootloaders while preserving `v0.1.0` as the Classic compatibility baseline. The release is published only from tag `v0.2.0` after the prepared changelog, package metadata and frozen manual snapshot have been committed.
 
 ## Quick start
 
@@ -146,9 +146,10 @@ The maintained [PDF user manual source](docs/manual/README.md) remains the compl
 
 | Version | Summary |
 |---|---|
+| **0.2.0** | Six-bank release with 24 algorithms across Classic, Organic, Generative, Ambient, Electronica and Percussion; bank-organized domain code; expanded mathematical/system verification; 0–5 V Percussion clock sync with Speed-knob fallback; complete multi-bank user manual; and hardened bank-aware release packaging for both Nano bootloaders. |
 | **0.1.0** | Initial C++17/PlatformIO firmware release for Free Modular Drift: four mathematically tested modulation algorithms, documented corrections to verified upstream issues, comprehensive Doxygen/source documentation, native/AVR CI, resource guardrails, engineering analyses, hardened release/manual tooling and a tagged-release PDF user manual. |
 
-The authoritative detailed history is the [changelog](CHANGELOG.md). Version `0.1.0` is published from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0). Future releases follow the same rule: ordinary commits and pull requests never create a GitHub Release; only a pushed version tag does.
+The authoritative detailed history is the [changelog](CHANGELOG.md). Version `0.2.0` is published from tag `v0.2.0`; version `0.1.0` remains available as the Classic-only compatibility baseline. Ordinary commits and pull requests never create a GitHub Release; only a pushed version tag does.
 
 ## Engineering architecture
 
@@ -162,9 +163,9 @@ FirmwareController              src/platform/nano_atmega328p/
     DriftEngine                 lib/fmd/domain/
         |
  compile-time bank
- /   |    |    |    \
-classic organic generative ambient electronica
- \   |    |    |    /
+ /   |    |    |    |    \
+classic organic generative ambient electronica percussion
+ \   |    |    |    |    /
  bank-local algorithms          lib/fmd/domain/<bank>/
         |
 minimal ports                   lib/fmd/ports/
@@ -174,7 +175,7 @@ AVR ADC / DAC / LED / tables    src/platform/nano_atmega328p/
 
 The portable core never calls `analogRead()`, `digitalWrite()`, `SPI.transfer()`, AVR registers or Arduino timing functions. Hardware dependencies terminate at small ports implemented by the Nano/ATmega328P platform layer.
 
-Algorithm implementations are grouped by compile-time bank in matching public-header and source subdirectories: `domain/classic/`, `domain/organic/`, `domain/generative/`, `domain/ambient/` and `domain/electronica/`. Shared engine, type, fixed-point, frequency and RNG support remains directly under `domain/` because it is used across bank boundaries.
+Algorithm implementations are grouped by compile-time bank in matching public-header and source subdirectories: `domain/classic/`, `domain/organic/`, `domain/generative/`, `domain/ambient/`, `domain/electronica/` and `domain/percussion/`. Shared engine, type, fixed-point, frequency and RNG support remains directly under `domain/` because it is used across bank boundaries.
 
 ### Engineering goals
 
@@ -206,7 +207,7 @@ Current native coverage includes:
 - machine-checked acceptance-criteria traceability;
 - sanitizer and coverage environments.
 
-The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. The current `Unreleased` source expands the repository to **194 native test cases across 35 suites** and **59 acceptance criteria** by adding Organic, Generative, Ambient, Electronica and Percussion bank verification. Classic, Organic, Generative, Ambient, Electronica and Percussion coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
+The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. Release **0.2.0** expands the repository to **194 native test cases across 35 suites** and **59 acceptance criteria** by adding Organic, Generative, Ambient, Electronica and Percussion bank verification. Classic, Organic, Generative, Ambient, Electronica and Percussion coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
 
 AVR builds also carry explicit engineering headroom: **Flash must stay at or below 85% (26,112 / 30,720 bytes)** and **static SRAM at or below 65% (1,331 / 2,048 bytes)**. These are repository guardrails, deliberately stricter than the ATmega328P hard limits.
 
@@ -331,7 +332,7 @@ Only a prepared/tagged release `vX.Y.Z` publishes `drift-user-manual.X.Y.Z.odt` 
 
 ## Release process
 
-Ordinary development after a release remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). Release `0.1.0` is produced from tag [`v0.1.0`](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases/tag/v0.1.0); its changelog section contains all changes included in that tag. For future releases, preparation creates the matching versioned changelog section and package metadata before the version tag is pushed.
+Ordinary development after a release remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). Release `0.2.0` is prepared from the six-bank source and is published from tag `v0.2.0`; `v0.1.0` remains the Classic compatibility baseline. Each release is created only after its matching changelog section, package metadata and frozen manual snapshot have been committed.
 
 Normal publication is triggered by pushed version tags. `.github/workflows/release.yml` also exposes a maintainer-only `workflow_dispatch` path for refreshing or recreating an **existing** tag without moving it. The workflow builds the firmware variants present in that tag, publishes the tag-pinned frozen/manual source as a versioned ODT, generates the matching PDF, adds bank-specific provenance files and checksum manifests, and derives release notes deterministically from the tagged changelog section rather than generic commit-message aggregation.
 

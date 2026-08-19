@@ -125,7 +125,7 @@ $$
 w_i' = b + \left\lfloor\frac{31(w_i-b)}{32}\right\rfloor.
 $$
 
-These constants are now part of the implemented `Unreleased` behavior. Future changes to them are sound-design changes and require updated deterministic/statistical tests plus a changelog entry.
+These constants are part of the behavior released in `0.2.0`. Future changes to them are sound-design changes and require updated deterministic/statistical tests plus a changelog entry.
 
 ## 9. Improvement strategy
 

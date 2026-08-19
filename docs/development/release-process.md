@@ -10,7 +10,7 @@ All release-relevant work is recorded under:
 ## Unreleased
 ```
 
-Do not invent a versioned changelog heading during ordinary development. During explicit release preparation, `lib/fmd/library.json` is set to the release version and a matching versioned changelog section is created. Release `0.1.0` is the current published compatibility baseline; post-0.1.0 work remains under `Unreleased` until the next release is explicitly prepared.
+Do not invent a versioned changelog heading during ordinary development. During explicit release preparation, `lib/fmd/library.json` is set to the release version and a matching versioned changelog section is created. Release `0.2.0` is the current six-bank release target; `0.1.0` remains the Classic-only compatibility baseline. New work after 0.2.0 returns to `Unreleased` until the next release is explicitly prepared.
 
 ## 2. Prepare a release
 

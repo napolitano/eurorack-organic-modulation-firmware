@@ -5,7 +5,7 @@
 The **Organic bank** is the first compile-time alternative bank for Drift. It keeps the original hardware and the same two rear DIP switches, but fills the four slots with **Fractal, Vector, Rain and Attractor**. The bank explores multi-scale correlated noise, deterministic two-dimensional flow, stochastic event density and nonlinear dynamical motion.
 
 > [!NOTE]
-> Organic is currently part of `Unreleased` development. It does not replace or modify the Classic 0.1.0 compatibility bank.
+> Organic is included in release `0.2.0`. It does not replace or modify the Classic 0.1.0 compatibility bank; flashing the Organic image explicitly selects this bank.
 
 ## Contents
 
