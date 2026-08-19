@@ -11,8 +11,8 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 
 | SVG | Manual source | Purpose |
 |---|---|---|
-| `drift-front-cover.svg` | Vector replacement for the original composed cover raster | User-manual cover covering both firmware banks |
-| `drift-back-cover.svg` | Vector replacement for the original composed back-cover raster | Credits, licence and Classic/Organic/Generative bank summary |
+| `drift-front-cover.svg` | Vector replacement for the original composed cover raster | User-manual cover covering the current firmware-bank scope |
+| `drift-back-cover.svg` | Vector replacement for the original composed back-cover raster | Credits, licence and Classic/Organic/Generative/Ambient bank summary |
 | `drift-front-panel.svg` | `Pictures/10000000000004D000000764D6EF55BF.png` | Numbered front-panel control reference |
 | `config-perlin.svg` | `Pictures/10000000000001C2000001203D7620D3.png` | Perlin configuration-switch position |
 | `config-brownian.svg` | `Pictures/10000000000001C200000120799504B3.png` | Brownian configuration-switch position |
@@ -26,6 +26,10 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 | `config-markov.svg` | Generated from the Generative bank DIP mapping | Markov configuration-switch position |
 | `config-motif.svg` | Generated from the Generative bank DIP mapping | Motif configuration-switch position |
 | `config-urn.svg` | Generated from the Generative bank DIP mapping | Urn configuration-switch position |
+| `config-current.svg` | Generated from the Ambient bank DIP mapping | Current configuration-switch position |
+| `config-anchor.svg` | Generated from the Ambient bank DIP mapping | Anchor configuration-switch position |
+| `config-breath.svg` | Generated from the Ambient bank DIP mapping | Breath configuration-switch position |
+| `config-fog.svg` | Generated from the Ambient bank DIP mapping | Fog configuration-switch position |
 | `dip-slot-00.svg` | Derived from the existing switch artwork | Compact OFF/OFF slot symbol for the bank overview table |
 | `dip-slot-10.svg` | Derived from the existing switch artwork | Compact ON/OFF slot symbol for the bank overview table |
 | `dip-slot-01.svg` | Derived from the existing switch artwork | Compact OFF/ON slot symbol for the bank overview table |
@@ -46,8 +50,12 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 | `markov-vocabulary.svg` | Generated from the documented eight-state grammar | Example recurring-state path |
 | `motif-evolution.svg` | Generated from the implemented phrase-edit model | Eight-step phrase before/after a structural edit |
 | `urn-reinforcement.svg` | Generated from the implemented bounded leaky weights | Equal, reinforced and relaxed state-weight comparison |
+| `current-long-form.svg` | Generated from the implemented Current ratios and weight endpoints | Low/high-Texture long-form Current comparison |
+| `anchor-mean-reversion.svg` | Deterministic explanatory simulation of the implemented mean-reverting contract | Narrow/wide anchored stochastic motion |
+| `breath-cycle-variation.svg` | Generated from the documented smoothstep swell topology and parameter ranges | Successive varied Breath cycles |
+| `fog-cloudlets.svg` | Generated from the implemented quartic cloudlet kernel | Individual bipolar cloudlets and summed Fog motion |
 
-The Organic-bank configuration diagrams and five Organic-bank explanatory figures are generated deterministically by `scripts/generate_organic_manual_assets.py`. The Generative DIP diagrams, compact slot symbols and four Generative explanatory figures are generated deterministically by `scripts/generate_generative_manual_assets.py`. They are explanatory visualisations of the implemented control laws rather than oscilloscope captures.
+The Organic-bank configuration diagrams and five Organic-bank explanatory figures are generated deterministically by `scripts/generate_organic_manual_assets.py`. The Generative DIP diagrams, compact slot symbols and four Generative explanatory figures are generated deterministically by `scripts/generate_generative_manual_assets.py`. The Ambient DIP diagrams and four Ambient explanatory figures are generated deterministically by `scripts/generate_ambient_manual_assets.py`. They are explanatory visualisations of the implemented control laws rather than oscilloscope captures.
 
 The ODT now embeds the reusable vector front/back covers from this directory. Creative Commons marks, callout-number circles and small decorative symbols remain embedded document artwork because they do not add reusable technical information outside the composed manual pages.
 
@@ -59,7 +67,7 @@ The ODT now embeds the reusable vector front/back covers from this directory. Cr
 - Prefer the manual palette and Ubuntu-family typography.
 - Do not add generated release-version strings to asset filenames.
 - If the corresponding figure in the ODT changes materially, update the SVG and this source mapping together.
-- Regenerate the Organic figures with `python scripts/generate_organic_manual_assets.py` and the Generative figures with `python scripts/generate_generative_manual_assets.py`; do not hand-edit generated geometry.
+- Regenerate the Organic figures with `python scripts/generate_organic_manual_assets.py`, the Generative figures with `python scripts/generate_generative_manual_assets.py`, and the Ambient figures with `python scripts/generate_ambient_manual_assets.py`; do not hand-edit generated geometry.
 
 Run `python scripts/check_manual_assets.py` to verify the vector-asset contract.
 

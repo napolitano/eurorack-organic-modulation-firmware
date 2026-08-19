@@ -11,8 +11,8 @@
     <line x1="110" y1="1090" x2="900" y2="1090" stroke="#ffffff" stroke-width="5"/>
     <text x="110" y="1215" font-size="66" font-weight="400">User Manual</text>
     <text x="110" y="1315" font-size="35" font-weight="300">Organic modulation source · Eurorack</text>
-    <rect x="110" y="1390" width="680" height="92" rx="18" fill="none" stroke="#ffffff" stroke-width="4"/>
-    <text x="145" y="1452" font-size="26" font-weight="500">Classic + Organic + Generative · 12 algorithms</text>
+    <rect x="110" y="1390" width="790" height="92" rx="18" fill="none" stroke="#ffffff" stroke-width="4"/>
+    <text x="145" y="1452" font-size="21" font-weight="500">Classic · Organic · Generative · Ambient · 16 algorithms</text>
     <text x="110" y="1635" font-size="31" font-weight="300">Manual  Axel Napolitano</text>
     <text x="110" y="1688" font-size="31" font-weight="300">Module design  Quinn Freedman · Free Modular</text>
     <text x="110" y="1741" font-size="31" font-weight="300">Manual  CC BY-NC 4.0</text>

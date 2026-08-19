@@ -64,7 +64,7 @@ The explanatory graphics from the manual are maintained as standalone SVGs in [`
   <img src="assets/drift-front-panel.svg" alt="Drift front panel controls" width="220">
 </p>
 
-The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). Organic DIP diagrams and Organic algorithm figures are regenerated deterministically with `scripts/generate_organic_manual_assets.py`. Generative DIP diagrams, compact bank-slot symbols and Generative algorithm figures are regenerated with `scripts/generate_generative_manual_assets.py`; generated geometry should not be edited by hand. These SVGs are covered by the same CC BY-NC 4.0 manual licence.
+The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). Organic DIP diagrams and Organic algorithm figures are regenerated deterministically with `scripts/generate_organic_manual_assets.py`. Generative DIP diagrams, compact bank-slot symbols and Generative algorithm figures are regenerated with `scripts/generate_generative_manual_assets.py`. Ambient DIP diagrams and Ambient algorithm figures are regenerated with `scripts/generate_ambient_manual_assets.py`; generated geometry should not be edited by hand. These SVGs are covered by the same CC BY-NC 4.0 manual licence.
 
 ## Behavioural source of truth
 
@@ -82,8 +82,12 @@ The manual describes the behavior of the firmware in this repository, including 
 - Markov uses an eight-state fixed voltage vocabulary and mixes a structured transition grammar with uniform exploration.
 - Motif preserves an explicit eight-step phrase and applies at most one structural edit at each completed phrase boundary.
 - Urn uses bounded, leaky reinforcement over eight fixed output states; it is Pólya-inspired rather than an exact classical Pólya urn.
+- Current combines three deterministic slow currents at fixed non-harmonic rate approximations; Texture redistributes a constant total weight and does not act as another level control.
+- Anchor is an OU-inspired bounded AR(1) mean-reverting process driven by the firmware's symmetric triangular innovation; it is deliberately not described as an exact Gaussian Ornstein-Uhlenbeck process.
+- Breath always follows baseline → one peak → baseline; Texture introduces cycle-to-cycle variation in duration, amplitude and peak position only at rollover.
+- Fog sums at most four finite-support bipolar cloudlets; Texture targets average occupancy while the static voice limit keeps CPU and SRAM bounded.
 
-The manual covers **all three compile-time banks and all twelve modes**. A dedicated **Algorithm banks** section explains the distinction between flashing a bank and selecting an algorithm. Each bank then has its own four DIP-switch diagrams before its mode descriptions. The Algorithm banks introduction provides a compact three-bank slot table and a separate origin/musical-value table, while the bank sections themselves remain bank-specific rather than using a cross-bank DIP comparison. Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains the musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/) and [`../analysis/algorithm-banks/`](../analysis/algorithm-banks/).
+The manual covers **all four compile-time banks and all sixteen modes**. A dedicated **Algorithm banks** section explains the distinction between flashing a bank and selecting an algorithm. Each bank then has its own four DIP-switch diagrams before its mode descriptions. The Algorithm banks introduction provides a compact four-bank slot table and a separate origin/musical-value table, while the bank sections themselves remain bank-specific rather than using a cross-bank DIP comparison. Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains the musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/) and [`../analysis/algorithm-banks/`](../analysis/algorithm-banks/).
 
 ## Source contract
 

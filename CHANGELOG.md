@@ -31,15 +31,16 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Acceptance criteria AC-33 through AC-37 introduced compile-time bank selection and the four Organic mathematical contracts.
 - Tagged-release packaging supports Classic, Organic, Generative and Ambient firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
 - The release workflow now enforces an explicit bank-aware artifact contract before checksums/upload: every selected bank must provide non-empty new/old-bootloader HEX and ELF images plus matching build-provenance records, and unexpected firmware-bank artifacts fail the release.
-- Expanded user manual covering all three compile-time banks and all twelve algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for the Generative bank.
+- Expanded user manual covering all four compile-time banks and all sixteen algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for the Generative and Ambient banks.
 - Nine deterministic true-vector Organic-bank documentation assets plus a generator: four bank-specific DIP-switch diagrams and five explanatory figures for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor.
-- New vector front/back manual covers that identify Classic, Organic and Generative and the current twelve-algorithm scope.
+- New vector front/back manual covers that identify Classic, Organic, Generative and Ambient and the current sixteen-algorithm scope.
 
 ### Changed
+- Expanded the user manual and publication documentation to cover the Ambient bank (Current, Anchor, Breath and Fog), bringing the maintained end-user scope to four banks and sixteen algorithms. Added bank-specific DIP diagrams, four deterministic Ambient explanatory SVGs, mathematical foundations, musical-value/origin entries and updated four-bank release documentation.
 
-- User manual Algorithm banks introduction now explains the expanded twelve-algorithm potential across three banks, the unavoidable four-selector-state hardware boundary, a compact bank/slot table with DIP symbols, and a concise origin/musical-value table for all twelve algorithms.
+- User manual Algorithm banks introduction now explains the expanded sixteen-algorithm potential across four banks, the unavoidable four-selector-state hardware boundary, a compact bank/slot table with DIP symbols, and a concise origin/musical-value table for all sixteen algorithms.
 - Added a complete Generative bank section to the user manual with bank-specific Turing/Markov/Motif/Urn DIP diagrams, four deterministic explanatory SVGs, mathematical foundations and patch-oriented musical interpretation.
-- User manual bank documentation now uses a dedicated Algorithm banks introduction, separate top-level Classic and Organic sections, bank-specific DIP-switch SVGs, and identical heading/subsection styling across all eight algorithms; the former cross-bank configuration comparison is removed.
+- User manual bank documentation now uses a dedicated Algorithm banks introduction, separate top-level Classic, Organic, Generative and Ambient sections, bank-specific DIP-switch SVGs, and identical heading/subsection styling across all sixteen algorithms; the former cross-bank configuration comparison is removed.
 - Root bank documentation uses explicit `README-BANK-CLASSIC.md`, `README-BANK-ORGANIC.md`, `README-BANK-GENERATIVE.md` and `README-BANK-AMBIENT.md` names, while the main README provides a compact four-bank overview and links to each detailed guide.
 - Dependabot CI dependency updates are now consolidated across GitHub Actions and Python into one monthly multi-ecosystem pull request instead of one pull request per ecosystem.
 - Tagged-release manual dependency installation now uses only the Ubuntu package source, canonical HTTPS Ubuntu mirrors, bounded APT retry/network timeouts and the minimal `libreoffice-writer` package set.

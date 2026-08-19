@@ -181,7 +181,7 @@ The test strategy distinguishes **mathematical correctness**, **state-machine be
 
 Current native coverage includes:
 
-- dedicated mathematical suites for all four Classic algorithms and all four Organic algorithms;
+- dedicated mathematical suites for all sixteen current algorithms across Classic, Organic, Generative and Ambient;
 - shared fixed-point, frequency, RNG and reference-table tests;
 - edge-case and long-run state-transition tests;
 - property/invariant tests across the control domain;
@@ -198,7 +198,7 @@ See [README_TESTING.md](README_TESTING.md) and [requirements traceability](docs/
 
 ## Algorithm engineering analyses
 
-Each algorithm has a dedicated developer analysis that starts from the mathematics and then examines the upstream Rust implementation, actual behavior, computational cost, findings, proposed improvements and verification evidence:
+Each algorithm has a dedicated developer analysis that starts from the mathematics. Classic analyses then examine the upstream Rust implementation and compatibility findings; project-defined Organic, Generative and Ambient analyses document the mathematical contract, computational cost, implementation risks, musical value and verification evidence:
 
 - [Perlin noise](docs/analysis/algorithms/perlin-noise-analysis.md)
 - [Brownian / bounded random walk](docs/analysis/algorithms/brownian-motion-analysis.md)
@@ -291,7 +291,7 @@ Matching `.elf` files are included for debugging/provenance. Each current four-b
 
 ## User manual
 
-The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It currently documents the published Classic, Organic and Generative material; Ambient is implemented but remains release-blocked until the manual is extended with its four algorithms, including bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
+The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It documents all four current compile-time banks — Classic, Organic, Generative and Ambient — including bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
 
 The manual repository area contains:
 

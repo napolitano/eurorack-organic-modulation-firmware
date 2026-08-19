@@ -17,6 +17,13 @@ The bank is selected by flashing an Ambient firmware image. The rear DIP switche
 | **OFF** | **ON** | **Breath** |
 | **ON** | **ON** | **Fog** |
 
+<p align="center">
+  <img src="docs/manual/assets/config-current.svg" alt="Current DIP switch configuration" width="160">
+  <img src="docs/manual/assets/config-anchor.svg" alt="Anchor DIP switch configuration" width="160">
+  <img src="docs/manual/assets/config-breath.svg" alt="Breath DIP switch configuration" width="160">
+  <img src="docs/manual/assets/config-fog.svg" alt="Fog DIP switch configuration" width="160">
+</p>
+
 ## Controls at a glance
 
 | Algorithm | Speed | Texture | Character |
@@ -27,6 +34,10 @@ The bank is selected by flashing an Ambient firmware image. The rear DIP switche
 | **Fog** | cloudlet duration | target mean cloud occupancy | smooth bipolar stochastic cloudlets with controlled overlap |
 
 ## Current
+
+<p align="center">
+  <img src="docs/manual/assets/current-long-form.svg" alt="Current low- and high-Texture long-form motion" width="820">
+</p>
 
 Current advances three independent phases at fixed rate approximations of
 
@@ -41,6 +52,10 @@ Current is fully deterministic for fixed controls. Its musical strength is long 
 Engineering analysis: [Current algorithm](docs/analysis/algorithms/current-analysis.md).
 
 ## Anchor
+
+<p align="center">
+  <img src="docs/manual/assets/anchor-mean-reversion.svg" alt="Anchor mean-reverting stochastic motion" width="820">
+</p>
 
 Anchor is implemented as an **OU-inspired bounded AR(1) process**, not as an exact Gaussian Ornstein-Uhlenbeck process. The state has an explicit restoring term toward zero. Random innovation uses the repository's existing symmetric triangular inverse-CDF table.
 
@@ -58,6 +73,10 @@ Engineering analysis: [Anchor algorithm](docs/analysis/algorithms/anchor-analysi
 
 ## Breath
 
+<p align="center">
+  <img src="docs/manual/assets/breath-cycle-variation.svg" alt="Breath cycle-to-cycle swell variation" width="820">
+</p>
+
 Breath always follows one invariant gesture:
 
 $$
@@ -73,6 +92,10 @@ Musically, Breath is intended for macro-dynamics, filter/reverb movement and oth
 Engineering analysis: [Breath algorithm](docs/analysis/algorithms/breath-analysis.md).
 
 ## Fog
+
+<p align="center">
+  <img src="docs/manual/assets/fog-cloudlets.svg" alt="Fog overlapping bipolar cloudlets" width="820">
+</p>
 
 Fog contains four statically allocated cloudlet voices. Every voice uses the finite-support kernel
 
