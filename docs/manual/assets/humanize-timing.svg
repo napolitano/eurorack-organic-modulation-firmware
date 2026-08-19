@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 455" role="img" aria-label="Humanize timing and amplitude variation">
+<title>Humanize timing and amplitude variation</title>
+<style>
+.title{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:29px;font-weight:700;fill:#1a1a1a}
+.subtitle{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:300;fill:#6e6e6e}
+.label{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:500;fill:#1a1a1a}
+.small{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:15px;font-weight:300;fill:#6e6e6e}
+</style><rect width="1056" height="455" fill="white"/>
+<text x="34" y="52" class="title">Humanize — bounded deviation around a fixed grid</text>
+<text x="34" y="87" class="subtitle">Eight nominal eighth notes remain; Texture adds up to ±12 ms timing shift and bounded pulse-level variation</text>
+<line x1="115" y1="315" x2="1000" y2="315" stroke="#dedede" stroke-width="3"/>
+<line x1="145" y1="130" x2="145" y2="330" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6 7"/>
+<line x1="135" y1="220" x2="135" y2="315" stroke="#e64a2b" stroke-width="8"/>
+<line x1="257" y1="130" x2="257" y2="330" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6 7"/>
+<line x1="269" y1="190" x2="269" y2="315" stroke="#e64a2b" stroke-width="8"/>
+<line x1="369" y1="130" x2="369" y2="330" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6 7"/>
+<line x1="365" y1="210" x2="365" y2="315" stroke="#e64a2b" stroke-width="8"/>
+<line x1="481" y1="130" x2="481" y2="330" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6 7"/>
+<line x1="489" y1="175" x2="489" y2="315" stroke="#e64a2b" stroke-width="8"/>
+<line x1="593" y1="130" x2="593" y2="330" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6 7"/>
+<line x1="580" y1="203" x2="580" y2="315" stroke="#e64a2b" stroke-width="8"/>
+<line x1="705" y1="130" x2="705" y2="330" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6 7"/>
+<line x1="710" y1="183" x2="710" y2="315" stroke="#e64a2b" stroke-width="8"/>
+<line x1="817" y1="130" x2="817" y2="330" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6 7"/>
+<line x1="817" y1="215" x2="817" y2="315" stroke="#e64a2b" stroke-width="8"/>
+<line x1="929" y1="130" x2="929" y2="330" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="6 7"/>
+<line x1="940" y1="195" x2="940" y2="315" stroke="#e64a2b" stroke-width="8"/>
+<text x="145" y="375" class="small">grey: nominal grid · orange: emitted event</text>
+<text x="145" y="407" class="small">Every offset is measured from its own nominal time, so timing error never accumulates into tempo drift</text>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 455" role="img" aria-label="Repeat ratchet placement">
+<title>Repeat ratchet placement</title>
+<style>
+.title{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:29px;font-weight:700;fill:#1a1a1a}
+.subtitle{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:300;fill:#6e6e6e}
+.label{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:500;fill:#1a1a1a}
+.small{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:15px;font-weight:300;fill:#6e6e6e}
+</style><rect width="1056" height="455" fill="white"/>
+<text x="34" y="52" class="title">Repeat — one anchor, optional ratchets</text>
+<text x="34" y="87" class="subtitle">Repeats stay inside the first half of a quarter note; phrase fills force stronger tail rolls</text>
+<line x1="130" y1="340" x2="965" y2="340" stroke="#dedede" stroke-width="3"/>
+<text x="38" y="155" class="label">single</text><line x1="210" y1="125" x2="210" y2="185" stroke="#e64a2b" stroke-width="8"/>
+<text x="38" y="245" class="label">double</text><line x1="210" y1="215" x2="210" y2="275" stroke="#e64a2b" stroke-width="8"/><line x1="385" y1="215" x2="385" y2="275" stroke="#f27962" stroke-width="7"/>
+<text x="38" y="335" class="label">quad</text><line x1="210" y1="305" x2="210" y2="365" stroke="#e64a2b" stroke-width="8"/><line x1="300" y1="305" x2="300" y2="365" stroke="#f27962" stroke-width="7"/><line x1="390" y1="305" x2="390" y2="365" stroke="#f27962" stroke-width="7"/><line x1="480" y1="305" x2="480" y2="365" stroke="#f27962" stroke-width="7"/>
+<line x1="210" y1="118" x2="210" y2="382" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="8 8"/>
+<line x1="560" y1="118" x2="560" y2="382" stroke="#8d8d8d" stroke-width="2" stroke-dasharray="8 8"/>
+<text x="210" y="410" class="small" text-anchor="middle">quarter start</text><text x="560" y="410" class="small" text-anchor="middle">half-beat limit for ratchets</text>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 455" role="img" aria-label="Probability metric classes">
+<title>Probability metric classes</title>
+<style>
+.title{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:29px;font-weight:700;fill:#1a1a1a}
+.subtitle{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:300;fill:#6e6e6e}
+.label{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:500;fill:#1a1a1a}
+.small{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:15px;font-weight:300;fill:#6e6e6e}
+</style><rect width="1056" height="455" fill="white"/>
+<text x="34" y="52" class="title">Probability — metric skeleton plus optional detail</text>
+<text x="34" y="87" class="subtitle">Primary quarter notes are guaranteed; secondary and ghost positions become more likely with Texture</text>
+<rect x="127" y="160" width="36" height="115" rx="8" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<text x="145" y="305" text-anchor="middle" class="small">0</text>
+<text x="145" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="white">P</text>
+<rect x="181" y="160" width="36" height="115" rx="8" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<text x="199" y="305" text-anchor="middle" class="small">1</text>
+<text x="199" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">G</text>
+<rect x="235" y="160" width="36" height="115" rx="8" fill="#f27962" stroke="#f27962" stroke-width="3"/>
+<text x="253" y="305" text-anchor="middle" class="small">2</text>
+<text x="253" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="white">S</text>
+<rect x="289" y="160" width="36" height="115" rx="8" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<text x="307" y="305" text-anchor="middle" class="small">3</text>
+<text x="307" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">G</text>
+<rect x="343" y="160" width="36" height="115" rx="8" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<text x="361" y="305" text-anchor="middle" class="small">4</text>
+<text x="361" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="white">P</text>
+<rect x="397" y="160" width="36" height="115" rx="8" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<text x="415" y="305" text-anchor="middle" class="small">5</text>
+<text x="415" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">G</text>
+<rect x="451" y="160" width="36" height="115" rx="8" fill="#f27962" stroke="#f27962" stroke-width="3"/>
+<text x="469" y="305" text-anchor="middle" class="small">6</text>
+<text x="469" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="white">S</text>
+<rect x="505" y="160" width="36" height="115" rx="8" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<text x="523" y="305" text-anchor="middle" class="small">7</text>
+<text x="523" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">G</text>
+<rect x="559" y="160" width="36" height="115" rx="8" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<text x="577" y="305" text-anchor="middle" class="small">8</text>
+<text x="577" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="white">P</text>
+<rect x="613" y="160" width="36" height="115" rx="8" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<text x="631" y="305" text-anchor="middle" class="small">9</text>
+<text x="631" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">G</text>
+<rect x="667" y="160" width="36" height="115" rx="8" fill="#f27962" stroke="#f27962" stroke-width="3"/>
+<text x="685" y="305" text-anchor="middle" class="small">10</text>
+<text x="685" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="white">S</text>
+<rect x="721" y="160" width="36" height="115" rx="8" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<text x="739" y="305" text-anchor="middle" class="small">11</text>
+<text x="739" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">G</text>
+<rect x="775" y="160" width="36" height="115" rx="8" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<text x="793" y="305" text-anchor="middle" class="small">12</text>
+<text x="793" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="white">P</text>
+<rect x="829" y="160" width="36" height="115" rx="8" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<text x="847" y="305" text-anchor="middle" class="small">13</text>
+<text x="847" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">G</text>
+<rect x="883" y="160" width="36" height="115" rx="8" fill="#f27962" stroke="#f27962" stroke-width="3"/>
+<text x="901" y="305" text-anchor="middle" class="small">14</text>
+<text x="901" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="white">S</text>
+<rect x="937" y="160" width="36" height="115" rx="8" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<text x="955" y="305" text-anchor="middle" class="small">15</text>
+<text x="955" y="228" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="700" fill="#1a1a1a">G</text>
+<text x="145" y="370" class="small">P: always · S: probability ∝ Texture · G: probability ∝ Texture² / 2</text>
+<text x="145" y="400" class="small">Fill bars boost optional probabilities, especially in the final quarter; primary hits stay fixed</text>
+</svg>

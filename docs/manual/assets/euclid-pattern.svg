@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 455" role="img" aria-label="Euclid pattern and phrase fill">
+<title>Euclid pattern and phrase fill</title>
+<style>
+.title{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:29px;font-weight:700;fill:#1a1a1a}
+.subtitle{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:300;fill:#6e6e6e}
+.label{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:500;fill:#1a1a1a}
+.small{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:15px;font-weight:300;fill:#6e6e6e}
+</style><rect width="1056" height="455" fill="white"/>
+<text x="34" y="52" class="title">Euclid — stable pattern, phrase-end fill</text>
+<text x="34" y="87" class="subtitle">Texture selects E(k,16) density and the shared 4/8/12/16-bar phrase activity</text>
+<text x="34" y="196" class="label">normal bar</text>
+<circle cx="190" cy="190" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<line x1="165" y1="162" x2="165" y2="218" stroke="#dedede" stroke-width="2"/>
+<circle cx="240" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="290" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="340" cy="190" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<circle cx="390" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<line x1="365" y1="162" x2="365" y2="218" stroke="#dedede" stroke-width="2"/>
+<circle cx="440" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="490" cy="190" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<circle cx="540" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="590" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<line x1="565" y1="162" x2="565" y2="218" stroke="#dedede" stroke-width="2"/>
+<circle cx="640" cy="190" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<circle cx="690" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="740" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="790" cy="190" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<line x1="765" y1="162" x2="765" y2="218" stroke="#dedede" stroke-width="2"/>
+<circle cx="840" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="890" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="940" cy="190" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<text x="34" y="311" class="label">fill bar</text>
+<circle cx="190" cy="305" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<line x1="165" y1="277" x2="165" y2="333" stroke="#dedede" stroke-width="2"/>
+<circle cx="240" cy="305" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="290" cy="305" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="340" cy="305" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<circle cx="390" cy="305" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<line x1="365" y1="277" x2="365" y2="333" stroke="#dedede" stroke-width="2"/>
+<circle cx="440" cy="305" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="490" cy="305" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<circle cx="540" cy="305" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="590" cy="305" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<line x1="565" y1="277" x2="565" y2="333" stroke="#dedede" stroke-width="2"/>
+<circle cx="640" cy="305" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<circle cx="690" cy="305" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="740" cy="305" r="15" fill="white" stroke="#8d8d8d" stroke-width="3"/>
+<circle cx="790" cy="305" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<line x1="765" y1="277" x2="765" y2="333" stroke="#dedede" stroke-width="2"/>
+<circle cx="840" cy="305" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<circle cx="890" cy="305" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<circle cx="940" cy="305" r="15" fill="#e64a2b" stroke="#e64a2b" stroke-width="3"/>
+<text x="190" y="385" class="small">16-step bar; fill only adds tail hits and never removes the Euclidean core</text>
+</svg>
