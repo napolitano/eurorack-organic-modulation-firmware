@@ -37,7 +37,11 @@ enum class Algorithm : uint8_t {
   Turing = 8,     ///< Generative: mutating 16-bit shift-register loop.
   Markov = 9,     ///< Generative: finite-state stochastic transition grammar.
   Motif = 10,     ///< Generative: explicit phrase with structural transformations.
-  Urn = 11        ///< Generative: bounded leaky reinforced-state process.
+  Urn = 11,       ///< Generative: bounded leaky reinforced-state process.
+  Current = 12,   ///< Ambient: deterministic quasi-periodic-inspired long motion.
+  Anchor = 13,    ///< Ambient: bounded mean-reverting stochastic modulation.
+  Breath = 14,    ///< Ambient: recurrent smooth swells with cycle variation.
+  Fog = 15        ///< Ambient: overlapping smooth bipolar stochastic cloudlets.
 };
 
 /**

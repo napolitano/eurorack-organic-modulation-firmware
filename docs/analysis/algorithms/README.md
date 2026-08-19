@@ -1,6 +1,6 @@
 # Drift algorithm engineering analyses
 
-These documents analyze each supported or proposed Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The **Organic** and **Generative** documents use the same engineering structure for project-defined algorithms with no upstream implementation to preserve. Proposed **Ambient** documents extend the same contract into long-form continuous modulation and retain the explicit musical assessment because musical differentiation from the existing banks is part of the design requirement.
+These documents analyze each supported or proposed Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The **Organic**, **Generative** and **Ambient** documents use the same engineering structure for project-defined algorithms with no upstream implementation to preserve. Ambient extends the contract into long-form continuous modulation and retains the explicit musical assessment because musical differentiation from the existing banks is part of the design requirement.
 
 > [!IMPORTANT]
 > The analyses are engineering notes, not criticism of the upstream project. A finding is classified according to the available evidence. Unusual behavior is not automatically a defect. Where analysis establishes a defect and a stronger mathematical contract can be stated, the unreleased firmware may correct it directly; the intentional difference is then documented and regression-tested.
@@ -28,7 +28,7 @@ These documents analyze each supported or proposed Drift algorithm independently
 - [Urn reinforced preference](urn-analysis.md)
 - [Generative bank architecture, duplication audit and musical contract](../algorithm-banks/generative-bank-design.md)
 
-### Proposed Ambient bank
+### Ambient bank
 
 - [Current / quasi-periodic long-form motion](current-analysis.md)
 - [Anchor / mean-reverting stochastic motion](anchor-analysis.md)
@@ -56,7 +56,7 @@ Equations in these analyses use GitHub's native MathJax rendering: inline expres
 
 ## Shared implementation context
 
-Three Classic modes — Perlin, Bézier, and LFO — use the common upstream `shared.rs::get_delta_t()` V/oct phase-increment mapping. Brownian intentionally does not. The Organic Fractal, Vector and Attractor modes reuse the corrected C++ equivalent of that Speed mapping; Rain intentionally uses direct Speed-to-decay control instead. Findings in shared paths are repeated only where they materially affect the algorithm being analyzed.
+Three Classic modes — Perlin, Bézier, and LFO — use the common upstream `shared.rs::get_delta_t()` V/oct phase-increment mapping. Brownian intentionally does not. The Organic Fractal, Vector and Attractor modes reuse the corrected C++ equivalent of that Speed mapping; Rain intentionally uses direct Speed-to-decay control instead. The Ambient bank reuses the common Speed mapping and then applies its documented 1/16 macro-time scale; Anchor additionally uses a generated Speed-compensation table for its bounded triangular innovation. Findings in shared paths are repeated only where they materially affect the algorithm being analyzed.
 
 The authoritative upstream references remain:
 

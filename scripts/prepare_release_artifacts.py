@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
-VALID_BANKS = ("classic", "organic", "generative")
+VALID_BANKS = ("classic", "organic", "generative", "ambient")
 
 
 @dataclass(frozen=True)
@@ -32,6 +32,8 @@ ALL_IMAGES = (
     FirmwareImage("organic", "old", "nanoatmega328_organic"),
     FirmwareImage("generative", "new", "nanoatmega328new_generative"),
     FirmwareImage("generative", "old", "nanoatmega328_generative"),
+    FirmwareImage("ambient", "new", "nanoatmega328new_ambient"),
+    FirmwareImage("ambient", "old", "nanoatmega328_ambient"),
 )
 
 
@@ -40,8 +42,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--version", required=True, help="Release version without leading v")
     parser.add_argument(
         "--banks",
-        default="classic,organic,generative",
-        help="Comma-separated banks to package (classic, organic, generative)",
+        default="classic,organic,generative,ambient",
+        help="Comma-separated banks to package (classic, organic, generative, ambient)",
     )
     parser.add_argument("--build-root", default=".pio/build")
     parser.add_argument("--output-dir", default="dist")
@@ -117,6 +119,7 @@ def write_firmware_manifest(
         "classic": "OFF/OFF Perlin; ON/OFF Brownian; OFF/ON Bezier; ON/ON LFO",
         "organic": "OFF/OFF Fractal; ON/OFF Vector; OFF/ON Rain; ON/ON Attractor",
         "generative": "OFF/OFF Turing; ON/OFF Markov; OFF/ON Motif; ON/ON Urn",
+        "ambient": "OFF/OFF Current; ON/OFF Anchor; OFF/ON Breath; ON/ON Fog",
     }
     for image in images:
         hex_name = artifact_name(image, version, "hex")
@@ -133,6 +136,8 @@ def write_firmware_manifest(
         lines.append("- **Organic** contains Fractal, Vector, Rain and Attractor.")
     if "generative" in banks:
         lines.append("- **Generative** contains Turing, Markov, Motif and Urn.")
+    if "ambient" in banks:
+        lines.append("- **Ambient** contains Current, Anchor, Breath and Fog.")
     lines.extend(
         [
             "- Choose **new bootloader** for a current Arduino Nano bootloader and **old bootloader** for the legacy Nano bootloader.",

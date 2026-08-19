@@ -25,6 +25,10 @@ class MemoryReferenceTables final : public fmd::IReferenceTables {
     return triangularIcdfTableQ1F15_[index];
   }
 
+  uint16_t anchorInnovationGainQ1_15(uint16_t index) const override {
+    return anchorInnovationGainQ1F15_[index > 306U ? 306U : index];
+  }
+
   uint8_t gamma8(uint8_t index) const override {
     return gammaTable8_[index];
   }
@@ -36,6 +40,10 @@ class MemoryReferenceTables final : public fmd::IReferenceTables {
 
   inline static constexpr int16_t triangularIcdfTableQ1F15_[257] = {
 #include "fmd/config/generated/IcdfTable.inc"
+  };
+
+  inline static constexpr uint16_t anchorInnovationGainQ1F15_[307] = {
+#include "fmd/config/generated/AnchorGainTable.inc"
   };
 
   inline static constexpr uint8_t gammaTable8_[256] = {

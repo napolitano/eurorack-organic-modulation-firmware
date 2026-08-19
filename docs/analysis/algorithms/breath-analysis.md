@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-Breath is a proposed Ambient-bank modulation mode that produces recurring smooth swells while allowing each complete cycle to vary slightly in duration, height and asymmetry.
+Breath is the implemented Ambient-bank modulation mode that produces recurring smooth swells while allowing each complete cycle to vary slightly in duration, height and asymmetry.
 
 The algorithm is intentionally project-defined. It is not a physiological breathing simulator and should not be documented as one. The word **Breath** describes the musical gesture: rise, peak, release, rest, repeat with controlled imperfection.
 
@@ -90,7 +90,7 @@ $$
 s=0.375.
 $$
 
-These exact musical ranges are project choices and should be listening-tested before firmware behavior is frozen.
+These ranges are now frozen in the implementation: duration uses Q10 `768..1280` around `1024`, amplitude uses DAC codes `2662..4095` around `3378`, and peak position uses Q0.12 `1024..2048` around `1536`.
 
 Speed controls nominal cycle rate through the common Ambient /16 macro-time scale. The duration multiplier is applied per cycle without discarding phase overshoot.
 
@@ -131,7 +131,7 @@ At maximum irregularity the process should remain recognizably cyclical. The par
 
 The first implementation should keep exactly three varying parameters. Adding rest phases, double peaks, random baseline offsets or multiple envelope stages would weaken the algorithm's identity and should be treated as future variants.
 
-The amplitude, period and skew ranges should be validated by rendered traces and listening tests, but changes must remain explicit because they alter the musical contract.
+The amplitude, period and skew ranges are now implementation constants. Any later listening-driven retuning must be treated as an explicit behavioral change because it alters the musical contract.
 
 ## 8. Computational cost on ATmega328P
 
@@ -156,10 +156,11 @@ This should be a comparatively cheap Ambient mode because stochastic work occurs
 ## 9. Optimization opportunities
 
 - Reuse the verified cubic smoothstep integer evaluator.
-- Keep skew and amplitude in power-of-two fixed-point domains.
+- Keep skew and amplitude in power-of-two fixed-point domains; the implementation uses Q0.12 and direct 12-bit DAC amplitude respectively.
 - Use bounded integer interpolation from Texture to the maximum deviation ranges.
 - Generate all three cycle random values only at rollover.
 - Preserve phase overshoot exactly rather than resetting phase to zero.
+- Cache duration scale and attack/release reciprocals only at rollover so the normal 2.5 kHz path avoids general integer division.
 
 ## 10. Verification and test strategy
 
@@ -198,7 +199,7 @@ The main overlap risk is low Texture, where any repeated smooth envelope begins 
 
 ## 12. Engineering assessment
 
-Breath is low-risk computationally and numerically. Its main design risk is tuning: too little allowed variation makes it a fancy LFO; too much makes it Bézier-like random motion. The bounded parameter contract and rollover-only mutation give clear tests for maintaining the intended middle ground.
+Breath is low-risk computationally and numerically. The implementation freezes the bounded parameter ranges and computes random parameters only on rollover. The host suite verifies nominal Texture-zero parameters, full-Texture bounds, baseline/peak/baseline topology, reciprocal duration endpoints and deterministic bounded output.
 
 <!-- drift-footer:start -->
 <p align="center">

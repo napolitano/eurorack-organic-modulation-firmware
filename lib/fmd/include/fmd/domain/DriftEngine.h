@@ -33,6 +33,11 @@
 #include "fmd/domain/MotifAlgorithm.h"
 #include "fmd/domain/TuringAlgorithm.h"
 #include "fmd/domain/UrnAlgorithm.h"
+#elif FMD_ALGORITHM_BANK == FMD_BANK_AMBIENT
+#include "fmd/domain/AnchorAlgorithm.h"
+#include "fmd/domain/BreathAlgorithm.h"
+#include "fmd/domain/CurrentAlgorithm.h"
+#include "fmd/domain/FogAlgorithm.h"
 #endif
 
 namespace fmd {
@@ -86,6 +91,11 @@ class DriftEngine {
   MarkovAlgorithm markovAlgorithm_;       ///< Generative-bank Markov grammar state.
   MotifAlgorithm motifAlgorithm_;         ///< Generative-bank phrase-transform state.
   UrnAlgorithm urnAlgorithm_;             ///< Generative-bank reinforced-state process.
+#elif FMD_ALGORITHM_BANK == FMD_BANK_AMBIENT
+  CurrentAlgorithm currentAlgorithm_;     ///< Ambient deterministic long-form motion.
+  AnchorAlgorithm anchorAlgorithm_;       ///< Ambient mean-reverting stochastic motion.
+  BreathAlgorithm breathAlgorithm_;       ///< Ambient recurrent swell state.
+  FogAlgorithm fogAlgorithm_;             ///< Ambient bounded cloudlet process.
 #endif
 };
 

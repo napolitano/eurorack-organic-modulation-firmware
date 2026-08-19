@@ -35,6 +35,13 @@ Algorithm algorithmForBankSlot(uint8_t slotIndex) {
       Algorithm::Motif,
       Algorithm::Urn,
   };
+#elif FMD_ALGORITHM_BANK == FMD_BANK_AMBIENT
+  constexpr Algorithm kAlgorithms[4] = {
+      Algorithm::Current,
+      Algorithm::Anchor,
+      Algorithm::Breath,
+      Algorithm::Fog,
+  };
 #endif
   return kAlgorithms[slotIndex < 4U ? slotIndex : 0U];
 }
@@ -73,6 +80,11 @@ DriftEngine::DriftEngine(Algorithm algorithm,
       , markovAlgorithm_(referenceTables, randomSeed)
       , motifAlgorithm_(referenceTables, randomSeed)
       , urnAlgorithm_(referenceTables, randomSeed)
+#elif FMD_ALGORITHM_BANK == FMD_BANK_AMBIENT
+      , currentAlgorithm_(referenceTables)
+      , anchorAlgorithm_(referenceTables, randomSeed)
+      , breathAlgorithm_(referenceTables, randomSeed)
+      , fogAlgorithm_(referenceTables, randomSeed)
 #endif
 {}
 
@@ -105,6 +117,15 @@ uint16_t DriftEngine::step(const ControlFrame& controls) {
       return motifAlgorithm_.step(controls);
     case Algorithm::Urn:
       return urnAlgorithm_.step(controls);
+#elif FMD_ALGORITHM_BANK == FMD_BANK_AMBIENT
+    case Algorithm::Current:
+      return currentAlgorithm_.step(controls);
+    case Algorithm::Anchor:
+      return anchorAlgorithm_.step(controls);
+    case Algorithm::Breath:
+      return breathAlgorithm_.step(controls);
+    case Algorithm::Fog:
+      return fogAlgorithm_.step(controls);
 #endif
     default:
       break;

@@ -26,6 +26,11 @@ const int16_t kTriangularIcdfTableQ1F15[257] PROGMEM = {
 #include "fmd/config/generated/IcdfTable.inc"
 };
 
+/// 307-entry Anchor innovation compensation table, Q1.15, stored in flash.
+const uint16_t kAnchorInnovationGainQ1F15[307] PROGMEM = {
+#include "fmd/config/generated/AnchorGainTable.inc"
+};
+
 /// 256-entry gamma 2.2 LED transfer table stored in flash.
 const uint8_t kGammaTable8[256] PROGMEM = {
 #include "fmd/config/generated/GammaTable.inc"
@@ -39,6 +44,13 @@ uint32_t AvrReferenceTables::exp2Q16_16(uint8_t index) const {
 
 int16_t AvrReferenceTables::triangularIcdfQ1_15(uint16_t index) const {
   return static_cast<int16_t>(pgm_read_word(&kTriangularIcdfTableQ1F15[index]));
+}
+
+uint16_t AvrReferenceTables::anchorInnovationGainQ1_15(uint16_t index) const {
+  if (index > 306U) {
+    index = 306U;
+  }
+  return pgm_read_word(&kAnchorInnovationGainQ1F15[index]);
 }
 
 uint8_t AvrReferenceTables::gamma8(uint8_t index) const {

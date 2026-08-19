@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-Fog is a proposed Ambient-bank stochastic modulation mode that creates a slowly changing bipolar cloud from multiple overlapping smooth pulse events.
+Fog is the implemented Ambient-bank stochastic modulation mode that creates a slowly changing bipolar cloud from multiple overlapping smooth pulse events.
 
 The conceptual reference is filtered pulse/shot-noise modeling, but Drift deliberately uses a finite number of voices, discrete event timing and a compact polynomial pulse shape to remain bounded and practical on ATmega328P.
 
@@ -83,7 +83,7 @@ for sparse events.
 
 The implementation may use a Bernoulli threshold approximation, but the compensation relationship between duration and event probability is part of the control contract.
 
-A practical initial Texture mapping should keep $\lambda$ below the four-voice cap for most of the panel range. Exact endpoint values remain a tuning parameter for implementation analysis.
+The implementation freezes the target occupancy range at `1..24` eighths of a voice, i.e. $0.125..3.0$ expected voices. This remains below the four-voice hard cap across the panel range while still allowing dense overlap.
 
 ## 5. Relationship to Rain and upstream Drift
 
@@ -132,7 +132,7 @@ Because positive and negative amplitudes are symmetric by construction, the unsa
 
 The first implementation should remain four voices with a common duration and one fixed pulse shape. Variable-duration events, more voices or multiple kernel families would increase both tuning and CPU complexity.
 
-The first tuning task is selecting $\lambda(\tau)$ so the usable panel range moves naturally from isolated events through overlap without spending too much range in voice saturation.
+The first implementation selects a linear `0.125..3.0` target-occupancy law. Event creation compares a composed 32-bit RNG word against a 32-bit cutoff proportional to Ambient phase increment and target occupancy; this preserves sparse event probabilities that would disappear in a 16-bit threshold at very slow settings.
 
 ## 9. Computational cost on ATmega328P
 
@@ -144,7 +144,7 @@ Every sample requires:
 - signed accumulation;
 - midpoint bias and saturation.
 
-A second RNG draw is needed only when a new event is accepted to determine signed amplitude.
+Two 16-bit RNG draws are composed into the per-sample 32-bit arrival word. A further RNG draw is consumed only when a free voice accepts a new event, selecting a symmetric signed peak amplitude with magnitude `512..1023` DAC codes.
 
 Persistent state is four small voice records plus RNG state.
 
@@ -154,7 +154,7 @@ Fog is likely the Ambient bank's worst-case CPU mode when all four voices are si
 
 - Express $g(u)=16[u(1-u)]^2$ to reduce polynomial operations.
 - Use a fixed-point phase where voice completion is detected by wrap/limit without division.
-- Precompute or cache the duration-derived event threshold when Speed/Texture changes.
+- The current implementation computes the 32-bit cutoff directly from Ambient increment and the small integer occupancy target; caching remains optional if AVR timing data shows a need.
 - Keep the voice array statically allocated and unrolled only if measurement proves worthwhile.
 - Use symmetric amplitude generation around zero without division.
 
@@ -198,7 +198,7 @@ Its central musical quality is **soft stochastic density**. The output should fe
 
 ## 13. Engineering assessment
 
-Fog is conceptually strong and numerically bounded but must earn its place through timing measurement. Four polynomial voices at 2.5 kHz are still modest by desktop standards but cannot be assumed cheap on an ATmega328P. The fixed voice cap and compact kernel make the cost predictable enough to qualify rigorously.
+Fog is conceptually strong and numerically bounded. The implementation fixes four voices, `0.125..3.0` target occupancy and signed `512..1023`-code cloud amplitudes. The host suite verifies the compact kernel, occupancy law, duration-compensated event cutoff, signed amplitude bounds, voice completion and fixed-seed bounded behavior. Four polynomial voices at 2.5 kHz still require the dedicated AVR timing image before release.
 
 <!-- drift-footer:start -->
 <p align="center">

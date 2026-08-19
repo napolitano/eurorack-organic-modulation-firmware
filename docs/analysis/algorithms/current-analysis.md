@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-Current is a proposed Ambient-bank algorithm for deterministic long-form modulation. It combines several independent slow motions whose rates are intentionally non-harmonic, producing a trajectory with a much longer practical recurrence than a single LFO.
+Current is the implemented Ambient-bank algorithm for deterministic long-form modulation. It combines several independent slow motions whose rates are intentionally non-harmonic, producing a trajectory with a much longer practical recurrence than a single LFO.
 
 The initial working name was **Tide**, but this was rejected because Mutable Instruments already used **Tides** for a prominent Eurorack function generator. The official Tides manual documents cyclic/envelope waveform generation over a wide frequency range: <https://pichenettes.github.io/mutable-instruments-documentation/modules/tides_2018/manual/>. Current avoids unnecessary naming and provenance confusion.
 
@@ -120,7 +120,7 @@ The digital implementation eventually repeats because every phase accumulator an
 
 The first implementation should keep the three fixed rate ratios and fixed phase offsets. Random phase resets, Texture-dependent frequency ratios, additional voices or sine tables would make the behavior harder to reason about and should be separate revisions.
 
-The rational approximations should be selected by an explicit error/CPU trade-off and recorded as constants with tests against the ideal ratios.
+The implementation freezes the rate approximations at `362/256` for $\sqrt2$ and `414/256` for $\varphi$. Both use multiply/add/shift arithmetic and are tested against the ideal ratios. Startup phases are fixed at `0`, `0x55555555` and `0xAAAAAAAA`.
 
 ## 8. Computational cost on ATmega328P
 
@@ -182,7 +182,7 @@ The main limitation is conceptual honesty: the AVR implementation is ultimately 
 
 ## 12. Engineering assessment
 
-Current is mathematically bounded and conceptually clean. The two areas requiring real measurement are execution time and fixed-point ratio quality. Neither is a reason to reject the mode, but both need explicit tests before implementation is considered finished.
+Current is mathematically bounded and conceptually clean. The two areas requiring real measurement are execution time and fixed-point ratio quality. Neither is a reason to reject the mode. The host mathematical suite now verifies constant-sum weights, ratio accuracy, soft-triangle extrema and deterministic bounded output; AVR timing qualification remains a release requirement.
 
 <!-- drift-footer:start -->
 <p align="center">

@@ -102,6 +102,29 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_generative -f ${{ matrix.suite }}
 
+  native-ambient-tests:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - unit/test_algorithms
+          - unit/test_current_algorithm
+          - unit/test_anchor_algorithm
+          - unit/test_breath_algorithm
+          - unit/test_fog_algorithm
+          - integration/test_selection
+          - integration/test_runtime
+          - property/test_invariants
+          - system/test_signal_path
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_ambient -f ${{ matrix.suite }}
+
   native-coverage:
     runs-on: ubuntu-24.04
     steps:
@@ -160,6 +183,22 @@ jobs:
             --txt
           python scripts/check_native_coverage.py coverage-generative/coverage.xml
 
+  native-ambient-coverage:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_ambient_coverage
+      - run: |
+          mkdir -p coverage-ambient
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
+            --xml-pretty --output coverage-ambient/coverage.xml
+          python scripts/check_native_coverage.py coverage-ambient/coverage.xml
+
   native-sanitizers:
     runs-on: ubuntu-24.04
     steps:
@@ -191,6 +230,16 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_generative_sanitized
 
+  native-ambient-sanitizers:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_ambient_sanitized
+
   avr-build:
     runs-on: ubuntu-24.04
     strategy:
@@ -203,6 +252,8 @@ jobs:
           - nanoatmega328_organic
           - nanoatmega328new_generative
           - nanoatmega328_generative
+          - nanoatmega328new_ambient
+          - nanoatmega328_ambient
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0
@@ -217,7 +268,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing]
+        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing, nanoatmega328new_ambient_timing]
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0

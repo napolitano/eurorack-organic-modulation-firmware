@@ -209,7 +209,7 @@
     },
     {
       "id": "AC-18",
-      "description": "Both Bézier easing functions match their cubic reference equations and are monotonic.",
+      "description": "Both B\u00e9zier easing functions match their cubic reference equations and are monotonic.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -223,7 +223,7 @@
     },
     {
       "id": "AC-19",
-      "description": "Bézier Texture morph is continuous and the triangular inverse-CDF spans both mathematical endpoints without a final plateau.",
+      "description": "B\u00e9zier Texture morph is continuous and the triangular inverse-CDF spans both mathematical endpoints without a final plateau.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -241,7 +241,7 @@
     },
     {
       "id": "AC-20",
-      "description": "Bézier phase accumulation preserves wrap overshoot.",
+      "description": "B\u00e9zier phase accumulation preserves wrap overshoot.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -345,7 +345,7 @@
     },
     {
       "id": "AC-26",
-      "description": "Bézier segment-speed variation has the documented center dead zone, symmetric knob response, monotonic CV contribution and bounded full-scale behavior.",
+      "description": "B\u00e9zier segment-speed variation has the documented center dead zone, symmetric knob response, monotonic CV contribution and bounded full-scale behavior.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -363,7 +363,7 @@
     },
     {
       "id": "AC-27",
-      "description": "Bézier endpoint interpolation and multi-segment A-to-B state transitions remain mathematically consistent across repeated phase rollovers.",
+      "description": "B\u00e9zier endpoint interpolation and multi-segment A-to-B state transitions remain mathematically consistent across repeated phase rollovers.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -531,7 +531,7 @@
     },
     {
       "id": "AC-37",
-      "description": "Attractor implements the documented fixed-point Hénon map over the complete Texture parameter range, remains bounded and emits deterministic 12-bit interpolated output.",
+      "description": "Attractor implements the documented fixed-point H\u00e9non map over the complete Texture parameter range, remains bounded and emits deterministic 12-bit interpolated output.",
       "tests": [
         {
           "file": "test/unit/test_attractor_algorithm/test_main.cpp",
@@ -626,6 +626,88 @@
         {
           "file": "test/unit/test_urn_algorithm/test_main.cpp",
           "case": "test_urn_output_vocabulary_is_exact_even_spacing_across_full_dac_range"
+        }
+      ]
+    },
+    {
+      "id": "AC-43",
+      "description": "The Ambient compile-time bank maps the four rear DIP slots to Current, Anchor, Breath and Fog while preserving the shared electrical truth table.",
+      "tests": [
+        {
+          "file": "test/integration/test_selection/test_main.cpp",
+          "case": "test_selected_bank_config_pin_mapping"
+        }
+      ]
+    },
+    {
+      "id": "AC-44",
+      "description": "Current uses three fixed non-harmonic rate approximations, exact constant-sum Texture weights and deterministic bounded 12-bit projection.",
+      "tests": [
+        {
+          "file": "test/unit/test_current_algorithm/test_main.cpp",
+          "case": "test_current_weights_have_exact_endpoints_and_constant_sum"
+        },
+        {
+          "file": "test/unit/test_current_algorithm/test_main.cpp",
+          "case": "test_current_ratio_approximations_are_close_to_ideal"
+        },
+        {
+          "file": "test/unit/test_current_algorithm/test_main.cpp",
+          "case": "test_current_algorithm_is_deterministic_and_bounded"
+        }
+      ]
+    },
+    {
+      "id": "AC-45",
+      "description": "Anchor implements explicit bounded mean reversion, zero-spread centre stability and seed-deterministic OU-inspired triangular-innovation motion.",
+      "tests": [
+        {
+          "file": "test/unit/test_anchor_algorithm/test_main.cpp",
+          "case": "test_anchor_reversion_moves_both_signs_toward_zero"
+        },
+        {
+          "file": "test/unit/test_anchor_algorithm/test_main.cpp",
+          "case": "test_anchor_zero_texture_stays_exactly_at_midpoint"
+        },
+        {
+          "file": "test/unit/test_anchor_algorithm/test_main.cpp",
+          "case": "test_anchor_is_seed_deterministic_and_bounded"
+        }
+      ]
+    },
+    {
+      "id": "AC-46",
+      "description": "Breath preserves a baseline-to-single-peak-to-baseline cycle, keeps all rollover-latched parameters inside documented bounds and remains deterministic for a fixed seed.",
+      "tests": [
+        {
+          "file": "test/unit/test_breath_algorithm/test_main.cpp",
+          "case": "test_breath_envelope_has_baseline_peak_baseline_topology"
+        },
+        {
+          "file": "test/unit/test_breath_algorithm/test_main.cpp",
+          "case": "test_breath_full_texture_parameters_never_leave_bounds"
+        },
+        {
+          "file": "test/unit/test_breath_algorithm/test_main.cpp",
+          "case": "test_breath_algorithm_is_seed_deterministic_and_bounded"
+        }
+      ]
+    },
+    {
+      "id": "AC-47",
+      "description": "Fog uses the documented compact smooth kernel, a fixed four-voice process, duration-compensated occupancy mapping and deterministic bounded bipolar output.",
+      "tests": [
+        {
+          "file": "test/unit/test_fog_algorithm/test_main.cpp",
+          "case": "test_fog_kernel_has_exact_endpoints_peak_and_symmetry"
+        },
+        {
+          "file": "test/unit/test_fog_algorithm/test_main.cpp",
+          "case": "test_fog_event_cutoff_compensates_duration_linearly"
+        },
+        {
+          "file": "test/unit/test_fog_algorithm/test_main.cpp",
+          "case": "test_fog_algorithm_is_seed_deterministic_and_bounded"
         }
       ]
     }

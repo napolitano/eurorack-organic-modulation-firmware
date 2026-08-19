@@ -85,6 +85,11 @@ jobs:
             && grep -q '^\[env:nanoatmega328_generative\]$' platformio.ini; then
             RELEASE_BANKS="${RELEASE_BANKS},generative"
           fi
+          if grep -q '^\[env:native_ambient\]$' platformio.ini \
+            && grep -q '^\[env:nanoatmega328new_ambient\]$' platformio.ini \
+            && grep -q '^\[env:nanoatmega328_ambient\]$' platformio.ini; then
+            RELEASE_BANKS="${RELEASE_BANKS},ambient"
+          fi
 
           echo "Release source: ${RELEASE_TAG} @ ${SOURCE_COMMIT}"
           echo "Release operation: ${RELEASE_OPERATION}"
@@ -168,6 +173,10 @@ jobs:
         if: contains(steps.release-context.outputs.banks, 'generative')
         run: pio test -e native_generative
 
+      - name: Run Ambient-bank native tests
+        if: contains(steps.release-context.outputs.banks, 'ambient')
+        run: pio test -e native_ambient
+
       - name: Run native sanitizers
         shell: bash
         env:
@@ -181,6 +190,9 @@ jobs:
           fi
           if [[ "${RELEASE_BANKS}" == *generative* ]]; then
             pio test -e native_generative_sanitized
+          fi
+          if [[ "${RELEASE_BANKS}" == *ambient* ]]; then
+            pio test -e native_ambient_sanitized
           fi
 
       - name: Enforce Classic-bank native coverage policy
@@ -214,6 +226,16 @@ jobs:
             --xml-pretty --output coverage-generative/coverage.xml
           python scripts/check_native_coverage.py coverage-generative/coverage.xml
 
+      - name: Enforce Ambient-bank native coverage policy
+        if: contains(steps.release-context.outputs.banks, 'ambient')
+        run: |
+          pio test -e native_ambient_coverage
+          mkdir -p coverage-ambient
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
+            --xml-pretty --output coverage-ambient/coverage.xml
+          python scripts/check_native_coverage.py coverage-ambient/coverage.xml
+
       - name: Build release firmware
         shell: bash
         run: |
@@ -227,6 +249,10 @@ jobs:
           if [[ "${RELEASE_BANKS}" == *generative* ]]; then
             pio run -e nanoatmega328new_generative
             pio run -e nanoatmega328_generative
+          fi
+          if [[ "${RELEASE_BANKS}" == *ambient* ]]; then
+            pio run -e nanoatmega328new_ambient
+            pio run -e nanoatmega328_ambient
           fi
 
       - name: Enforce AVR resource budgets
@@ -243,6 +269,10 @@ jobs:
             python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_generative/firmware.elf
             python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_generative/firmware.elf
           fi
+          if [[ "${RELEASE_BANKS}" == *ambient* ]]; then
+            python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_ambient/firmware.elf
+            python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_ambient/firmware.elf
+          fi
 
       - name: Compile timing qualification images
         shell: bash
@@ -254,6 +284,9 @@ jobs:
           fi
           if [[ "${RELEASE_BANKS}" == *generative* ]]; then
             pio run -e nanoatmega328new_generative_timing
+          fi
+          if [[ "${RELEASE_BANKS}" == *ambient* ]]; then
+            pio run -e nanoatmega328new_ambient_timing
           fi
 
       - name: Install manual publication dependencies
@@ -377,6 +410,24 @@ jobs:
           print("Generative manual coverage: passed")
           PY
 
+      - name: Require Ambient content in frozen manual
+        if: contains(steps.release-context.outputs.banks, 'ambient')
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANUAL_SOURCE='${{ steps.manual-source.outputs.source }}'
+          python - "${MANUAL_SOURCE}" <<'PY'
+          import sys, xml.etree.ElementTree as ET, zipfile
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              root = ET.fromstring(archive.read("content.xml"))
+          text = " ".join(part.strip() for part in root.itertext() if part.strip()).lower()
+          required = ("ambient", "current", "anchor", "breath", "fog")
+          missing = [term for term in required if term not in text]
+          if missing:
+              raise SystemExit("release manual does not yet document the Ambient bank: missing " + ", ".join(missing))
+          print("Ambient manual coverage: passed")
+          PY
+
       - name: Build and verify user manual
         shell: bash
         run: |
@@ -458,6 +509,21 @@ jobs:
               --git-commit "${SOURCE_COMMIT}" \
               --git-ref "${RELEASE_TAG}" \
               --output "dist/BUILD-INFO-generative-nano-old.${RELEASE_VERSION}.txt"
+          fi
+
+          if [[ "${RELEASE_BANKS}" == *ambient* ]]; then
+            python "${TOOLING_ROOT}/write_build_info.py" \
+              --bank ambient \
+              --environment nanoatmega328new_ambient \
+              --git-commit "${SOURCE_COMMIT}" \
+              --git-ref "${RELEASE_TAG}" \
+              --output "dist/BUILD-INFO-ambient-nano-new.${RELEASE_VERSION}.txt"
+            python "${TOOLING_ROOT}/write_build_info.py" \
+              --bank ambient \
+              --environment nanoatmega328_ambient \
+              --git-commit "${SOURCE_COMMIT}" \
+              --git-ref "${RELEASE_TAG}" \
+              --output "dist/BUILD-INFO-ambient-nano-old.${RELEASE_VERSION}.txt"
           fi
 
       - name: Validate exact release artifact set

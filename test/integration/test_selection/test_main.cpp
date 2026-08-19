@@ -28,12 +28,19 @@ void test_selected_bank_config_pin_mapping() {
       fmd::Algorithm::Rain,
       fmd::Algorithm::Attractor,
   };
-#else
+#elif FMD_ALGORITHM_BANK == FMD_BANK_GENERATIVE
   constexpr fmd::Algorithm expected[4] = {
       fmd::Algorithm::Turing,
       fmd::Algorithm::Markov,
       fmd::Algorithm::Motif,
       fmd::Algorithm::Urn,
+  };
+#else
+  constexpr fmd::Algorithm expected[4] = {
+      fmd::Algorithm::Current,
+      fmd::Algorithm::Anchor,
+      fmd::Algorithm::Breath,
+      fmd::Algorithm::Fog,
   };
 #endif
 

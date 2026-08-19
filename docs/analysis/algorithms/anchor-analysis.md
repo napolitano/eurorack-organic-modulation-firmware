@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-Anchor is a proposed Ambient-bank stochastic modulation mode designed around **mean reversion**. It should wander continuously but retain a statistical home around the DAC midpoint rather than behaving like a random walk that must eventually be constrained by rails.
+Anchor is the implemented Ambient-bank stochastic modulation mode designed around **mean reversion**. It should wander continuously but retain a statistical home around the DAC midpoint rather than behaving like a random walk that must eventually be constrained by rails.
 
 The mathematical inspiration is the Ornstein-Uhlenbeck family of mean-reverting stochastic processes. Drift's embedded implementation must remain honest about any approximation used for Gaussian noise or boundary handling.
 
@@ -42,7 +42,7 @@ $Z_n\sim\mathcal N(0,1)$ and $s$ the desired stationary standard deviation.
 
 This formulation exposes the key control-design requirement: if Speed changes $a$, the innovation scale must change with $\sqrt{1-a^2}$ if Texture is intended to represent roughly the same long-run spread.
 
-## 3. Proposed Drift contract
+## 3. Implemented Drift contract
 
 Speed controls the mean-reversion/correlation rate $\theta$ using the Ambient macro-time scale. Texture controls target excursion $s$.
 
@@ -64,15 +64,17 @@ The initial state is exactly centre.
 
 ## 4. Embedded innovation model
 
-Generating an exact continuous Gaussian random variable cheaply on ATmega328P is not automatic. Three implementation families are technically defensible:
+The implementation deliberately chooses the bounded triangular option. It reuses Drift's existing symmetric triangular inverse-CDF in signed Q1.15, whose variance is $1/6$, rather than pretending to generate Gaussian innovations. Anchor is therefore documented as an **OU-inspired AR(1) mean-reverting process**, not an exact Ornstein-Uhlenbeck process.
 
-1. a compact precomputed inverse-normal table driven by one uniform RNG word;
-2. a small bounded approximation such as a triangular innovation;
-3. a sum-of-uniforms approximation.
+Texture maps linearly to a target spread from zero to `9830` in Q1.15, approximately `0.30`. Speed is mapped into 307 eight-code buckets. Offline reference-table generation derives a Q1.15 innovation gain for each bucket from
 
-The first option best preserves the OU interpretation but consumes flash and interpolation work. The second is cheapest and bounded but makes the process **OU-inspired AR(1)** rather than exact Gaussian OU.
+$$
+g=\sqrt{6(1-a^2)},
+$$
 
-The implementation analysis must choose one explicitly before code is written. The firmware and user documentation must use terminology matching that choice.
+where the factor 6 compensates the triangular innovation variance. The generated `AnchorGainTable.inc` is stored through the common reference-table abstraction and placed in AVR program memory.
+
+Mean reversion itself uses an integer Q0.24 coefficient plus a fractional residual accumulator. The residual prevents very small non-zero states from becoming permanently stuck because an individual fixed-point reversion step rounded to zero.
 
 ## 5. Relationship to Brownian and upstream Drift
 
@@ -101,7 +103,7 @@ If innovation scaling is not compensated for Speed, this control model breaks: s
 
 - **Mathematical requirement:** mean reversion must be explicit and testable from any non-zero state.
 - **Control requirement:** Texture should primarily control spread while Speed controls correlation time.
-- **Implementation decision still required:** exact/approximate Gaussian innovation method.
+- **Implementation decision:** bounded symmetric triangular innovations are used; the mode is therefore OU-inspired rather than exact Gaussian OU.
 - **Terminology constraint:** if the innovation is not Gaussian, do not call the implementation an exact Ornstein-Uhlenbeck process.
 - **Numerical requirement:** output saturation must not become the normal mechanism defining the stationary distribution.
 - **Compatibility status:** no upstream behavior exists to preserve.
@@ -133,14 +135,14 @@ Every sample is expected to require:
 
 Persistent state is one signed process value plus RNG state and any cached coefficients.
 
-A table-based Gaussian approximation would add flash use and interpolation work but should still be much cheaper than multi-octave gradient noise if designed carefully.
+The implemented triangular innovation needs no Gaussian lookup. A 307-entry Q1.15 Speed-compensation table is generated offline; the per-sample path performs table lookup and fixed-point multiplies only.
 
 ## 10. Optimization opportunities
 
 - Precompute coefficient pairs $(a,b)$ indexed by a reduced Speed domain.
 - Use a power-of-two fixed-point format for state and coefficient products.
 - Recompute coefficient lookup only when the effective Speed code changes.
-- If an inverse-normal table is selected, reuse interpolation infrastructure already proven elsewhere rather than introducing floating point.
+- Reuse the already verified triangular ICDF instead of adding a second stochastic-distribution implementation.
 - Keep all stochastic operations deterministic for a fixed seed.
 
 ## 11. Verification and test strategy
@@ -184,7 +186,7 @@ Compared with Brownian, the result should feel less like a drunk walk and more l
 
 ## 13. Engineering assessment
 
-Anchor is musically strong but has the highest mathematical-definition risk in the Ambient bank because careless discretization can make Speed alter amplitude as much as time scale. The analysis must therefore be treated as a real contract: mean reversion, stationary-spread behavior and innovation model all need independent verification before release.
+Anchor is musically strong and the implementation now resolves its largest definition risk explicitly: bounded triangular innovations plus generated Speed compensation. The deterministic host suite verifies spread endpoints, reversion direction, fractional-residual convergence, exact Texture-zero midpoint behavior and fixed-seed bounded output. Long-run statistical spread/autocorrelation checks and AVR timing remain release-level evidence rather than assumptions.
 
 <!-- drift-footer:start -->
 <p align="center">

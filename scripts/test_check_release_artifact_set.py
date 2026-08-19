@@ -22,7 +22,7 @@ def populate(root: Path, version: str, banks: tuple[str, ...]) -> None:
 
 def main() -> int:
     version = "1.2.3"
-    banks = ("classic", "organic", "generative")
+    banks = ("classic", "organic", "generative", "ambient")
     with tempfile.TemporaryDirectory() as temp_dir:
         root = Path(temp_dir)
         populate(root, version, banks)

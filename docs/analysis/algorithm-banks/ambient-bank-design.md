@@ -274,9 +274,16 @@ The Ambient bank should add dedicated tests for:
 
 Statistical tests must validate properties of the stochastic contract with tolerances and fixed seeds; they must not require an arbitrary finite random stream to match an ideal asymptotic distribution exactly.
 
-## 14. Design status
+## 14. Implementation status
 
-This document defines the proposed Ambient mathematical and musical contract. It does **not** claim that the current firmware implements the bank. Implementation should follow these contracts or explicitly revise the analysis before code is changed.
+The Ambient bank is now implemented as compile-time bank `FMD_ALGORITHM_BANK=3` with Current, Anchor, Breath and Fog in DIP slots 0 through 3. The production code follows the bank-level contract with four explicit implementation decisions frozen during engineering:
+
+- Current uses rational rate approximations `362/256` and `414/256` for the ideal $\sqrt2$ and $\varphi$ ratios.
+- Anchor is an **OU-inspired AR(1) mean-reverting process**, not an exact Gaussian Ornstein-Uhlenbeck process; it reuses the bounded symmetric triangular ICDF and a generated 307-entry Q1.15 Speed-compensation table.
+- Breath freezes the analyzed maximum-Texture ranges at duration `0.75..1.25`, amplitude `0.65..1.00` and peak position `0.25..0.50`, with rollover-cached reciprocals so the per-sample path contains no general division.
+- Fog freezes the Texture occupancy range at `0.125..3.0` expected voices, uses a 32-bit Bernoulli threshold so very sparse events remain representable at slow settings, and retains the four-voice hard cap.
+
+Acceptance criteria AC-43 through AC-47 cover bank selection and the four algorithm contracts. Release tooling recognizes Ambient as a fourth bank, but publication is intentionally blocked until the frozen end-user manual also documents Ambient.
 
 <!-- drift-footer:start -->
 <p align="center">

@@ -19,17 +19,18 @@
 
 Drift is a **4 HP Eurorack modulation source** that produces evolving 0–10 V control voltages. Its defining idea is controlled movement: instead of choosing only between a conventional repeating LFO and completely uncorrelated random values, Drift offers several ways to generate motion with **continuity, memory, structure or controlled unpredictability**.
 
-This firmware now supports three compile-time algorithm banks:
+This firmware now supports four compile-time algorithm banks:
 
 | Bank | Algorithms | Status | Detailed guide |
 |---|---|---|---|
 | **Classic** | Perlin · Brownian · Bézier · LFO | Default; 0.1.0 compatibility baseline | **[README-BANK-CLASSIC.md](README-BANK-CLASSIC.md)** |
 | **Organic** | Fractal · Vector · Rain · Attractor | Optional compile-time bank; currently `Unreleased` | **[README-BANK-ORGANIC.md](README-BANK-ORGANIC.md)** |
 | **Generative** | Turing · Markov · Motif · Urn | Optional compile-time bank; currently `Unreleased` | **[README-BANK-GENERATIVE.md](README-BANK-GENERATIVE.md)** |
+| **Ambient** | Current · Anchor · Breath · Fog | Optional compile-time bank; currently `Unreleased` | **[README-BANK-AMBIENT.md](README-BANK-AMBIENT.md)** |
 
 
 > [!IMPORTANT]
-> **Flashing chooses the algorithm bank.** The two rear DIP switches then choose one of four algorithms inside the flashed bank. A DIP setting cannot switch between Classic, Organic and Generative.
+> **Flashing chooses the algorithm bank.** The two rear DIP switches then choose one of four algorithms inside the flashed bank. A DIP setting cannot switch between Classic, Organic, Generative and Ambient.
 
 ## Why this firmware?
 
@@ -71,12 +72,12 @@ The project therefore aims to:
 
 The bank is fixed when the firmware is compiled/flashed. The rear DIP truth table is then interpreted inside that bank:
 
-| Rear DIP 1 | Rear DIP 2 | Classic | Organic | Generative |
-|---|---|---|---|---|
-| **OFF** | **OFF** | Perlin | Fractal | Turing |
-| **ON** | **OFF** | Brownian | Vector | Markov |
-| **OFF** | **ON** | Bézier | Rain | Motif |
-| **ON** | **ON** | LFO | Attractor | Urn |
+| Rear DIP 1 | Rear DIP 2 | Classic | Organic | Generative | Ambient |
+|---|---|---|---|---|---|
+| **OFF** | **OFF** | Perlin | Fractal | Turing | Current |
+| **ON** | **OFF** | Brownian | Vector | Markov | Anchor |
+| **OFF** | **ON** | Bézier | Rain | Motif | Breath |
+| **ON** | **ON** | LFO | Attractor | Urn | Fog |
 
 The switches are sampled only during startup. Cycle power after changing them. **ON is the upper physical switch position.**
 
@@ -85,6 +86,7 @@ For mode-specific control semantics, mathematics, figures and use cases, use the
 - **[Classic bank — Perlin, Brownian, Bézier, LFO](README-BANK-CLASSIC.md)**
 - **[Organic bank — Fractal, Vector, Rain, Attractor](README-BANK-ORGANIC.md)**
 - **[Generative bank — Turing, Markov, Motif, Urn](README-BANK-GENERATIVE.md)**
+- **[Ambient bank — Current, Anchor, Breath, Fog](README-BANK-AMBIENT.md)**
 
 ### 3. Make the first patch
 
@@ -124,6 +126,7 @@ The detailed user-facing algorithm documentation now lives at repository root so
 | **[README-BANK-CLASSIC.md](README-BANK-CLASSIC.md)** | DIP mapping, controls, Perlin/Brownian/Bézier/LFO mathematics and figures, upstream findings, Classic build commands |
 | **[README-BANK-ORGANIC.md](README-BANK-ORGANIC.md)** | DIP mapping, controls, Fractal/Vector/Rain/Attractor mathematics and figures, hardware constraints, Organic build commands |
 | **[README-BANK-GENERATIVE.md](README-BANK-GENERATIVE.md)** | DIP mapping, controls, Turing/Markov/Motif/Urn mathematics, musical roles and Generative build commands |
+| **[README-BANK-AMBIENT.md](README-BANK-AMBIENT.md)** | DIP mapping, controls, Current/Anchor/Breath/Fog mathematics, musical roles and Ambient build commands |
 
 The maintained [PDF user manual source](docs/manual/README.md) remains the complete end-user reference. The engineering derivations stay under [docs/analysis](docs/analysis/algorithms/README.md).
 
@@ -187,7 +190,7 @@ Current native coverage includes:
 - machine-checked acceptance-criteria traceability;
 - sanitizer and coverage environments.
 
-The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. The current `Unreleased` source expands the repository to **125 native test cases across 22 suites** and **42 acceptance criteria** by adding Organic and Generative bank verification. Classic, Organic and Generative coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
+The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. The current `Unreleased` source expands the repository to **145 native test cases across 26 suites** and **47 acceptance criteria** by adding Organic, Generative and Ambient bank verification. Classic, Organic, Generative and Ambient coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
 
 AVR builds also carry explicit engineering headroom: **Flash must stay at or below 85% (26,112 / 30,720 bytes)** and **static SRAM at or below 65% (1,331 / 2,048 bytes)**. These are repository guardrails, deliberately stricter than the ATmega328P hard limits.
 
@@ -207,6 +210,11 @@ Each algorithm has a dedicated developer analysis that starts from the mathemati
 - [Attractor / Hénon map](docs/analysis/algorithms/attractor-analysis.md)
 - [Organic bank architecture and control contract](docs/analysis/algorithm-banks/organic-bank-design.md)
 - [Generative bank architecture and control contract](docs/analysis/algorithm-banks/generative-bank-design.md)
+- [Ambient bank architecture and control contract](docs/analysis/algorithm-banks/ambient-bank-design.md)
+- [Current](docs/analysis/algorithms/current-analysis.md)
+- [Anchor](docs/analysis/algorithms/anchor-analysis.md)
+- [Breath](docs/analysis/algorithms/breath-analysis.md)
+- [Fog](docs/analysis/algorithms/fog-analysis.md)
 
 The common classification policy is documented in [docs/analysis/algorithms/README.md](docs/analysis/algorithms/README.md).
 
@@ -224,8 +232,20 @@ Organic firmware builds:
 ```bash
 pio run -e nanoatmega328new_organic
 pio run -e nanoatmega328_organic
+```
+
+Generative firmware builds:
+
+```bash
 pio run -e nanoatmega328new_generative
 pio run -e nanoatmega328_generative
+```
+
+Ambient firmware builds:
+
+```bash
+pio run -e nanoatmega328new_ambient
+pio run -e nanoatmega328_ambient
 ```
 
 Host verification:
@@ -241,6 +261,9 @@ pio test -e native_organic_coverage
 pio test -e native_generative
 pio test -e native_generative_sanitized
 pio test -e native_generative_coverage
+pio test -e native_ambient
+pio test -e native_ambient_sanitized
+pio test -e native_ambient_coverage
 
 python scripts/check_requirement_traceability.py
 python scripts/check_code_documentation.py
@@ -248,26 +271,27 @@ python scripts/check_markdown_footer.py
 python scripts/check_markdown_math.py
 ```
 
-Timing qualification uses `nanoatmega328new_timing` for Classic, `nanoatmega328new_organic_timing` for Organic and `nanoatmega328new_generative_timing` for Generative.
+Timing qualification uses `nanoatmega328new_timing` for Classic, `nanoatmega328new_organic_timing` for Organic, `nanoatmega328new_generative_timing` for Generative and `nanoatmega328new_ambient_timing` for Ambient.
 
 ## Release artifacts
 
-Tagged releases publish **every compile-time bank present in the tagged source** for both supported Arduino Nano bootloaders. The current source therefore publishes Classic, Organic and Generative. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
+Tagged releases publish **every compile-time bank present in the tagged source** for both supported Arduino Nano bootloaders. The current source therefore publishes Classic, Organic, Generative and Ambient. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
 
 | Bank | New bootloader | Old bootloader |
 |---|---|---|
 | **Classic** | `fm-drift-classic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-classic-nano-old-bootloader.X.Y.Z.hex` |
 | **Organic** | `fm-drift-organic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-organic-nano-old-bootloader.X.Y.Z.hex` |
 | **Generative** | `fm-drift-generative-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-generative-nano-old-bootloader.X.Y.Z.hex` |
+| **Ambient** | `fm-drift-ambient-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-ambient-nano-old-bootloader.X.Y.Z.hex` |
 
-Matching `.elf` files are included for debugging/provenance. Each current three-bank release also contains `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **six build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests.
+Matching `.elf` files are included for debugging/provenance. Each current four-bank release also contains `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **eight build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests.
 
 > [!IMPORTANT]
-> Flashing chooses **Classic, Organic or Generative**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.
+> Flashing chooses **Classic, Organic, Generative or Ambient**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.
 
 ## User manual
 
-The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It now documents **all three compile-time banks and all twelve algorithms**, including bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
+The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It currently documents the published Classic, Organic and Generative material; Ambient is implemented but remains release-blocked until the manual is extended with its four algorithms, including bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
 
 The manual repository area contains:
 

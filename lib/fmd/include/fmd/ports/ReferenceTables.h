@@ -42,6 +42,15 @@ class IReferenceTables {
    */
   virtual int16_t triangularIcdfQ1_15(uint16_t index) const = 0;
 
+
+  /**
+   * @brief Read one Anchor triangular-innovation compensation gain.
+   * @param index Quantized effective Speed bucket 0..306.
+   * @return Q1.15 multiplier that compensates the bounded triangular innovation
+   *         for the selected mean-reversion rate.
+   */
+  virtual uint16_t anchorInnovationGainQ1_15(uint16_t index) const = 0;
+
   /**
    * @brief Read one gamma-corrected LED brightness entry.
    * @param index Linear brightness index 0..255.

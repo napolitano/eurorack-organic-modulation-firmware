@@ -55,6 +55,39 @@ gamma = [
     for i in range(256)
 ]
 
+# Anchor uses a bounded triangular innovation with variance 1/6. Its discrete
+# AR(1) update is x[n+1]=(1-alpha)x[n]+gain*s*z[n], where z follows that
+# triangular distribution. The gain below therefore normalizes stationary
+# spread approximately independently of Speed:
+#   gain = sqrt(6 * (1 - (1-alpha)^2)).
+# Speed is quantized in the same mapped-control domain used by the production
+# exponential frequency map (8 control codes per bucket, 0..306).
+def interpolate_exp2_q16_16(combined_control):
+    lookup_position = combined_control * 20
+    lower = lookup_position >> 8
+    upper = min(255, lower + 1)
+    weight = (lookup_position << 8) & 0xFFFF
+    start = exp[lower]
+    end = exp[upper]
+    return start + (((end - start) * weight) >> 16)
+
+
+def phase_increment_from_decihertz_q16_16(value):
+    return ((value << 16) + 50000) // 100000
+
+
+anchor_gain = []
+for bucket in range(307):
+    combined = min(2455, bucket * 8 + 4)
+    phase_increment = phase_increment_from_decihertz_q16_16(
+        interpolate_exp2_q16_16(combined)
+    )
+    ambient_increment = (phase_increment + 8) >> 4
+    alpha = ambient_increment / float(1 << 32)
+    a = 1.0 - alpha
+    gain = math.sqrt(max(0.0, 6.0 * (1.0 - a * a)))
+    anchor_gain.append(max(0, min(32767, round(gain * 32768.0))))
+
 write(
     "Exp2Table.inc",
     exp,
@@ -75,4 +108,12 @@ write(
     str,
     16,
     "256-entry gamma 2.2 transfer table for 8-bit LED PWM.",
+)
+
+write(
+    "AnchorGainTable.inc",
+    anchor_gain,
+    str,
+    12,
+    "307 Q1.15 Anchor triangular-innovation compensation gains for 8-code Speed buckets.",
 )

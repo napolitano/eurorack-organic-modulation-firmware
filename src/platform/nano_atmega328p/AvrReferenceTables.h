@@ -33,6 +33,10 @@ class AvrReferenceTables final : public IReferenceTables {
    */
   int16_t triangularIcdfQ1_15(uint16_t index) const override;
 
+
+  /** @brief Read one Anchor innovation compensation gain from PROGMEM. */
+  uint16_t anchorInnovationGainQ1_15(uint16_t index) const override;
+
   /**
    * @brief Read one 8-bit gamma-correction entry from PROGMEM.
    * @param index Linear brightness index 0..255.
