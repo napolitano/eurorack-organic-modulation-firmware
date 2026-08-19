@@ -7,6 +7,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
+- Release/CI delivery is now explicitly hardened for the complete six-bank source: Percussion clock tests are part of the targeted CI matrix, current tags require all 24 HEX/ELF firmware files and 12 BUILD-INFO provenance files, and release-process documentation/manual guards cover all six banks while remaining capability-aware for historical tags.
 - Percussion Speed CV can now act as an optional **0–5 V quarter-note clock input**. Two rising edges acquire external timing; clock loss after 2.5 periods automatically falls back to the Speed-knob 30–240 BPM source without resetting the running phrase.
 - Added explicit current-hardware safety warnings to the main README, Percussion guide and user manual: the original Speed CV stage is not specified as a 10 V Eurorack trigger input, so 10 V clocks/triggers are unsupported until the input hardware is revised.
 - Corrected Humanize positive-jitter scheduling so delayed hits count their offset from the nominal grid boundary rather than from event preparation.

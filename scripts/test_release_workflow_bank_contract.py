@@ -14,6 +14,66 @@ from pathlib import Path
 WORKFLOW = Path(".github/workflows/release.yml")
 
 BANK_FRAGMENTS = {
+    "organic": {
+        "bank detection": (
+            "grep -q '^\\[env:native_organic\\]$' platformio.ini",
+            "grep -q '^\\[env:nanoatmega328new_organic\\]$' platformio.ini",
+            "grep -q '^\\[env:nanoatmega328_organic\\]$' platformio.ini",
+            'RELEASE_BANKS="${RELEASE_BANKS},organic"',
+        ),
+        "native qualification": (
+            "pio test -e native_organic",
+            "pio test -e native_organic_sanitized",
+            "pio test -e native_organic_coverage",
+        ),
+        "AVR builds": (
+            "pio run -e nanoatmega328new_organic",
+            "pio run -e nanoatmega328_organic",
+        ),
+        "resource qualification": (
+            ".pio/build/nanoatmega328new_organic/firmware.elf",
+            ".pio/build/nanoatmega328_organic/firmware.elf",
+        ),
+        "timing qualification": ("pio run -e nanoatmega328new_organic_timing",),
+        "build provenance": (
+            "BUILD-INFO-organic-nano-new.${RELEASE_VERSION}.txt",
+            "BUILD-INFO-organic-nano-old.${RELEASE_VERSION}.txt",
+            "--environment nanoatmega328new_organic",
+            "--environment nanoatmega328_organic",
+        ),
+    },
+    "generative": {
+        "bank detection": (
+            "grep -q '^\\[env:native_generative\\]$' platformio.ini",
+            "grep -q '^\\[env:nanoatmega328new_generative\\]$' platformio.ini",
+            "grep -q '^\\[env:nanoatmega328_generative\\]$' platformio.ini",
+            'RELEASE_BANKS="${RELEASE_BANKS},generative"',
+        ),
+        "native qualification": (
+            "pio test -e native_generative",
+            "pio test -e native_generative_sanitized",
+            "pio test -e native_generative_coverage",
+        ),
+        "AVR builds": (
+            "pio run -e nanoatmega328new_generative",
+            "pio run -e nanoatmega328_generative",
+        ),
+        "resource qualification": (
+            ".pio/build/nanoatmega328new_generative/firmware.elf",
+            ".pio/build/nanoatmega328_generative/firmware.elf",
+        ),
+        "timing qualification": ("pio run -e nanoatmega328new_generative_timing",),
+        "manual coverage": (
+            "Require Generative content in frozen manual",
+            'required = ("generative", "turing", "markov", "motif", "urn")',
+        ),
+        "build provenance": (
+            "BUILD-INFO-generative-nano-new.${RELEASE_VERSION}.txt",
+            "BUILD-INFO-generative-nano-old.${RELEASE_VERSION}.txt",
+            "--environment nanoatmega328new_generative",
+            "--environment nanoatmega328_generative",
+        ),
+    },
     "ambient": {
         "bank detection": (
             "grep -q '^\\[env:native_ambient\\]$' platformio.ini",
@@ -135,7 +195,7 @@ def main() -> int:
             print(f"release workflow bank contract error: {item}")
         return 2
 
-    print("release workflow optional-bank contract: passed")
+    print("release workflow six-bank contract: passed")
     return 0
 
 

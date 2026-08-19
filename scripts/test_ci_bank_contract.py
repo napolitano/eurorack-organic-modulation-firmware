@@ -64,6 +64,7 @@ PERCUSSION_SUITES = (
     "unit/test_repeat_algorithm",
     "unit/test_probability_algorithm",
     "unit/test_humanize_algorithm",
+    "unit/test_percussion_clock",
     "integration/test_selection",
     "integration/test_runtime",
     "property/test_invariants",

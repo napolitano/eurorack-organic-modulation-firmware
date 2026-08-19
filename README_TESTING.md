@@ -36,6 +36,19 @@ The metadata job also runs `scripts/test_ci_bank_contract.py`, which structurall
 | Generative | `unit/test_markov_algorithm` | exact transition partition, exploration endpoints, stratified vocabulary and deterministic fixed-vocabulary runtime |
 | Generative | `unit/test_motif_algorithm` | exact edit endpoints, circular rotations/swaps/reversals, replacement bounds and deterministic phrase evolution |
 | Generative | `unit/test_urn_algorithm` | leaky weight relaxation, reinforcement law, weighted categorical partition, fixed vocabulary and deterministic runtime |
+| Ambient | `unit/test_current_algorithm` | long-form ratio/weight invariants, deterministic phase flow and bounded output |
+| Ambient | `unit/test_anchor_algorithm` | mean reversion, bounded triangular innovation and speed-normalized spread |
+| Ambient | `unit/test_breath_algorithm` | single-swell topology, cycle-boundary randomization and bounded shape parameters |
+| Ambient | `unit/test_fog_algorithm` | quartic cloudlet kernel, bounded overlap/occupancy and bipolar output |
+| Electronica | `unit/test_pump_algorithm` | 30–240 BPM mapping, duck/recovery contour and bounded timing |
+| Electronica | `unit/test_acid_algorithm` | deterministic 16-step permutation, accent/slide masks and bounded contour |
+| Electronica | `unit/test_shuffle_algorithm` | straight-to-3:1 long/short timing with constant pair duration |
+| Electronica | `unit/test_polymeter_algorithm` | 4 against 3/5/7/9 cycle lengths and exact 12/20/28/36-step repeats |
+| Percussion | `unit/test_euclid_algorithm` | E(k,16) masks, exact hit counts and phrase-tail fill densification |
+| Percussion | `unit/test_repeat_algorithm` | ratchet positions, repeat probability and phrase-fill escalation |
+| Percussion | `unit/test_probability_algorithm` | primary/secondary/ghost metric classes, probability bounds and fill boosts |
+| Percussion | `unit/test_humanize_algorithm` | fixed event count, bounded microtiming/intensity and non-accumulating jitter |
+| Percussion | `unit/test_percussion_clock` | 0–5 V hysteretic clock detection, two-edge lock, quarter-note period tracking and 2.5-period fallback |
 
 The common frequency mapping has its own exact-rational and monotonicity suite under `unit/test_frequency`; shared fixed-point primitives are independently verified under `unit/test_fixed_math`. `unit/test_reference_tables` independently checks the generated exponential and gamma LUTs against their mathematical generation contracts.
 
@@ -98,12 +111,39 @@ pio test -e native_generative_coverage
 pio run -e nanoatmega328new_generative
 pio run -e nanoatmega328_generative
 pio run -e nanoatmega328new_generative_timing
+```
+
+Ambient uses `FMD_ALGORITHM_BANK=3`:
+
+```bash
 pio test -e native_ambient
 pio test -e native_ambient_sanitized
 pio test -e native_ambient_coverage
 pio run -e nanoatmega328new_ambient
 pio run -e nanoatmega328_ambient
 pio run -e nanoatmega328new_ambient_timing
+```
+
+Electronica uses `FMD_ALGORITHM_BANK=4`:
+
+```bash
+pio test -e native_electronica
+pio test -e native_electronica_sanitized
+pio test -e native_electronica_coverage
+pio run -e nanoatmega328new_electronica
+pio run -e nanoatmega328_electronica
+pio run -e nanoatmega328new_electronica_timing
+```
+
+Percussion uses `FMD_ALGORITHM_BANK=5`:
+
+```bash
+pio test -e native_percussion
+pio test -e native_percussion_sanitized
+pio test -e native_percussion_coverage
+pio run -e nanoatmega328new_percussion
+pio run -e nanoatmega328_percussion
+pio run -e nanoatmega328new_percussion_timing
 ```
 
 Generic integration, property and system suites use `algorithmForBankSlot()` so they exercise the four algorithms compiled into the selected bank rather than assuming enum values from Classic. Algorithm-specific suites remain explicit.
