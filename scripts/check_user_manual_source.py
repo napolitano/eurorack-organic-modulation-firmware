@@ -58,7 +58,9 @@ def validate(source: Path) -> None:
 
         # Organic algorithm figures are maintained as standalone deterministic SVGs.
         embedded_organic: dict[str, str] = {}
+        embedded_generative: dict[str, str] = {}
         embedded_bank_config: dict[str, str] = {}
+        embedded_bank_slot: dict[str, str] = {}
         embedded_manual: dict[str, str] = {}
         for frame in root.findall(".//draw:frame", namespaces):
             frame_name = frame.attrib.get(draw_name, "")
@@ -68,8 +70,12 @@ def validate(source: Path) -> None:
             href = image.attrib[xlink_href]
             if frame_name.startswith("Organic-"):
                 embedded_organic[frame_name.removeprefix("Organic-")] = href
+            elif frame_name.startswith("Generative-"):
+                embedded_generative[frame_name.removeprefix("Generative-")] = href
             elif frame_name.startswith("BankConfig-"):
                 embedded_bank_config[frame_name.removeprefix("BankConfig-")] = href
+            elif frame_name.startswith("BankSlot-"):
+                embedded_bank_slot[frame_name.removeprefix("BankSlot-")] = href
             elif frame_name.startswith("Manual-"):
                 embedded_manual[frame_name.removeprefix("Manual-")] = href
 
@@ -89,6 +95,33 @@ def validate(source: Path) -> None:
             if archive.read(href) != standalone.read_bytes():
                 raise ValueError(f"manual embeds a stale copy of Organic SVG {asset_name}")
 
+        required_generative_assets = (
+            "turing-mutation.svg",
+            "markov-vocabulary.svg",
+            "motif-evolution.svg",
+            "urn-reinforcement.svg",
+        )
+        for asset_name in required_generative_assets:
+            href = embedded_generative.get(asset_name)
+            if href is None:
+                raise ValueError(f"manual is missing Generative SVG figure {asset_name}")
+            standalone = Path("docs/manual/assets") / asset_name
+            if not standalone.is_file():
+                raise ValueError(f"standalone Generative SVG is missing: {standalone}")
+            if archive.read(href) != standalone.read_bytes():
+                raise ValueError(f"manual embeds a stale copy of Generative SVG {asset_name}")
+
+        required_bank_slot_assets = (
+            "dip-slot-00.svg", "dip-slot-10.svg", "dip-slot-01.svg", "dip-slot-11.svg",
+        )
+        for asset_name in required_bank_slot_assets:
+            href = embedded_bank_slot.get(asset_name)
+            if href is None:
+                raise ValueError(f"manual bank overview is missing DIP slot SVG {asset_name}")
+            standalone = Path("docs/manual/assets") / asset_name
+            if archive.read(href) != standalone.read_bytes():
+                raise ValueError(f"manual embeds a stale DIP slot SVG {asset_name}")
+
         # Each bank owns its own four DIP diagrams; the manual must embed the
         # maintained SVGs directly rather than a comparison table/overview.
         required_config_assets = (
@@ -100,6 +133,10 @@ def validate(source: Path) -> None:
             "config-vector.svg",
             "config-rain.svg",
             "config-attractor.svg",
+            "config-turing.svg",
+            "config-markov.svg",
+            "config-motif.svg",
+            "config-urn.svg",
         )
         for asset_name in required_config_assets:
             href = embedded_bank_config.get(asset_name)
@@ -134,7 +171,8 @@ def validate(source: Path) -> None:
             "4 Algorithm banks",
             "5 Classic bank",
             "6 Organic bank",
-            "7 Signals at a glance",
+            "7 Generative bank",
+            "8 Signals at a glance",
         )
         for heading in expected_sections:
             matches = paragraph_map.get(heading, [])
@@ -147,6 +185,7 @@ def validate(source: Path) -> None:
         mode_headings = (
             "Perlin mode (default)", "Bezier mode", "Brownian mode", "LFO mode",
             "Fractal mode", "Vector mode", "Rain mode", "Attractor mode",
+            "Turing mode", "Markov mode", "Motif mode", "Urn mode",
         )
         for heading in mode_headings:
             matches = paragraph_map.get(heading, [])
@@ -157,15 +196,15 @@ def validate(source: Path) -> None:
                 raise ValueError(f"algorithm heading lacks the standard T15 style: {heading}")
 
         math_headings = paragraph_map.get("Mathematical foundations", [])
-        if len(math_headings) != 8:
-            raise ValueError("manual must contain exactly eight Mathematical foundations subsections")
+        if len(math_headings) != 12:
+            raise ValueError("manual must contain exactly twelve Mathematical foundations subsections")
         for heading in math_headings:
             spans = heading.findall("text:span", namespaces)
             if heading.attrib.get(text_style) != "P20" or len(spans) != 1 or spans[0].attrib.get(text_style) != "T15":
                 raise ValueError("Mathematical foundations heading has inconsistent formatting")
 
         dip_headings = paragraph_map.get("DIP switch selection", [])
-        if len(dip_headings) != 2:
+        if len(dip_headings) != 3:
             raise ValueError("manual must contain one DIP switch selection subsection per bank")
         for heading in dip_headings:
             spans = heading.findall("text:span", namespaces)
@@ -181,9 +220,10 @@ def validate(source: Path) -> None:
     require("en-US", meta, "manual language")
     require("CC BY-NC 4.0", meta, "CC BY-NC 4.0 rights notice")
 
-    require("An algorithm bank is a complete firmware variant", content, "Algorithm banks introduction")
+    require("Drift started with four algorithm concepts", content, "Algorithm banks introduction")
     require("Classic bank — DIP-switch positions", content, "Classic bank DIP caption")
     require("Organic bank — DIP-switch positions", content, "Organic bank DIP caption")
+    require("Generative bank — DIP-switch positions", content, "Generative bank DIP caption")
     require("f(t) = 6t", content, "Perlin mathematical foundation")
     require("P(move) = c / 1024", content, "Brownian mathematical foundation")
     require("C(t,", content, "Bezier mathematical foundation")
@@ -193,6 +233,13 @@ def validate(source: Path) -> None:
     require("cutoff(d) =", content, "Rain density law")
     require("α(s) = 4 + 8s", content, "Rain decay law")
     require("x[n+1] = 1 - a", content, "Attractor mathematical foundation")
+    require("b' = b", content, "Turing mathematical foundation")
+    require("Pτ =", content, "Markov mathematical foundation")
+    require("P(edit) =", content, "Motif mathematical foundation")
+    require("P(X = i)", content, "Urn mathematical foundation")
+    require("twelve algorithms across three", content, "three-bank capability overview")
+    require("Software can add new banks, but it cannot create additional physical switch states", content, "hardware selector limitation")
+    require("Musical character and origin", content, "musical value table section")
     require("flashed firmware image", content, "compile-time bank selection explanation")
     require("symmetric triangular random offset", content, "Bezier timing-distribution description")
     require("Brownian is deliberately different", content, "Brownian Speed semantic distinction")

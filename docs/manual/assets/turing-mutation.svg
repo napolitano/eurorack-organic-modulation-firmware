@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 455" role="img" aria-label="Turing locked loop and mutation">
+<title>Turing locked loop and mutation</title>
+<style>
+.title{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:29px;font-weight:700;fill:#1a1a1a}
+.subtitle{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:300;fill:#6e6e6e}
+.label{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:500;fill:#1a1a1a}
+.small{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:15px;font-weight:300;fill:#6e6e6e}
+</style>
+<rect width="1056" height="455" fill="white"/>
+<text x="34" y="52" class="title">Turing — repetition that can slowly rewrite itself</text>
+<text x="34" y="87" class="subtitle">Texture 0 locks the 16-bit register; mutation changes the future loop rather than drawing a new sequence</text>
+<text x="42" y="174" class="label">Locked</text><line x1="190" y1="196" x2="1015" y2="196" stroke="#e6e6e6"/>
+<polyline points="190.0,158.8 215.8,139.4 241.6,129.7 267.3,179.8 293.1,204.9 318.9,217.5 344.7,223.7 370.5,171.9 396.2,145.9 422.0,132.9 447.8,181.5 473.6,150.7 499.4,190.4 525.2,210.2 550.9,165.1 576.7,197.6 602.5,158.8 628.3,139.4 654.1,129.7 679.8,179.8 705.6,204.9 731.4,217.5 757.2,223.7 783.0,171.9 808.8,145.9 834.5,132.9 860.3,181.5 886.1,150.7 911.9,190.4 937.7,210.2 963.4,165.1 989.2,197.6 1015.0,158.8" fill="none" stroke="#8d8d8d" stroke-width="5" stroke-linejoin="round"/>
+<text x="42" y="331" class="label">One mutation</text><line x1="190" y1="352" x2="1015" y2="352" stroke="#e6e6e6"/>
+<polyline points="190.0,314.8 215.8,295.4 241.6,285.7 267.3,335.8 293.1,360.9 318.9,373.5 344.7,379.7 370.5,327.9 396.2,301.9 422.0,288.9 447.8,337.5 473.6,306.7 499.4,291.4 525.2,338.7 550.9,307.3 576.7,346.7 602.5,311.3 628.3,293.6 654.1,284.8 679.8,335.4 705.6,360.7 731.4,373.4 757.2,379.7 783.0,327.8 808.8,301.9 834.5,288.9 860.3,337.5 886.1,306.7 911.9,291.4 937.7,338.7 963.4,307.3 989.2,346.7 1015.0,311.3" fill="none" stroke="#e64a2b" stroke-width="5" stroke-linejoin="round"/>
+<line x1="473.6" y1="270" x2="473.6" y2="395" stroke="#f27962" stroke-width="2" stroke-dasharray="7 7"/>
+<text x="481.6" y="410" class="small">feedback bit mutated</text>
+</svg>

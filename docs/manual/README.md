@@ -58,13 +58,13 @@ The PDF validator intentionally does **not** treat the ODT `meta:page-count` fie
 
 ## Reusable vector assets
 
-The explanatory graphics from the manual are maintained as standalone SVGs in [`assets/`](assets/). The current inventory contains **23 true-vector assets**: the shared/Classic material, four bank-specific Organic DIP diagrams and five deterministic Organic algorithm figures. They are vector artwork rather than SVG wrappers around raster images, keeping diagrams sharp on GitHub, in generated documentation and in downstream layouts.
+The explanatory graphics from the manual are maintained as standalone SVGs in [`assets/`](assets/). The current inventory contains **35 true-vector assets**: the shared/Classic material, bank-specific Organic and Generative DIP diagrams, four compact DIP-slot symbols for the bank overview, and deterministic explanatory figures for both added banks. They are vector artwork rather than SVG wrappers around raster images, keeping diagrams sharp on GitHub, in generated documentation and in downstream layouts.
 
 <p align="center">
   <img src="assets/drift-front-panel.svg" alt="Drift front panel controls" width="220">
 </p>
 
-The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). Organic DIP diagrams and Organic algorithm figures are regenerated deterministically with `scripts/generate_organic_manual_assets.py`; generated geometry should not be edited by hand. These SVGs are covered by the same CC BY-NC 4.0 manual licence.
+The asset inventory and source mapping are documented in [`assets/README.md`](assets/README.md). Organic DIP diagrams and Organic algorithm figures are regenerated deterministically with `scripts/generate_organic_manual_assets.py`. Generative DIP diagrams, compact bank-slot symbols and Generative algorithm figures are regenerated with `scripts/generate_generative_manual_assets.py`; generated geometry should not be edited by hand. These SVGs are covered by the same CC BY-NC 4.0 manual licence.
 
 ## Behavioural source of truth
 
@@ -78,8 +78,12 @@ The manual describes the behavior of the firmware in this repository, including 
 - Vector is deterministic two-axis toroidal phase flow; Texture controls bounded cross-coupling rather than randomness.
 - Rain maps Texture to event **Density**, Speed to envelope-decay speed, and the physical post-DAC Attenuation control naturally acts as final output **Intensity**.
 - Attractor uses a fixed-point Hénon map with Texture-controlled parameter `a`; because the digital state space is finite, its trajectories are ultimately periodic rather than mathematically infinite chaotic orbits.
+- Turing uses a 16-bit feedback shift register whose Texture-controlled mutation probability is limited to 0..1/2; full inversion would be deterministic, not maximally random.
+- Markov uses an eight-state fixed voltage vocabulary and mixes a structured transition grammar with uniform exploration.
+- Motif preserves an explicit eight-step phrase and applies at most one structural edit at each completed phrase boundary.
+- Urn uses bounded, leaky reinforcement over eight fixed output states; it is Pólya-inspired rather than an exact classical Pólya urn.
 
-The manual covers **both compile-time banks and all eight modes**. A dedicated **Algorithm banks** section explains the distinction between flashing a bank and selecting an algorithm. Each bank then has its own four DIP-switch diagrams before its mode descriptions; the manual deliberately avoids a cross-bank DIP comparison. Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains the musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/) and [`../analysis/algorithm-banks/`](../analysis/algorithm-banks/).
+The manual covers **all three compile-time banks and all twelve modes**. A dedicated **Algorithm banks** section explains the distinction between flashing a bank and selecting an algorithm. Each bank then has its own four DIP-switch diagrams before its mode descriptions. The Algorithm banks introduction provides a compact three-bank slot table and a separate origin/musical-value table, while the bank sections themselves remain bank-specific rather than using a cross-bank DIP comparison. Each mode ends with a **Mathematical foundations** subsection that states the core equations and explains the musical consequence. The detailed engineering derivations remain in [`../analysis/algorithms/`](../analysis/algorithms/) and [`../analysis/algorithm-banks/`](../analysis/algorithm-banks/).
 
 ## Source contract
 

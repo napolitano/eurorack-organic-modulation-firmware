@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 455" role="img" aria-label="Markov recurring state vocabulary">
+<title>Markov recurring state vocabulary</title>
+<style>
+.title{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:29px;font-weight:700;fill:#1a1a1a}
+.subtitle{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:300;fill:#6e6e6e}
+.label{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:500;fill:#1a1a1a}
+.small{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:15px;font-weight:300;fill:#6e6e6e}
+</style>
+<rect width="1056" height="455" fill="white"/>
+<text x="34" y="52" class="title">Markov — familiar states, changing routes</text>
+<text x="34" y="87" class="subtitle">The next value depends on the current state; Texture moves from a structured grammar toward free exploration</text>
+<line x1="155" y1="375" x2="1015" y2="375" stroke="#eeeeee"/><text x="120" y="380" text-anchor="end" class="small">S0</text><line x1="155" y1="341" x2="1015" y2="341" stroke="#eeeeee"/><text x="120" y="346" text-anchor="end" class="small">S1</text><line x1="155" y1="307" x2="1015" y2="307" stroke="#eeeeee"/><text x="120" y="312" text-anchor="end" class="small">S2</text><line x1="155" y1="273" x2="1015" y2="273" stroke="#eeeeee"/><text x="120" y="278" text-anchor="end" class="small">S3</text><line x1="155" y1="239" x2="1015" y2="239" stroke="#eeeeee"/><text x="120" y="244" text-anchor="end" class="small">S4</text><line x1="155" y1="205" x2="1015" y2="205" stroke="#eeeeee"/><text x="120" y="210" text-anchor="end" class="small">S5</text><line x1="155" y1="171" x2="1015" y2="171" stroke="#eeeeee"/><text x="120" y="176" text-anchor="end" class="small">S6</text><line x1="155" y1="137" x2="1015" y2="137" stroke="#eeeeee"/><text x="120" y="142" text-anchor="end" class="small">S7</text>
+<polyline points="165.0,375.0 188.0,375.0 210.9,375.0 233.9,375.0 256.9,341.0 279.9,205.0 302.8,205.0 325.8,171.0 348.8,307.0 371.8,273.0 394.7,239.0 417.7,239.0 440.7,205.0 463.6,205.0 486.6,205.0 509.6,341.0 532.6,307.0 555.5,307.0 578.5,341.0 601.5,307.0 624.5,273.0 647.4,273.0 670.4,239.0 693.4,239.0 716.4,239.0 739.3,273.0 762.3,307.0 785.3,307.0 808.2,273.0 831.2,273.0 854.2,307.0 877.2,307.0 900.1,171.0 923.1,137.0 946.1,375.0 969.1,375.0 992.0,341.0 1015.0,341.0" fill="none" stroke="#e64a2b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="155" y="430" class="small">Example structured-state path; physical voltages are a fixed shuffled eight-level vocabulary</text>
+</svg>

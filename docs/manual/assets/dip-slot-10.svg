@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 120" role="img" aria-label="DIP slot ON / OFF">
+<title>DIP slot ON / OFF</title>
+<rect width="220" height="120" fill="white"/>
+<rect x="20" y="15" width="180" height="78" rx="8" fill="#f1f1f1" stroke="#1a1a1a" stroke-width="4"/>
+<rect x="44" y="28" width="50" height="60" rx="5" fill="white" stroke="#1a1a1a" stroke-width="3"/>
+<rect x="52" y="35" width="34" height="18" rx="3" fill="#e64a2b"/>
+<rect x="126" y="28" width="50" height="60" rx="5" fill="white" stroke="#1a1a1a" stroke-width="3"/>
+<rect x="134" y="62" width="34" height="18" rx="3" fill="#8d8d8d"/>
+<text x="69" y="112" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="13" fill="#6e6e6e">1</text>
+<text x="151" y="112" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="13" fill="#6e6e6e">2</text>
+</svg>

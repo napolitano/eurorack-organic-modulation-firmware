@@ -23,12 +23,14 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Dedicated mathematical unit suites and developer analyses for all four Organic algorithms plus a bank-level architecture/control-contract document.
 - Acceptance criteria AC-33 through AC-37 introduced compile-time bank selection and the four Organic mathematical contracts.
 - Tagged-release packaging supports Classic, Organic and Generative firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
-- Expanded user manual covering both compile-time banks and all eight algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for Fractal, Vector, Rain and Attractor.
+- Expanded user manual covering all three compile-time banks and all twelve algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for the Generative bank.
 - Nine deterministic true-vector Organic-bank documentation assets plus a generator: four bank-specific DIP-switch diagrams and five explanatory figures for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor.
-- New vector front/back manual covers that identify the Classic and Organic banks without retaining the former Classic-only algorithm list.
+- New vector front/back manual covers that identify Classic, Organic and Generative and the current twelve-algorithm scope.
 
 ### Changed
 
+- User manual Algorithm banks introduction now explains the expanded twelve-algorithm potential across three banks, the unavoidable four-selector-state hardware boundary, a compact bank/slot table with DIP symbols, and a concise origin/musical-value table for all twelve algorithms.
+- Added a complete Generative bank section to the user manual with bank-specific Turing/Markov/Motif/Urn DIP diagrams, four deterministic explanatory SVGs, mathematical foundations and patch-oriented musical interpretation.
 - User manual bank documentation now uses a dedicated Algorithm banks introduction, separate top-level Classic and Organic sections, bank-specific DIP-switch SVGs, and identical heading/subsection styling across all eight algorithms; the former cross-bank configuration comparison is removed.
 - Root bank documentation uses explicit `README-BANK-CLASSIC.md`, `README-BANK-ORGANIC.md` and `README-BANK-GENERATIVE.md` names, while the main README provides a compact three-bank overview and links to each detailed guide.
 - Dependabot CI dependency updates are now consolidated across GitHub Actions and Python into one monthly multi-ecosystem pull request instead of one pull request per ecosystem.
