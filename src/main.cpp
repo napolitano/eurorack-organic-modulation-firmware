@@ -11,6 +11,8 @@
  */
 #include "platform/nano_atmega328p/FirmwareController.h"
 
+#include <Arduino.h>
+
 namespace {
 
 /// Single firmware composition root used by Arduino's setup()/loop() entry points.

@@ -15,6 +15,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Fixed
 
+- Fixed the Arduino composition root linkage by including `Arduino.h` in `src/main.cpp`, so `setup()` and `loop()` use the C linkage expected by the AVR Arduino core.
 - Corrected the manual PDF font validator so `pdffonts` names containing spaces (for example `Ubuntu Light`) are parsed as a single font name instead of being truncated at the first space.
 - Use Ubuntu 24.04's current `fonts-ubuntu` package for release publication and print resolved/embedded font diagnostics before validating the manual artifact.
 
