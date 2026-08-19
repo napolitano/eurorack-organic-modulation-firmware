@@ -20,6 +20,7 @@ The system rig does not contain a second firmware implementation. It supplies de
 ## Algorithm-specific mathematical suites
 
 Each Drift mode has a dedicated suite. Classic remains the default compile-time bank; Organic, Generative, Ambient and Electronica are exercised by their respective `native_organic*`, `native_generative*`, `native_ambient*` and `native_electronica*` environments.
+The metadata job also runs `scripts/test_ci_bank_contract.py`, which structurally guards the five-bank native/coverage/sanitizer/AVR/timing matrix so an implemented bank cannot silently disappear from CI qualification.
 
 | Bank | Suite | Primary proof obligations |
 |---|---|---|

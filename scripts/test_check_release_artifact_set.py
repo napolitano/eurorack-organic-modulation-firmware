@@ -54,6 +54,18 @@ def main() -> int:
         assert any("BUILD-INFO-electronica-nano-new" in error for error in errors)
 
         populate(root, version, banks)
+        electronica_elf = root / f"fm-drift-electronica-nano-new-bootloader.{version}.elf"
+        electronica_elf.unlink()
+        errors = checker.validate_release_artifacts(root, version, banks)
+        assert any("electronica-nano-new-bootloader" in error for error in errors)
+
+        populate(root, version, banks)
+        electronica_old_build_info = root / f"BUILD-INFO-electronica-nano-old.{version}.txt"
+        electronica_old_build_info.unlink()
+        errors = checker.validate_release_artifacts(root, version, banks)
+        assert any("BUILD-INFO-electronica-nano-old" in error for error in errors)
+
+        populate(root, version, banks)
         generative_hex = root / f"fm-drift-generative-nano-new-bootloader.{version}.hex"
         generative_hex.unlink()
         errors = checker.validate_release_artifacts(root, version, banks)

@@ -27,6 +27,7 @@ jobs:
       - run: python scripts/test_prepare_release_artifacts.py
       - run: PYTHONPATH=scripts python scripts/test_check_release_artifact_set.py
       - run: python scripts/test_release_workflow_bank_contract.py
+      - run: python scripts/test_ci_bank_contract.py
       - run: python scripts/test_freeze_user_manual.py
 
   native-tests:

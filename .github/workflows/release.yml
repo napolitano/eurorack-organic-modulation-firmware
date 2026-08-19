@@ -169,6 +169,9 @@ jobs:
           if [[ -f scripts/test_release_workflow_bank_contract.py ]]; then
             python scripts/test_release_workflow_bank_contract.py
           fi
+          if [[ -f scripts/test_ci_bank_contract.py ]]; then
+            python scripts/test_ci_bank_contract.py
+          fi
           if [[ -f scripts/test_freeze_user_manual.py ]]; then
             python scripts/test_freeze_user_manual.py
           fi

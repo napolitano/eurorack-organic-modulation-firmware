@@ -290,7 +290,7 @@ Timing qualification uses `nanoatmega328new_timing` for Classic, `nanoatmega328n
 
 ## Release artifacts
 
-Tagged releases publish **every compile-time bank present in the tagged source** for both supported Arduino Nano bootloaders once that bank also satisfies the release-documentation guards. The current source is prepared to build Classic, Organic, Generative, Ambient and Electronica. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
+Tagged releases publish **every compile-time bank present in the tagged source** for both supported Arduino Nano bootloaders once that bank also satisfies the release-documentation guards. The current CI and tagged-release workflow build Classic, Organic, Generative, Ambient and Electronica. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
 
 | Bank | New bootloader | Old bootloader |
 |---|---|---|
@@ -300,7 +300,7 @@ Tagged releases publish **every compile-time bank present in the tagged source**
 | **Ambient** | `fm-drift-ambient-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-ambient-nano-old-bootloader.X.Y.Z.hex` |
 | **Electronica** | `fm-drift-electronica-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-electronica-nano-old-bootloader.X.Y.Z.hex` |
 
-Matching `.elf` files are included for debugging/provenance. Once Electronica is included in a tagged release, the five-bank artifact set contains `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **ten build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests.
+Matching `.elf` files are included for debugging/provenance. A five-bank release therefore contains **20 firmware binaries** (five banks × two bootloaders × HEX/ELF), `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **ten build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests. The release artifact contract fails before checksum generation or upload if any expected binary/provenance file is missing or an unexpected bank binary is present.
 
 > [!IMPORTANT]
 > Flashing chooses **Classic, Organic, Generative, Ambient or Electronica**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.

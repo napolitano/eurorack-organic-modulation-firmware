@@ -6,6 +6,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
+- Electronica release/CI delivery is now guarded end-to-end: CI must qualify Electronica natively, under coverage and sanitizers, and build both Nano bootloader variants plus the timing image; tagged releases must package both Electronica HEX/ELF pairs and both BUILD-INFO provenance files before checksums or upload.
 - Expanded the maintained user manual to the Electronica bank (Pump, Acid, Shuffle and Polymeter), bringing the end-user scope to five banks and twenty algorithms. Added four bank-specific DIP diagrams, four deterministic Electronica explanatory SVGs, exact implemented mathematical foundations, musical-value/origin entries and free-running 30–240 BPM limitations.
 
 - Electronica-bank design specification defining Pump, Acid, Shuffle and Polymeter as four deterministic tempo/grid-oriented CV modes for house, acid, techno and adjacent electronic styles, including a duplication audit against all existing banks and the planned Percussion concepts.
@@ -34,7 +35,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Dedicated Organic PlatformIO build, native-test, sanitizer, coverage and timing environments for both Nano bootloader variants where applicable.
 - Dedicated mathematical unit suites and developer analyses for all four Organic algorithms plus a bank-level architecture/control-contract document.
 - Acceptance criteria AC-33 through AC-37 introduced compile-time bank selection and the four Organic mathematical contracts.
-- Tagged-release packaging supports Classic, Organic, Generative and Ambient firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
+- Tagged-release packaging supports Classic, Organic, Generative, Ambient and Electronica firmware banks, each built for the new and old Arduino Nano bootloader with unambiguous versioned HEX/ELF filenames, generated firmware-artifact mapping and per-image build provenance.
 - The release workflow now enforces an explicit bank-aware artifact contract before checksums/upload: every selected bank must provide non-empty new/old-bootloader HEX and ELF images plus matching build-provenance records, and unexpected firmware-bank artifacts fail the release.
 - Expanded user manual covering all four compile-time banks and all sixteen algorithms, including control semantics, DIP mappings, mathematical foundations and musical interpretation for the Generative and Ambient banks.
 - Nine deterministic true-vector Organic-bank documentation assets plus a generator: four bank-specific DIP-switch diagrams and five explanatory figures for bank overview, Fractal texture, Vector flow, Rain density and the fixed-point Hénon attractor.
@@ -55,7 +56,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 - Release runs for the same tag now share a concurrency group; retriggering a tag cancels an obsolete in-progress run instead of consuming Actions time in parallel.
 - `DriftEngine` now owns and dispatches only the compile-time-selected algorithm bank, so inactive-bank algorithm state does not consume SRAM in the resulting firmware image.
 - Generic selection, integration, property and system tests are bank-aware and exercise the four slots of the active compile-time bank.
-- CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic, Organic, Generative and Ambient builds independently.
+- CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic, Organic, Generative, Ambient and Electronica builds independently.
 - Organic per-sample control mappings avoid general integer division in their hot paths where a bounded power-of-two mapping provides the documented behavior.
 - README, testing documentation and algorithm-analysis index now describe the compile-time bank model and the Organic control/DIP mapping.
 - README and release-process documentation now explain multi-bank release files, bootloader variants, bank-vs-DIP selection boundary and the versioned release manifest.
