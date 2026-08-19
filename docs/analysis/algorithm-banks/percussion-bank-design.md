@@ -28,7 +28,7 @@ The bank itself is selected at build/flash time. The rear DIP switches select on
 
 ## 3. Shared tempo and pulse contract
 
-Percussion uses the same nominal tempo scale already defined for Electronica. With normalized combined Speed control $u\in[0,1]$,
+With no valid external clock, Percussion uses the same nominal tempo scale already defined for Electronica, but **Speed CV is not part of that tempo sum**. The Speed knob alone supplies normalized internal tempo control $u\in[0,1]$,
 
 $$
 B(u)=30\cdot 2^{3u}\ \text{BPM}.
@@ -52,11 +52,13 @@ Euclid, Repeat and Probability output full-scale pulse events. The initial pulse
 
 Humanize uses the same 10 ms pulse duration but intentionally varies pulse amplitude as part of its musical contract.
 
-### External synchronization limitation
+### Speed CV as optional external clock
 
-The current Drift hardware has no dedicated clock or reset input. Percussion is therefore **free-running**. The firmware can count its own steps, bars and phrases exactly, but it cannot know where bar 1 of an external sequencer, DAW or modular clock begins.
+Percussion repurposes **Speed CV** as an optional external quarter-note clock input. It is no longer summed with the Speed knob in this bank. The firmware uses hysteresis around approximately 1 V LOW / 2 V HIGH, requires two valid rising edges before lock, and measures their scheduler-sample interval. One accepted rising edge represents one quarter note. Sixteenth/eighth subdivisions and ratchet positions are derived from that measured period.
 
-Consequently, wording such as "fill every eight bars" means every eight internally generated Drift bars after the algorithm starts. It must not be documented as transport-synchronized behavior.
+With no valid external pulse train, Percussion runs from the Speed knob alone at the 30..240 BPM internal mapping. If an active external clock disappears for more than 2.5 measured periods, timing falls back automatically to the current Speed-knob rate without resetting bar/phrase state. A later lock defines a fresh deterministic phrase origin because the hardware still has no independent reset input.
+
+> **Electrical limitation of the current hardware:** the original Speed CV input is a 0..5 V CV input, not a protected general-purpose Eurorack trigger input. The Percussion clock feature is therefore specified for **0..5 V clocks only**. 10 V triggers/clocks are explicitly unsupported on the current hardware revision. Firmware cannot make the analogue input stage overvoltage-tolerant.
 
 ## 4. Shared phrase engine
 
@@ -101,16 +103,16 @@ $$
 
 Euclid, Repeat and Probability interpret $F$ differently. Humanize intentionally ignores fill state because changing event count would contradict its role as a timing/velocity humanizer.
 
-The phrase counter starts from zero when the algorithm starts. There is no external reset source on current hardware.
+The phrase counter starts from zero when the algorithm starts. External-clock acquisition restarts the phrase from zero so the second accepted edge has deterministic bar-1/beat-1 semantics. Clock loss does not reset the phrase. There is no independent external reset source on current hardware.
 
 ## 5. Shared control contract
 
 | Algorithm | Speed | Texture | Phrase behavior | Analog Attenuation |
 |---|---|---|---|---|
-| **Euclid** | nominal tempo | Euclidean hit density; also shortens phrase and strengthens fill | deterministic tail fill on final bar | final pulse level |
-| **Repeat** | nominal tempo | repeat probability and ratchet depth; also shortens phrase | forced repeat escalation near phrase end | final pulse level |
-| **Probability** | nominal tempo | probability of secondary/ghost hits; also shortens phrase | optional-hit probabilities increase on final bar | final pulse level |
-| **Humanize** | nominal tempo | microtiming + pulse-amplitude deviation | no fill; event count remains fixed | final pulse level |
+| **Euclid** | Speed knob internal tempo / Speed CV quarter-note clock | Euclidean hit density; also shortens phrase and strengthens fill | deterministic tail fill on final bar | final pulse level |
+| **Repeat** | Speed knob internal tempo / Speed CV quarter-note clock | repeat probability and ratchet depth; also shortens phrase | forced repeat escalation near phrase end | final pulse level |
+| **Probability** | Speed knob internal tempo / Speed CV quarter-note clock | probability of secondary/ghost hits; also shortens phrase | optional-hit probabilities increase on final bar | final pulse level |
+| **Humanize** | Speed knob internal tempo / Speed CV quarter-note clock | microtiming + pulse-amplitude deviation | no fill; event count remains fixed | final pulse level |
 
 Texture knob and Texture CV are summed and saturated in the normal 10-bit Drift control domain. For the first three algorithms, rhythm parameters are latched at musically safe boundaries rather than allowing mid-step pattern tearing.
 

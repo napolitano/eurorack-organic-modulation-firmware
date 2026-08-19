@@ -209,7 +209,7 @@
     },
     {
       "id": "AC-18",
-      "description": "Both B\u00e9zier easing functions match their cubic reference equations and are monotonic.",
+      "description": "Both Bézier easing functions match their cubic reference equations and are monotonic.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -223,7 +223,7 @@
     },
     {
       "id": "AC-19",
-      "description": "B\u00e9zier Texture morph is continuous and the triangular inverse-CDF spans both mathematical endpoints without a final plateau.",
+      "description": "Bézier Texture morph is continuous and the triangular inverse-CDF spans both mathematical endpoints without a final plateau.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -241,7 +241,7 @@
     },
     {
       "id": "AC-20",
-      "description": "B\u00e9zier phase accumulation preserves wrap overshoot.",
+      "description": "Bézier phase accumulation preserves wrap overshoot.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -345,7 +345,7 @@
     },
     {
       "id": "AC-26",
-      "description": "B\u00e9zier segment-speed variation has the documented center dead zone, symmetric knob response, monotonic CV contribution and bounded full-scale behavior.",
+      "description": "Bézier segment-speed variation has the documented center dead zone, symmetric knob response, monotonic CV contribution and bounded full-scale behavior.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -363,7 +363,7 @@
     },
     {
       "id": "AC-27",
-      "description": "B\u00e9zier endpoint interpolation and multi-segment A-to-B state transitions remain mathematically consistent across repeated phase rollovers.",
+      "description": "Bézier endpoint interpolation and multi-segment A-to-B state transitions remain mathematically consistent across repeated phase rollovers.",
       "tests": [
         {
           "file": "test/unit/test_bezier_algorithm/test_main.cpp",
@@ -531,7 +531,7 @@
     },
     {
       "id": "AC-37",
-      "description": "Attractor implements the documented fixed-point H\u00e9non map over the complete Texture parameter range, remains bounded and emits deterministic 12-bit interpolated output.",
+      "description": "Attractor implements the documented fixed-point Hénon map over the complete Texture parameter range, remains bounded and emits deterministic 12-bit interpolated output.",
       "tests": [
         {
           "file": "test/unit/test_attractor_algorithm/test_main.cpp",
@@ -790,6 +790,132 @@
         {
           "file": "test/unit/test_polymeter_algorithm/test_main.cpp",
           "case": "test_polymeter_recurrence_lengths_are_exact_lcms"
+        }
+      ]
+    },
+    {
+      "id": "AC-53",
+      "description": "The Percussion compile-time bank maps the four rear DIP slots to Euclid, Repeat, Probability and Humanize while preserving the shared electrical truth table.",
+      "tests": [
+        {
+          "file": "test/integration/test_selection/test_main.cpp",
+          "case": "test_selected_bank_config_pin_mapping"
+        }
+      ]
+    },
+    {
+      "id": "AC-54",
+      "description": "Euclid maps Texture to E(k,16) hit counts 2..13, uses canonical masks with exact population and applies deterministic phrase-end tail fills without removing base hits.",
+      "tests": [
+        {
+          "file": "test/unit/test_euclid_algorithm/test_main.cpp",
+          "case": "test_euclid_hit_count_maps_exactly_to_2_through_13"
+        },
+        {
+          "file": "test/unit/test_euclid_algorithm/test_main.cpp",
+          "case": "test_euclid_masks_have_requested_population_and_step_zero"
+        },
+        {
+          "file": "test/unit/test_euclid_algorithm/test_main.cpp",
+          "case": "test_fill_tail_masks_only_add_final_quarter_candidates"
+        }
+      ]
+    },
+    {
+      "id": "AC-55",
+      "description": "Repeat preserves guaranteed quarter-note anchors, maps Texture to the documented ratchet probability/count and applies exact phrase-fill minimum repeat counts.",
+      "tests": [
+        {
+          "file": "test/unit/test_repeat_algorithm/test_main.cpp",
+          "case": "test_repeat_probability_and_count_endpoints"
+        },
+        {
+          "file": "test/unit/test_repeat_algorithm/test_main.cpp",
+          "case": "test_ratchet_thresholds_are_evenly_inside_first_half_beat"
+        },
+        {
+          "file": "test/unit/test_repeat_algorithm/test_main.cpp",
+          "case": "test_fill_forcing_matches_phrase_contract"
+        }
+      ]
+    },
+    {
+      "id": "AC-56",
+      "description": "Probability preserves primary quarter-note hits, uses exact secondary and quadratic ghost thresholds, and applies saturating phrase/final-quarter probability boosts.",
+      "tests": [
+        {
+          "file": "test/unit/test_probability_algorithm/test_main.cpp",
+          "case": "test_metric_classes_match_documented_masks"
+        },
+        {
+          "file": "test/unit/test_probability_algorithm/test_main.cpp",
+          "case": "test_probability_endpoints_match_contract"
+        },
+        {
+          "file": "test/unit/test_probability_algorithm/test_main.cpp",
+          "case": "test_fill_cutoffs_saturate_and_tail_never_decreases"
+        }
+      ]
+    },
+    {
+      "id": "AC-57",
+      "description": "Humanize preserves the fixed eighth-note source while bounding independent grid-relative timing jitter to ±30 samples and pulse amplitude to the documented Texture-controlled range.",
+      "tests": [
+        {
+          "file": "test/unit/test_humanize_algorithm/test_main.cpp",
+          "case": "test_humanize_jitter_radius_maps_zero_to_thirty_samples"
+        },
+        {
+          "file": "test/unit/test_humanize_algorithm/test_main.cpp",
+          "case": "test_humanize_random_mapping_stays_inside_exact_bounds"
+        },
+        {
+          "file": "test/unit/test_humanize_algorithm/test_main.cpp",
+          "case": "test_humanize_texture_zero_is_neutral"
+        }
+      ]
+    },
+    {
+      "id": "AC-58",
+      "description": "Percussion repurposes Speed CV as a hysteretic 0..5 V quarter-note clock input: internal Speed-knob timing remains active until two valid rising edges acquire external timing, steady DC cannot lock, and loss after 2.5 measured periods falls back automatically to the internal increment.",
+      "tests": [
+        {
+          "file": "test/unit/test_percussion_clock/test_main.cpp",
+          "case": "test_clock_uses_speed_knob_increment_until_two_valid_edges"
+        },
+        {
+          "file": "test/unit/test_percussion_clock/test_main.cpp",
+          "case": "test_clock_hysteresis_requires_low_release_before_next_rising_edge"
+        },
+        {
+          "file": "test/unit/test_percussion_clock/test_main.cpp",
+          "case": "test_steady_high_speed_cv_never_becomes_external_clock"
+        },
+        {
+          "file": "test/unit/test_percussion_clock/test_main.cpp",
+          "case": "test_external_clock_times_out_after_two_and_a_half_periods"
+        },
+        {
+          "file": "test/unit/test_euclid_algorithm/test_main.cpp",
+          "case": "test_euclid_acquires_external_clock_on_second_valid_edge"
+        },
+        {
+          "file": "test/unit/test_euclid_algorithm/test_main.cpp",
+          "case": "test_percussion_speed_cv_dc_does_not_modulate_internal_tempo"
+        }
+      ]
+    },
+    {
+      "id": "AC-59",
+      "description": "Humanize positive timing offsets are counted from the nominal grid boundary, while negative offsets remain predictive and all event timing stays referenced to the independent nominal clock.",
+      "tests": [
+        {
+          "file": "test/unit/test_humanize_algorithm/test_main.cpp",
+          "case": "test_humanize_positive_jitter_starts_after_nominal_boundary"
+        },
+        {
+          "file": "test/unit/test_humanize_algorithm/test_main.cpp",
+          "case": "test_humanize_texture_zero_is_neutral"
         }
       ]
     }

@@ -43,6 +43,11 @@
 #include "fmd/domain/electronica/PolymeterAlgorithm.h"
 #include "fmd/domain/electronica/PumpAlgorithm.h"
 #include "fmd/domain/electronica/ShuffleAlgorithm.h"
+#elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
+#include "fmd/domain/percussion/EuclidAlgorithm.h"
+#include "fmd/domain/percussion/HumanizeAlgorithm.h"
+#include "fmd/domain/percussion/ProbabilityAlgorithm.h"
+#include "fmd/domain/percussion/RepeatAlgorithm.h"
 #endif
 
 namespace fmd {
@@ -106,6 +111,11 @@ class DriftEngine {
   AcidAlgorithm acidAlgorithm_;            ///< Electronica deterministic riff contour.
   ShuffleAlgorithm shuffleAlgorithm_;      ///< Electronica long/short timing state.
   PolymeterAlgorithm polymeterAlgorithm_;  ///< Electronica polymetric accent state.
+#elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
+  EuclidAlgorithm euclidAlgorithm_;          ///< Percussion Euclidean phrase state.
+  RepeatAlgorithm repeatAlgorithm_;          ///< Percussion ratchet phrase state.
+  ProbabilityAlgorithm probabilityAlgorithm_;///< Percussion stochastic metric state.
+  HumanizeAlgorithm humanizeAlgorithm_;      ///< Percussion microtiming state.
 #endif
 };
 

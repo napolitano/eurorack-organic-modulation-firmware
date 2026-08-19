@@ -1,6 +1,6 @@
 # Free Modular Drift — Organic Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [User manual](docs/manual/README.md) · [Organic engineering design](docs/analysis/algorithm-banks/organic-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [User manual](docs/manual/README.md) · [Organic engineering design](docs/analysis/algorithm-banks/organic-bank-design.md) · [Percussion bank](README-BANK-PERCUSSION.md)
 
 The **Organic bank** is the first compile-time alternative bank for Drift. It keeps the original hardware and the same two rear DIP switches, but fills the four slots with **Fractal, Vector, Rain and Attractor**. The bank explores multi-scale correlated noise, deterministic two-dimensional flow, stochastic event density and nonlinear dynamical motion.
 

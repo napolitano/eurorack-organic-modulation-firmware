@@ -38,11 +38,10 @@ BANK_MEMBERS = {
         "AmbientAlgorithmMath",
     ),
     "electronica": (
-        "PumpAlgorithm",
-        "AcidAlgorithm",
-        "ShuffleAlgorithm",
-        "PolymeterAlgorithm",
-        "ElectronicaAlgorithmMath",
+        "PumpAlgorithm", "AcidAlgorithm", "ShuffleAlgorithm", "PolymeterAlgorithm", "ElectronicaAlgorithmMath",
+    ),
+    "percussion": (
+        "EuclidAlgorithm", "RepeatAlgorithm", "ProbabilityAlgorithm", "HumanizeAlgorithm", "PercussionAlgorithmMath",
     ),
 }
 
@@ -92,7 +91,7 @@ def main() -> None:
         if match:
             fail(f"stale unqualified bank include in {path.relative_to(ROOT)}: {match.group(0)}")
 
-    print("domain-bank-layout: five bank directories and qualified includes passed")
+    print("domain-bank-layout: six bank directories and qualified includes passed")
 
 
 if __name__ == "__main__":

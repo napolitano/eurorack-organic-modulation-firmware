@@ -24,6 +24,8 @@
 #define FMD_BANK_AMBIENT 3
 /** Alternative Electronica bank containing Pump, Acid, Shuffle and Polymeter. */
 #define FMD_BANK_ELECTRONICA 4
+/** Alternative Percussion bank containing Euclid, Repeat, Probability and Humanize. */
+#define FMD_BANK_PERCUSSION 5
 
 #ifndef FMD_ALGORITHM_BANK
 /** Default to the original/classic bank when no compiler flag selects another bank. */
@@ -34,8 +36,9 @@
     FMD_ALGORITHM_BANK != FMD_BANK_ORGANIC && \
     FMD_ALGORITHM_BANK != FMD_BANK_GENERATIVE && \
     FMD_ALGORITHM_BANK != FMD_BANK_AMBIENT && \
-    FMD_ALGORITHM_BANK != FMD_BANK_ELECTRONICA
-#error "FMD_ALGORITHM_BANK must be Classic (0), Organic (1), Generative (2), Ambient (3), or Electronica (4)"
+    FMD_ALGORITHM_BANK != FMD_BANK_ELECTRONICA && \
+    FMD_ALGORITHM_BANK != FMD_BANK_PERCUSSION
+#error "FMD_ALGORITHM_BANK must be Classic (0), Organic (1), Generative (2), Ambient (3), Electronica (4), or Percussion (5)"
 #endif
 
 namespace fmd {
@@ -46,7 +49,8 @@ enum class AlgorithmBank : uint8_t {
   Organic = FMD_BANK_ORGANIC,       ///< Fractal, Vector, Rain and Hénon attractor.
   Generative = FMD_BANK_GENERATIVE, ///< Turing, Markov, Motif and Urn.
   Ambient = FMD_BANK_AMBIENT,       ///< Current, Anchor, Breath and Fog.
-  Electronica = FMD_BANK_ELECTRONICA ///< Pump, Acid, Shuffle and Polymeter.
+  Electronica = FMD_BANK_ELECTRONICA, ///< Pump, Acid, Shuffle and Polymeter.
+  Percussion = FMD_BANK_PERCUSSION ///< Euclid, Repeat, Probability and Humanize.
 };
 
 /** Bank compiled into this firmware image. */

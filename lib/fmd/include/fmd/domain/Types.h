@@ -45,7 +45,11 @@ enum class Algorithm : uint8_t {
   Pump = 16,      ///< Electronica: free-running duck/recovery contour.
   Acid = 17,      ///< Electronica: deterministic accented/sliding 16-step contour.
   Shuffle = 18,   ///< Electronica: deterministic long/short timing modulation.
-  Polymeter = 19  ///< Electronica: four-against-odd-meter accent process.
+  Polymeter = 19, ///< Electronica: four-against-odd-meter accent process.
+  Euclid = 20,     ///< Percussion: phrase-aware 16-step Euclidean pulse rhythm.
+  Repeat = 21,     ///< Percussion: quarter-note anchors with ratchet clusters.
+  Probability = 22,///< Percussion: metrically weighted stochastic pulse rhythm.
+  Humanize = 23    ///< Percussion: bounded timing/amplitude variation.
 };
 
 /**
@@ -55,7 +59,7 @@ enum class Algorithm : uint8_t {
  * helpers clamp defensive out-of-range inputs where required by their contract.
  */
 struct ControlFrame {
-  uint16_t speedCv;      ///< Speed CV input, ADC code 0..1023.
+  uint16_t speedCv;      ///< Speed CV ADC code; Percussion interprets it as 0..5 V clock input.
   uint16_t textureCv;    ///< Texture CV input, ADC code 0..1023.
   uint16_t speedKnob;    ///< Speed potentiometer, ADC code 0..1023.
   uint16_t textureKnob;  ///< Texture potentiometer, ADC code 0..1023.

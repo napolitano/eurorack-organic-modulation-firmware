@@ -20,8 +20,8 @@ void test_electronica_tempo_mapping_has_exact_endpoints() {
   MemoryReferenceTables tables;
   const uint32_t minimum = fmd::electronicamath::quarterNotePhaseIncrement(tables, 0U, 0U);
   const uint32_t maximum = fmd::electronicamath::quarterNotePhaseIncrement(tables, 1023U, 1023U);
-  TEST_ASSERT_EQUAL_UINT32(fmd::phaseIncrementFromDecihertzQ16_16(5UL << 16U), minimum);
-  TEST_ASSERT_EQUAL_UINT32(fmd::phaseIncrementFromDecihertzQ16_16(40UL << 16U), maximum);
+  TEST_ASSERT_EQUAL_UINT32(fmd::phaseIncrementFromDecihertzQ16_16(20UL << 16U), minimum);
+  TEST_ASSERT_EQUAL_UINT32(fmd::phaseIncrementFromDecihertzQ16_16(160UL << 16U), maximum);
 }
 
 void test_pump_recovery_endpoint_has_exact_texture_endpoints() {

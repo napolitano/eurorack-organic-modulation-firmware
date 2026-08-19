@@ -61,11 +61,15 @@ This creates two distinct time scales:
 - intermittent repeats can appear **inside ordinary bars**;
 - the phrase end produces a guaranteed stronger repeat gesture when $F>0$.
 
+### Percussion clock-source contract
+
+In this bank, Speed CV is repurposed as a **0..5 V quarter-note clock input** rather than being summed with the Speed knob. Two valid rising edges acquire external timing; loss for more than 2.5 measured periods returns automatically to the Speed-knob clock. The original hardware is not specified for 10 V trigger inputs, so 10 V clocks are explicitly unsupported until the analogue input stage is revised.
+
 ## 4. Reference algorithm
 
 At every processing sample:
 
-1. map Speed to the Percussion 30..240 BPM quarter-note phase;
+1. use the Speed knob for the internal 30..240 BPM quarter-note phase, or replace it with the measured Speed-CV quarter-note interval after external-clock lock;
 2. advance the nominal beat/phrase counters while preserving phase overshoot;
 3. run the fixed 25-sample pulse countdown;
 4. on each quarter boundary, determine whether the anchor is forced by phrase-fill state;
@@ -80,7 +84,7 @@ Texture should be latched at the start of each bar so a CV change cannot alter t
 
 Ratchets, flams, retriggers and rolls are established sequencing/percussion techniques, but this exact anchor/probability/cluster/phrase contract is project-defined. The design deliberately avoids cloning a specific sequencer's ratchet interface or preset patterns.
 
-There is no equivalent upstream Drift mode. The inherited contracts are the scheduler, DAC path, seeded RNG and combined Speed/Texture control handling.
+There is no equivalent upstream Drift mode. The inherited contracts are the scheduler, DAC path, seeded RNG and bank-specific Speed-clock / Texture control handling.
 
 ## 6. Behavioral analysis
 

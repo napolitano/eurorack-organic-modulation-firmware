@@ -80,9 +80,13 @@ relative to the independent nominal eighth-note phase/grid.
 
 At 240 BPM the eighth-note interval is 125 ms. Even two successive events displaced toward each other by the maximum 12 ms remain 101 ms apart, so event order cannot invert.
 
+### Percussion clock-source contract
+
+In this bank, Speed CV is repurposed as a **0..5 V quarter-note clock input** rather than being summed with the Speed knob. Two valid rising edges acquire external timing; loss for more than 2.5 measured periods returns automatically to the Speed-knob clock. The original hardware is not specified for 10 V trigger inputs, so 10 V clocks are explicitly unsupported until the analogue input stage is revised.
+
 ## 4. Reference algorithm
 
-1. map Speed to the shared 30..240 BPM nominal tempo;
+1. derive the nominal grid from the Speed knob at 30..240 BPM or from the locked Speed-CV quarter-note clock;
 2. maintain an independent nominal eighth-note phase/count that never contains jitter;
 3. before each upcoming event, draw its bounded timing offset and amplitude deviation from the deterministic seeded RNG;
 4. schedule the event at its nominal due time plus the signed offset;

@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
-VALID_BANKS = ("classic", "organic", "generative", "ambient", "electronica")
+VALID_BANKS = ("classic", "organic", "generative", "ambient", "electronica", "percussion")
 
 
 @dataclass(frozen=True)
@@ -36,6 +36,8 @@ ALL_IMAGES = (
     FirmwareImage("ambient", "old", "nanoatmega328_ambient"),
     FirmwareImage("electronica", "new", "nanoatmega328new_electronica"),
     FirmwareImage("electronica", "old", "nanoatmega328_electronica"),
+    FirmwareImage("percussion", "new", "nanoatmega328new_percussion"),
+    FirmwareImage("percussion", "old", "nanoatmega328_percussion"),
 )
 
 
@@ -44,8 +46,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--version", required=True, help="Release version without leading v")
     parser.add_argument(
         "--banks",
-        default="classic,organic,generative,ambient,electronica",
-        help="Comma-separated banks to package (classic, organic, generative, ambient, electronica)",
+        default="classic,organic,generative,ambient,electronica,percussion",
+        help="Comma-separated banks to package (classic, organic, generative, ambient, electronica, percussion)",
     )
     parser.add_argument("--build-root", default=".pio/build")
     parser.add_argument("--output-dir", default="dist")
@@ -123,6 +125,7 @@ def write_firmware_manifest(
         "generative": "OFF/OFF Turing; ON/OFF Markov; OFF/ON Motif; ON/ON Urn",
         "ambient": "OFF/OFF Current; ON/OFF Anchor; OFF/ON Breath; ON/ON Fog",
         "electronica": "OFF/OFF Pump; ON/OFF Acid; OFF/ON Shuffle; ON/ON Polymeter",
+        "percussion": "OFF/OFF Euclid; ON/OFF Repeat; OFF/ON Probability; ON/ON Humanize",
     }
     for image in images:
         hex_name = artifact_name(image, version, "hex")
@@ -143,6 +146,8 @@ def write_firmware_manifest(
         lines.append("- **Ambient** contains Current, Anchor, Breath and Fog.")
     if "electronica" in banks:
         lines.append("- **Electronica** contains Pump, Acid, Shuffle and Polymeter.")
+    if "percussion" in banks:
+        lines.append("- **Percussion** contains Euclid, Repeat, Probability and Humanize.")
     lines.extend(
         [
             "- Choose **new bootloader** for a current Arduino Nano bootloader and **old bootloader** for the legacy Nano bootloader.",

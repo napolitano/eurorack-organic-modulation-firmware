@@ -1,6 +1,6 @@
 # Free Modular Drift — Classic Algorithm Bank
 
-[← Main README](README.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [User manual](docs/manual/README.md) · [Engineering analyses](docs/analysis/algorithms/README.md)
+[← Main README](README.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [User manual](docs/manual/README.md) · [Engineering analyses](docs/analysis/algorithms/README.md) · [Percussion bank](README-BANK-PERCUSSION.md)
 
 The **Classic bank** is Drift's compatibility bank and the default firmware build. It contains the four algorithm concepts of Quinn Freedman's original Drift — **Perlin, Brownian, Bézier and LFO** — implemented in the C++17/PlatformIO firmware with the verified numerical and state-handling corrections documented in this repository.
 

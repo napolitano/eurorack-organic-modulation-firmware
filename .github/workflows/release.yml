@@ -95,6 +95,11 @@ jobs:
             && grep -q '^\[env:nanoatmega328_electronica\]$' platformio.ini; then
             RELEASE_BANKS="${RELEASE_BANKS},electronica"
           fi
+          if grep -q '^\[env:native_percussion\]$' platformio.ini \
+            && grep -q '^\[env:nanoatmega328new_percussion\]$' platformio.ini \
+            && grep -q '^\[env:nanoatmega328_percussion\]$' platformio.ini; then
+            RELEASE_BANKS="${RELEASE_BANKS},percussion"
+          fi
 
           echo "Release source: ${RELEASE_TAG} @ ${SOURCE_COMMIT}"
           echo "Release operation: ${RELEASE_OPERATION}"
@@ -195,6 +200,10 @@ jobs:
         if: contains(steps.release-context.outputs.banks, 'electronica')
         run: pio test -e native_electronica
 
+      - name: Run Percussion-bank native tests
+        if: contains(steps.release-context.outputs.banks, 'percussion')
+        run: pio test -e native_percussion
+
       - name: Run native sanitizers
         shell: bash
         env:
@@ -215,6 +224,9 @@ jobs:
           if [[ "${RELEASE_BANKS}" == *electronica* ]]; then
             pio test -e native_electronica_sanitized
           fi
+          if [[ "${RELEASE_BANKS}" == *percussion* ]]; then
+            pio test -e native_percussion_sanitized
+          fi
 
       - name: Enforce Classic-bank native coverage policy
         shell: bash
@@ -223,7 +235,7 @@ jobs:
           pio test -e native_coverage
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion)/.*' \
             --xml-pretty --output coverage/coverage.xml
           python scripts/check_native_coverage.py coverage/coverage.xml
 
@@ -233,7 +245,7 @@ jobs:
           pio test -e native_organic_coverage
           mkdir -p coverage-organic
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica|percussion)/.*' \
             --xml-pretty --output coverage-organic/coverage.xml
           python scripts/check_native_coverage.py coverage-organic/coverage.xml
 
@@ -243,7 +255,7 @@ jobs:
           pio test -e native_generative_coverage
           mkdir -p coverage-generative
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica|percussion)/.*' \
             --xml-pretty --output coverage-generative/coverage.xml
           python scripts/check_native_coverage.py coverage-generative/coverage.xml
 
@@ -253,7 +265,7 @@ jobs:
           pio test -e native_ambient_coverage
           mkdir -p coverage-ambient
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|generative|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|generative|electronica|percussion)/.*' \
             --xml-pretty --output coverage-ambient/coverage.xml
           python scripts/check_native_coverage.py coverage-ambient/coverage.xml
 
@@ -263,9 +275,19 @@ jobs:
           pio test -e native_electronica_coverage
           mkdir -p coverage-electronica
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient|percussion)/.*' \
             --xml-pretty --output coverage-electronica/coverage.xml
           python scripts/check_native_coverage.py coverage-electronica/coverage.xml
+
+      - name: Enforce Percussion-bank native coverage policy
+        if: contains(steps.release-context.outputs.banks, 'percussion')
+        run: |
+          pio test -e native_percussion_coverage
+          mkdir -p coverage-percussion
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient|electronica)/.*' \
+            --xml-pretty --output coverage-percussion/coverage.xml
+          python scripts/check_native_coverage.py coverage-percussion/coverage.xml
 
       - name: Build release firmware
         shell: bash
@@ -288,6 +310,10 @@ jobs:
           if [[ "${RELEASE_BANKS}" == *electronica* ]]; then
             pio run -e nanoatmega328new_electronica
             pio run -e nanoatmega328_electronica
+          fi
+          if [[ "${RELEASE_BANKS}" == *percussion* ]]; then
+            pio run -e nanoatmega328new_percussion
+            pio run -e nanoatmega328_percussion
           fi
 
       - name: Enforce AVR resource budgets
@@ -312,6 +338,10 @@ jobs:
             python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_electronica/firmware.elf
             python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_electronica/firmware.elf
           fi
+          if [[ "${RELEASE_BANKS}" == *percussion* ]]; then
+            python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_percussion/firmware.elf
+            python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_percussion/firmware.elf
+          fi
 
       - name: Compile timing qualification images
         shell: bash
@@ -329,6 +359,9 @@ jobs:
           fi
           if [[ "${RELEASE_BANKS}" == *electronica* ]]; then
             pio run -e nanoatmega328new_electronica_timing
+          fi
+          if [[ "${RELEASE_BANKS}" == *percussion* ]]; then
+            pio run -e nanoatmega328new_percussion_timing
           fi
 
       - name: Install manual publication dependencies
@@ -488,6 +521,24 @@ jobs:
           print("Electronica manual coverage: passed")
           PY
 
+      - name: Require Percussion content in frozen manual
+        if: contains(steps.release-context.outputs.banks, 'percussion')
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANUAL_SOURCE='${{ steps.manual-source.outputs.source }}'
+          python - "${MANUAL_SOURCE}" <<'PY'
+          import sys, xml.etree.ElementTree as ET, zipfile
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              root = ET.fromstring(archive.read("content.xml"))
+          text = " ".join(part.strip() for part in root.itertext() if part.strip()).lower()
+          required = ("percussion", "euclid", "repeat", "probability", "humanize")
+          missing = [term for term in required if term not in text]
+          if missing:
+              raise SystemExit("release manual does not yet document the Percussion bank: missing " + ", ".join(missing))
+          print("Percussion manual coverage: passed")
+          PY
+
       - name: Build and verify user manual
         shell: bash
         run: |
@@ -599,6 +650,21 @@ jobs:
               --git-commit "${SOURCE_COMMIT}" \
               --git-ref "${RELEASE_TAG}" \
               --output "dist/BUILD-INFO-electronica-nano-old.${RELEASE_VERSION}.txt"
+          fi
+
+          if [[ "${RELEASE_BANKS}" == *percussion* ]]; then
+            python "${TOOLING_ROOT}/write_build_info.py" \
+              --bank percussion \
+              --environment nanoatmega328new_percussion \
+              --git-commit "${SOURCE_COMMIT}" \
+              --git-ref "${RELEASE_TAG}" \
+              --output "dist/BUILD-INFO-percussion-nano-new.${RELEASE_VERSION}.txt"
+            python "${TOOLING_ROOT}/write_build_info.py" \
+              --bank percussion \
+              --environment nanoatmega328_percussion \
+              --git-commit "${SOURCE_COMMIT}" \
+              --git-ref "${RELEASE_TAG}" \
+              --output "dist/BUILD-INFO-percussion-nano-old.${RELEASE_VERSION}.txt"
           fi
 
       - name: Validate exact release artifact set

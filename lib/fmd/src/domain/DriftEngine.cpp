@@ -44,10 +44,11 @@ Algorithm algorithmForBankSlot(uint8_t slotIndex) {
   };
 #elif FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
   constexpr Algorithm kAlgorithms[4] = {
-      Algorithm::Pump,
-      Algorithm::Acid,
-      Algorithm::Shuffle,
-      Algorithm::Polymeter,
+      Algorithm::Pump, Algorithm::Acid, Algorithm::Shuffle, Algorithm::Polymeter,
+  };
+#elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
+  constexpr Algorithm kAlgorithms[4] = {
+      Algorithm::Euclid, Algorithm::Repeat, Algorithm::Probability, Algorithm::Humanize,
   };
 #endif
   return kAlgorithms[slotIndex < 4U ? slotIndex : 0U];
@@ -97,6 +98,11 @@ DriftEngine::DriftEngine(Algorithm algorithm,
       , acidAlgorithm_(referenceTables)
       , shuffleAlgorithm_(referenceTables)
       , polymeterAlgorithm_(referenceTables)
+#elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
+      , euclidAlgorithm_(referenceTables)
+      , repeatAlgorithm_(referenceTables, randomSeed)
+      , probabilityAlgorithm_(referenceTables, randomSeed)
+      , humanizeAlgorithm_(referenceTables, randomSeed)
 #endif
 {
 #if FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
@@ -151,6 +157,15 @@ uint16_t DriftEngine::step(const ControlFrame& controls) {
       return shuffleAlgorithm_.step(controls);
     case Algorithm::Polymeter:
       return polymeterAlgorithm_.step(controls);
+#elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
+    case Algorithm::Euclid:
+      return euclidAlgorithm_.step(controls);
+    case Algorithm::Repeat:
+      return repeatAlgorithm_.step(controls);
+    case Algorithm::Probability:
+      return probabilityAlgorithm_.step(controls);
+    case Algorithm::Humanize:
+      return humanizeAlgorithm_.step(controls);
 #endif
     default:
       break;

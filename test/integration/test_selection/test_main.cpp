@@ -42,12 +42,13 @@ void test_selected_bank_config_pin_mapping() {
       fmd::Algorithm::Breath,
       fmd::Algorithm::Fog,
   };
+#elif FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
+  constexpr fmd::Algorithm expected[4] = {
+      fmd::Algorithm::Pump, fmd::Algorithm::Acid, fmd::Algorithm::Shuffle, fmd::Algorithm::Polymeter,
+  };
 #else
   constexpr fmd::Algorithm expected[4] = {
-      fmd::Algorithm::Pump,
-      fmd::Algorithm::Acid,
-      fmd::Algorithm::Shuffle,
-      fmd::Algorithm::Polymeter,
+      fmd::Algorithm::Euclid, fmd::Algorithm::Repeat, fmd::Algorithm::Probability, fmd::Algorithm::Humanize,
   };
 #endif
 

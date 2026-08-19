@@ -58,7 +58,7 @@ The fill masks add only final-quarter steps and never remove Euclidean onsets.
 
 ## 3. Reference algorithm
 
-1. combine Speed knob and CV through the Percussion 30..240 BPM mapping;
+1. obtain timing from the Speed knob at 30..240 BPM unless the shared Percussion Speed-CV clock detector has locked to an external quarter-note pulse train;
 2. advance the sixteenth-note phase while preserving overshoot;
 3. on a new bar, latch Texture for the bar's Euclidean density and fill strength;
 4. at phrase start, latch phrase length from Texture;
@@ -69,6 +69,10 @@ The fill masks add only final-quarter steps and never remove Euclidean onsets.
 9. otherwise keep the output at zero.
 
 The Bjorklund/Euclidean construction is performed offline when reference masks are generated. The AVR hot path only performs table access, counters and bit tests.
+
+### Percussion clock-source contract
+
+In this bank, Speed CV is repurposed as a **0..5 V quarter-note clock input** rather than being summed with the Speed knob. Two valid rising edges acquire external timing; loss for more than 2.5 measured periods returns automatically to the Speed-knob clock. The original hardware is not specified for 10 V trigger inputs, so 10 V clocks are explicitly unsupported until the analogue input stage is revised.
 
 ## 4. Relationship to prior art and upstream Drift
 
@@ -108,7 +112,7 @@ Because the mask is deterministic inside a bar, Euclid is suitable for kick-like
 
 The first implementation should keep rotation fixed. Adding rotation as another Texture dimension would make the single macro harder to understand and would create discontinuous pattern changes under CV.
 
-Future hardware with a dedicated trigger/clock input could make Euclid dramatically stronger by supporting external clock/reset while preserving the same $E(k,16)$ and fill contracts.
+The implemented Percussion bank already permits **0..5 V** quarter-note clocking through Speed CV. A future hardware revision should make that repurposed input explicitly Eurorack-clock tolerant and add a dedicated reset if transport-defined bar alignment is required.
 
 If listening tests show that 2..13 hits is too narrow, the range can be revised before implementation, but the exact mapping must then be frozen in the analysis and golden vectors.
 

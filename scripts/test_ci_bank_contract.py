@@ -50,7 +50,25 @@ BANKS = {
         "avr": ("nanoatmega328new_electronica", "nanoatmega328_electronica"),
         "timing": ("nanoatmega328new_electronica_timing",),
     },
+    "percussion": {
+        "native": ("pio test -e native_percussion -f ${{ matrix.suite }}",),
+        "coverage": ("pio test -e native_percussion_coverage",),
+        "sanitizers": ("pio test -e native_percussion_sanitized",),
+        "avr": ("nanoatmega328new_percussion", "nanoatmega328_percussion"),
+        "timing": ("nanoatmega328new_percussion_timing",),
+    },
 }
+
+PERCUSSION_SUITES = (
+    "unit/test_euclid_algorithm",
+    "unit/test_repeat_algorithm",
+    "unit/test_probability_algorithm",
+    "unit/test_humanize_algorithm",
+    "integration/test_selection",
+    "integration/test_runtime",
+    "property/test_invariants",
+    "system/test_signal_path",
+)
 
 ELECTRONICA_SUITES = (
     "unit/test_pump_algorithm",
@@ -85,12 +103,23 @@ def main() -> int:
     if "native-electronica-sanitizers:" not in text:
         missing.append("electronica/sanitizer job: native-electronica-sanitizers")
 
+    for suite in PERCUSSION_SUITES:
+        if suite not in text:
+            missing.append(f"percussion/test suite: {suite}")
+
+    if "native-percussion-tests:" not in text:
+        missing.append("percussion/native job: native-percussion-tests")
+    if "native-percussion-coverage:" not in text:
+        missing.append("percussion/coverage job: native-percussion-coverage")
+    if "native-percussion-sanitizers:" not in text:
+        missing.append("percussion/sanitizer job: native-percussion-sanitizers")
+
     if missing:
         for item in missing:
             print(f"CI bank contract error: {item}")
         return 2
 
-    print("CI five-bank build/qualification contract: passed")
+    print("CI six-bank build/qualification contract: passed")
     return 0
 
 

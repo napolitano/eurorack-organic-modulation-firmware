@@ -78,6 +78,38 @@ BANK_FRAGMENTS = {
             "--environment nanoatmega328_electronica",
         ),
     },
+    "percussion": {
+        "bank detection": (
+            "grep -q '^\\[env:native_percussion\\]$' platformio.ini",
+            "grep -q '^\\[env:nanoatmega328new_percussion\\]$' platformio.ini",
+            "grep -q '^\\[env:nanoatmega328_percussion\\]$' platformio.ini",
+            'RELEASE_BANKS="${RELEASE_BANKS},percussion"',
+        ),
+        "native qualification": (
+            "pio test -e native_percussion",
+            "pio test -e native_percussion_sanitized",
+            "pio test -e native_percussion_coverage",
+        ),
+        "AVR builds": (
+            "pio run -e nanoatmega328new_percussion",
+            "pio run -e nanoatmega328_percussion",
+        ),
+        "resource qualification": (
+            ".pio/build/nanoatmega328new_percussion/firmware.elf",
+            ".pio/build/nanoatmega328_percussion/firmware.elf",
+        ),
+        "timing qualification": ("pio run -e nanoatmega328new_percussion_timing",),
+        "manual coverage": (
+            "Require Percussion content in frozen manual",
+            'required = ("percussion", "euclid", "repeat", "probability", "humanize")',
+        ),
+        "build provenance": (
+            "BUILD-INFO-percussion-nano-new.${RELEASE_VERSION}.txt",
+            "BUILD-INFO-percussion-nano-old.${RELEASE_VERSION}.txt",
+            "--environment nanoatmega328new_percussion",
+            "--environment nanoatmega328_percussion",
+        ),
+    },
 }
 
 COMMON_FRAGMENTS = (
@@ -103,7 +135,7 @@ def main() -> int:
             print(f"release workflow bank contract error: {item}")
         return 2
 
-    print("release workflow Ambient/Electronica bank contract: passed")
+    print("release workflow optional-bank contract: passed")
     return 0
 
 

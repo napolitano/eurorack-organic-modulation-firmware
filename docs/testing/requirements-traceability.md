@@ -39,6 +39,26 @@
 | AC-35 | Vector uses continuous bipolar toroidal projections, bounded cross-coupling and a deterministic 12-bit scalar projection. | `test/unit/test_vector_algorithm` |
 | AC-36 | Rain Density and Speed follow documented monotonic event/decay laws, fractional decay reaches zero without a truncation deadband, and fixed seeds are deterministic. | `test/unit/test_rain_algorithm` |
 | AC-37 | Attractor implements the documented fixed-point Hénon map over the complete Texture parameter range, remains bounded and emits deterministic 12-bit interpolated output. | `test/unit/test_attractor_algorithm` |
+| AC-38 | The Generative compile-time bank maps the four rear DIP slots to Turing, Markov, Motif and Urn while preserving the shared electrical truth table. | `test/integration/test_selection` |
+| AC-39 | Turing maps Texture exactly from zero mutation to one-half mutation probability, rotates locked state exactly and remains deterministic in the 12-bit DAC domain. | `test/unit/test_turing_algorithm` |
+| AC-40 | Markov implements the exact 4/8, 2/8, 1/8, 1/8 structured transition kernel, exact Texture endpoint behavior and a fixed stratified seed-defined 12-bit vocabulary. | `test/unit/test_markov_algorithm` |
+| AC-41 | Motif applies at most one project-defined structural edit at a complete phrase boundary, including correct circular transformations, and remains deterministic and bounded. | `test/unit/test_motif_algorithm` |
+| AC-42 | Urn uses bounded 31/32 relaxation, monotonic Texture-controlled reinforcement, correct weighted categorical selection at equal weights and the exact eight-level DAC vocabulary. | `test/unit/test_urn_algorithm` |
+| AC-43 | The Ambient compile-time bank maps the four rear DIP slots to Current, Anchor, Breath and Fog while preserving the shared electrical truth table. | `test/integration/test_selection` |
+| AC-44 | Current uses three fixed non-harmonic rate approximations, exact constant-sum Texture weights and deterministic bounded 12-bit projection. | `test/unit/test_current_algorithm` |
+| AC-45 | Anchor implements explicit bounded mean reversion, zero-spread centre stability and seed-deterministic OU-inspired triangular-innovation motion. | `test/unit/test_anchor_algorithm` |
+| AC-46 | Breath preserves a baseline-to-single-peak-to-baseline cycle, keeps all rollover-latched parameters inside documented bounds and remains deterministic for a fixed seed. | `test/unit/test_breath_algorithm` |
+| AC-47 | Fog uses the documented compact smooth kernel, a fixed four-voice process, duration-compensated occupancy mapping and deterministic bounded bipolar output. | `test/unit/test_fog_algorithm` |
+| AC-48 | The Electronica compile-time bank maps the four rear DIP slots to Pump, Acid, Shuffle and Polymeter while preserving the shared electrical truth table. | `test/integration/test_selection` |
+| AC-49 | Pump uses the documented 30..240 BPM Electronica tempo mapping, exact 1/4..15/16 recovery range and monotonic deterministic duck/recovery contour. | `test/unit/test_pump_algorithm` |
+| AC-50 | Acid implements the exact project-defined 16-step permutation, accent/slide masks, Texture-zero dry sequence and bounded smooth accent/slide contours without RNG state. | `test/unit/test_acid_algorithm` |
+| AC-51 | Shuffle maps Texture monotonically from straight timing to an exact 3:1 long/short pair while preserving total pair duration and deterministic bounded output. | `test/unit/test_shuffle_algorithm` |
+| AC-52 | Polymeter selects exact secondary meters 3/5/7/9, preserves the documented accent amplitudes and exact 12/20/28/36-step composite recurrences. | `test/unit/test_polymeter_algorithm` |
+| AC-53 | The Percussion compile-time bank maps the four rear DIP slots to Euclid, Repeat, Probability and Humanize while preserving the shared electrical truth table. | `test/integration/test_selection` |
+| AC-54 | Euclid maps Texture to E(k,16) hit counts 2..13, uses canonical masks with exact population and applies deterministic phrase-end tail fills without removing base hits. | `test/unit/test_euclid_algorithm` |
+| AC-55 | Repeat preserves guaranteed quarter-note anchors, maps Texture to the documented ratchet probability/count and applies exact phrase-fill minimum repeat counts. | `test/unit/test_repeat_algorithm` |
+| AC-56 | Probability preserves primary quarter-note hits, uses exact secondary and quadratic ghost thresholds, and applies saturating phrase/final-quarter probability boosts. | `test/unit/test_probability_algorithm` |
+| AC-57 | Humanize preserves the fixed eighth-note source while bounding independent grid-relative timing jitter to ±30 samples and pulse amplitude to the documented Texture-controlled range. | `test/unit/test_humanize_algorithm` |
 
 The machine-readable mapping is `test/requirements-traceability.json` and is validated by CI. Requirement IDs must remain unique and consecutive; referenced test cases must exist as `RUN_TEST()` entries.
 

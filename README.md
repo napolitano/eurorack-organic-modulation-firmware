@@ -19,7 +19,7 @@
 
 Drift is a **4 HP Eurorack modulation source** that produces evolving 0–10 V control voltages. Its defining idea is controlled movement: instead of choosing only between a conventional repeating LFO and completely uncorrelated random values, Drift offers several ways to generate motion with **continuity, memory, structure or controlled unpredictability**.
 
-This firmware now supports five compile-time algorithm banks:
+This firmware now supports six compile-time algorithm banks:
 
 | Bank | Algorithms | Status | Detailed guide |
 |---|---|---|---|
@@ -28,10 +28,11 @@ This firmware now supports five compile-time algorithm banks:
 | **Generative** | Turing · Markov · Motif · Urn | Optional compile-time bank; currently `Unreleased` | **[README-BANK-GENERATIVE.md](README-BANK-GENERATIVE.md)** |
 | **Ambient** | Current · Anchor · Breath · Fog | Optional compile-time bank; currently `Unreleased` | **[README-BANK-AMBIENT.md](README-BANK-AMBIENT.md)** |
 | **Electronica** | Pump · Acid · Shuffle · Polymeter | Optional compile-time bank; currently `Unreleased` | **[README-BANK-ELECTRONICA.md](README-BANK-ELECTRONICA.md)** |
+| **Percussion** | Euclid · Repeat · Probability · Humanize | Optional compile-time bank; currently `Unreleased` | **[README-BANK-PERCUSSION.md](README-BANK-PERCUSSION.md)** |
 
 
 > [!IMPORTANT]
-> **Flashing chooses the algorithm bank.** The two rear DIP switches then choose one of four algorithms inside the flashed bank. A DIP setting cannot switch between Classic, Organic, Generative, Ambient and Electronica.
+> **Flashing chooses the algorithm bank.** The two rear DIP switches then choose one of four algorithms inside the flashed bank. A DIP setting cannot switch between Classic, Organic, Generative, Ambient, Electronica and Percussion.
 
 ## Why this firmware?
 
@@ -64,7 +65,7 @@ The project therefore aims to:
 | **1** | **Speed** | Primary time-scale or activity control. Its exact meaning depends on the selected algorithm. |
 | **2** | **Texture** | Secondary shape, structure or activity control. Its exact meaning depends on the selected algorithm. |
 | **3** | **Attenuation** | Analogue scaling of the final 0–10 V output; firmware cannot read this knob. |
-| **4** | **Speed CV** | 0–5 V control input contributing to Speed. |
+| **4** | **Speed CV** | 0–5 V Speed control input; **Percussion bank: optional 0–5 V quarter-note clock input instead**. |
 | **5** | **Texture CV** | 0–5 V control input contributing to the algorithm's secondary parameter. |
 | **6** | **Output** | Unipolar 0–10 V modulation output. |
 | **7** | **LED** | Indicates instantaneous output level. |
@@ -73,12 +74,12 @@ The project therefore aims to:
 
 The bank is fixed when the firmware is compiled/flashed. The rear DIP truth table is then interpreted inside that bank:
 
-| Rear DIP 1 | Rear DIP 2 | Classic | Organic | Generative | Ambient | Electronica |
+| Rear DIP 1 | Rear DIP 2 | Classic | Organic | Generative | Ambient | Electronica | Percussion |
 |---|---|---|---|---|---|---|
-| **OFF** | **OFF** | Perlin | Fractal | Turing | Current | Pump |
-| **ON** | **OFF** | Brownian | Vector | Markov | Anchor | Acid |
-| **OFF** | **ON** | Bézier | Rain | Motif | Breath | Shuffle |
-| **ON** | **ON** | LFO | Attractor | Urn | Fog | Polymeter |
+| **OFF** | **OFF** | Perlin | Fractal | Turing | Current | Pump | Euclid |
+| **ON** | **OFF** | Brownian | Vector | Markov | Anchor | Acid | Repeat |
+| **OFF** | **ON** | Bézier | Rain | Motif | Breath | Shuffle | Probability |
+| **ON** | **ON** | LFO | Attractor | Urn | Fog | Polymeter | Humanize |
 
 The switches are sampled only during startup. Cycle power after changing them. **ON is the upper physical switch position.**
 
@@ -89,6 +90,7 @@ For mode-specific control semantics, mathematics, figures and use cases, use the
 - **[Generative bank — Turing, Markov, Motif, Urn](README-BANK-GENERATIVE.md)**
 - **[Ambient bank — Current, Anchor, Breath, Fog](README-BANK-AMBIENT.md)**
 - **[Electronica bank — Pump, Acid, Shuffle, Polymeter](README-BANK-ELECTRONICA.md)**
+- **[Percussion bank — Euclid, Repeat, Probability, Humanize](README-BANK-PERCUSSION.md)**
 
 ### 3. Make the first patch
 
@@ -97,7 +99,10 @@ For mode-specific control semantics, mathematics, figures and use cases, use the
 3. Patch **OUT** to a modulation destination such as filter cutoff, wavetable position, waveshaping, effect depth, panning or another CV-controlled parameter.
 4. Turn **Attenuation** fully clockwise while learning the mode, then reduce it if the destination needs a smaller modulation range.
 5. Start with **Speed** and **Texture** near the middle and explore their behavior using the selected bank guide.
-6. Patch 0–5 V modulation into **Speed CV** or **Texture CV** when you want Drift's behavior to evolve under external control.
+6. Patch 0–5 V modulation into **Speed CV** or **Texture CV** when you want Drift's behavior to evolve under external control. **Exception: in Percussion, Speed CV is the optional 0–5 V quarter-note clock input; never patch a 10 V trigger into the original hardware.**
+
+> [!WARNING]
+> **Percussion bank only: Speed CV becomes a 0–5 V external clock input. Do not feed 10 V Eurorack triggers/clocks into the original Drift hardware.** The existing Speed CV input stage is specified here only for 0–5 V operation; the firmware cannot add the missing overvoltage protection. Without a valid clock, Percussion automatically uses the Speed knob as its internal 30–240 BPM clock.
 
 > [!TIP]
 > Drift outputs **0–10 V unipolar CV**. If the destination expects a smaller or bipolar range, use the Attenuation knob and, where necessary, an external attenuverter/offset stage.
@@ -130,6 +135,7 @@ The detailed user-facing algorithm documentation now lives at repository root so
 | **[README-BANK-GENERATIVE.md](README-BANK-GENERATIVE.md)** | DIP mapping, controls, Turing/Markov/Motif/Urn mathematics, musical roles and Generative build commands |
 | **[README-BANK-AMBIENT.md](README-BANK-AMBIENT.md)** | DIP mapping, controls, Current/Anchor/Breath/Fog mathematics, musical roles and Ambient build commands |
 | **[README-BANK-ELECTRONICA.md](README-BANK-ELECTRONICA.md)** | DIP mapping, controls, Pump/Acid/Shuffle/Polymeter mathematics, musical roles and Electronica build commands |
+| **[README-BANK-PERCUSSION.md](README-BANK-PERCUSSION.md)** | DIP mapping, phrase engine, Euclid/Repeat/Probability/Humanize contracts, musical roles and Percussion build commands |
 
 The maintained [PDF user manual source](docs/manual/README.md) remains the complete end-user reference. The engineering derivations stay under [docs/analysis](docs/analysis/algorithms/README.md).
 
@@ -188,7 +194,7 @@ The test strategy distinguishes **mathematical correctness**, **state-machine be
 
 Current native coverage includes:
 
-- dedicated mathematical suites for all twenty current algorithms across Classic, Organic, Generative, Ambient and Electronica;
+- dedicated mathematical suites for all twenty-four current algorithms across Classic, Organic, Generative, Ambient, Electronica and Percussion;
 - shared fixed-point, frequency, RNG and reference-table tests;
 - edge-case and long-run state-transition tests;
 - property/invariant tests across the control domain;
@@ -197,7 +203,7 @@ Current native coverage includes:
 - machine-checked acceptance-criteria traceability;
 - sanitizer and coverage environments.
 
-The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. The current `Unreleased` source expands the repository to **165 native test cases across 30 suites** and **52 acceptance criteria** by adding Organic, Generative, Ambient and Electronica bank verification. Classic, Organic, Generative, Ambient and Electronica coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
+The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. The current `Unreleased` source expands the repository to **194 native test cases across 35 suites** and **59 acceptance criteria** by adding Organic, Generative, Ambient, Electronica and Percussion bank verification. Classic, Organic, Generative, Ambient, Electronica and Percussion coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
 
 AVR builds also carry explicit engineering headroom: **Flash must stay at or below 85% (26,112 / 30,720 bytes)** and **static SRAM at or below 65% (1,331 / 2,048 bytes)**. These are repository guardrails, deliberately stricter than the ATmega328P hard limits.
 
@@ -205,7 +211,7 @@ See [README_TESTING.md](README_TESTING.md) and [requirements traceability](docs/
 
 ## Algorithm engineering analyses
 
-Each algorithm has a dedicated developer analysis that starts from the mathematics. Classic analyses then examine the upstream Rust implementation and compatibility findings; project-defined Organic, Generative, Ambient and Electronica analyses document the mathematical contract, computational cost, implementation risks, musical value and verification evidence:
+Each algorithm has a dedicated developer analysis that starts from the mathematics. Classic analyses then examine the upstream Rust implementation and compatibility findings; project-defined Organic, Generative, Ambient, Electronica and Percussion analyses document the mathematical contract, computational cost, implementation risks, musical value and verification evidence:
 
 - [Perlin noise](docs/analysis/algorithms/perlin-noise-analysis.md)
 - [Brownian / bounded random walk](docs/analysis/algorithms/brownian-motion-analysis.md)
@@ -223,6 +229,7 @@ Each algorithm has a dedicated developer analysis that starts from the mathemati
 - [Shuffle](docs/analysis/algorithms/shuffle-analysis.md)
 - [Polymeter](docs/analysis/algorithms/polymeter-analysis.md)
 - [Electronica bank architecture and control contract](docs/analysis/algorithm-banks/electronica-bank-design.md)
+- [Percussion bank architecture and control contract](docs/analysis/algorithm-banks/percussion-bank-design.md)
 - [Current](docs/analysis/algorithms/current-analysis.md)
 - [Anchor](docs/analysis/algorithms/anchor-analysis.md)
 - [Breath](docs/analysis/algorithms/breath-analysis.md)
@@ -286,11 +293,11 @@ python scripts/check_markdown_footer.py
 python scripts/check_markdown_math.py
 ```
 
-Timing qualification uses `nanoatmega328new_timing` for Classic, `nanoatmega328new_organic_timing` for Organic, `nanoatmega328new_generative_timing` for Generative, `nanoatmega328new_ambient_timing` for Ambient and `nanoatmega328new_electronica_timing` for Electronica.
+Timing qualification uses `nanoatmega328new_timing` for Classic, `nanoatmega328new_organic_timing` for Organic, `nanoatmega328new_generative_timing` for Generative, `nanoatmega328new_ambient_timing` for Ambient , `nanoatmega328new_electronica_timing` for Electronica and `nanoatmega328new_percussion_timing` for Percussion.
 
 ## Release artifacts
 
-Tagged releases publish **every compile-time bank present in the tagged source** for both supported Arduino Nano bootloaders once that bank also satisfies the release-documentation guards. The current CI and tagged-release workflow build Classic, Organic, Generative, Ambient and Electronica. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
+Tagged releases publish **every compile-time bank present in the tagged source** for both supported Arduino Nano bootloaders once that bank also satisfies the release-documentation guards. The current CI and tagged-release workflow build Classic, Organic, Generative, Ambient, Electronica and Percussion. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
 
 | Bank | New bootloader | Old bootloader |
 |---|---|---|
@@ -299,15 +306,16 @@ Tagged releases publish **every compile-time bank present in the tagged source**
 | **Generative** | `fm-drift-generative-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-generative-nano-old-bootloader.X.Y.Z.hex` |
 | **Ambient** | `fm-drift-ambient-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-ambient-nano-old-bootloader.X.Y.Z.hex` |
 | **Electronica** | `fm-drift-electronica-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-electronica-nano-old-bootloader.X.Y.Z.hex` |
+| **Percussion** | `fm-drift-percussion-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-percussion-nano-old-bootloader.X.Y.Z.hex` |
 
-Matching `.elf` files are included for debugging/provenance. A five-bank release therefore contains **20 firmware binaries** (five banks × two bootloaders × HEX/ELF), `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **ten build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests. The release artifact contract fails before checksum generation or upload if any expected binary/provenance file is missing or an unexpected bank binary is present.
+Matching `.elf` files are included for debugging/provenance. A six-bank release therefore contains **24 firmware binaries** (six banks × two bootloaders × HEX/ELF), `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **twelve build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests. The release artifact contract fails before checksum generation or upload if any expected binary/provenance file is missing or an unexpected bank binary is present.
 
 > [!IMPORTANT]
-> Flashing chooses **Classic, Organic, Generative, Ambient or Electronica**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.
+> Flashing chooses **Classic, Organic, Generative, Ambient, Electronica or Percussion**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.
 
 ## User manual
 
-The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It documents Classic, Organic, Generative, Ambient and Electronica, including all twenty current algorithms; the Electronica release-documentation guard is therefore satisfied by the maintained manual source. The current manual includes bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
+The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It currently documents Classic, Organic, Generative, Ambient and Electronica. Percussion is implemented in firmware but intentionally remains blocked from tagged publication until Euclid, Repeat, Probability and Humanize are added to the maintained and frozen user manual. The current manual includes bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
 
 The manual repository area contains:
 

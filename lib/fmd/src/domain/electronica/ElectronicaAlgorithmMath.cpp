@@ -50,9 +50,12 @@ uint32_t quarterNotePhaseIncrement(const IReferenceTables& referenceTables,
                                    uint16_t speedCvAdc) {
   const uint32_t octaveFactorQ16F16 = electronicaExp2Q16F16(
       referenceTables, speedControl(speedKnobAdc, speedCvAdc));
-  // 30 BPM = 0.5 Hz = 5 decihertz. Scaling 5 by the three-octave factor
-  // produces 5..40 decihertz, i.e. exactly 30..240 BPM.
-  return phaseIncrementFromDecihertzQ16_16(octaveFactorQ16F16 * 5UL);
+  // phaseIncrementFromDecihertzQ16_16() preserves the historical Drift
+  // frequency-domain scale where one Q16.16 input unit corresponds to 1/40 Hz.
+  // Therefore a 30 BPM quarter note (0.5 Hz) is represented by 20 units.
+  // Scaling 20 by the three-octave factor produces 0.5..4 Hz, i.e. exactly
+  // 30..240 BPM as documented for Electronica and Percussion.
+  return phaseIncrementFromDecihertzQ16_16(octaveFactorQ16F16 * 20UL);
 }
 
 uint32_t sixteenthNotePhaseIncrement(const IReferenceTables& referenceTables,

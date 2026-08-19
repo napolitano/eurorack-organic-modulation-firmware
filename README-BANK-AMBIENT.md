@@ -1,6 +1,6 @@
 # Free Modular Drift — Ambient Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Engineering design](docs/analysis/algorithm-banks/ambient-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Engineering design](docs/analysis/algorithm-banks/ambient-bank-design.md) · [Percussion bank](README-BANK-PERCUSSION.md)
 
 The **Ambient bank** is a compile-time Drift bank for slow, continuously evolving modulation. It contains **Current, Anchor, Breath and Fog**. The bank is deliberately separated from Classic, Organic and Generative: it focuses on long-form deterministic beating, mean-reverting stochastic motion, recurrent macro-gestures and smooth stochastic clouds rather than short loops, stepped state vocabularies or ordinary noise trajectories.
 

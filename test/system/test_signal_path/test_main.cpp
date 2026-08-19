@@ -26,9 +26,23 @@ void test_virtual_module_speed_inputs_change_active_bank_timing() {
   DriftTestRig slowRig(fmd::algorithmForBankSlot(0U), 1U);
   DriftTestRig fastRig(fmd::algorithmForBankSlot(0U), 1U);
   bool observedDifference = false;
-  for (uint16_t sampleIndex = 0U; sampleIndex < 512U; ++sampleIndex) {
+#if FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
+  constexpr uint16_t kObservationSamples = 800U;
+#else
+  constexpr uint16_t kObservationSamples = 512U;
+#endif
+  for (uint16_t sampleIndex = 0U; sampleIndex < kObservationSamples; ++sampleIndex) {
+#if FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
+    // Euclid at Texture zero is intentionally sparse (E(2,16)); within this
+    // short observation window both slow and fast paths can therefore remain
+    // between onsets. Use the dense endpoint so this system-level test observes
+    // the bank's Speed-dependent boundary timing rather than pattern sparsity.
+    const uint16_t slowOutput = slowRig.tick(0U, 1023U, 0U, 0U);
+    const uint16_t fastOutput = fastRig.tick(1023U, 1023U, 1023U, 0U);
+#else
     const uint16_t slowOutput = slowRig.tick(0U, 0U, 0U, 0U);
     const uint16_t fastOutput = fastRig.tick(1023U, 0U, 1023U, 0U);
+#endif
     observedDifference |= slowOutput != fastOutput;
   }
   TEST_ASSERT_TRUE(observedDifference);

@@ -33,42 +33,47 @@ def main() -> int:
             Path("README-BANK-GENERATIVE.md").write_text("Generative", encoding="utf-8")
             Path("README-BANK-AMBIENT.md").write_text("Ambient", encoding="utf-8")
             Path("README-BANK-ELECTRONICA.md").write_text("Electronica", encoding="utf-8")
+            Path("README-BANK-PERCUSSION.md").write_text("Percussion", encoding="utf-8")
 
             build_root = root / "build"
             output_dir = root / "dist"
             output_dir.mkdir()
-            banks = release.parse_banks("classic,organic,generative,ambient,electronica")
+            banks = release.parse_banks("classic,organic,generative,ambient,electronica,percussion")
             images = release.images_for_banks(banks)
             create_builds(build_root, images)
 
             copied = release.copy_firmware_images(build_root, output_dir, "1.2.3", images)
-            assert len(copied) == 20
-            assert len(set(copied)) == 20
+            assert len(copied) == 24
+            assert len(set(copied)) == 24
             docs = release.copy_release_documentation(output_dir, banks)
             assert "README-BANK-CLASSIC.md" in docs
             assert "README-BANK-ORGANIC.md" in docs
             assert "README-BANK-GENERATIVE.md" in docs
             assert "README-BANK-AMBIENT.md" in docs
             assert "README-BANK-ELECTRONICA.md" in docs
+            assert "README-BANK-PERCUSSION.md" in docs
 
             manifest = release.write_firmware_manifest(output_dir, "1.2.3", banks, images)
             text = (output_dir / manifest).read_text(encoding="utf-8")
-            assert "Classic" in text and "Organic" in text and "Generative" in text and "Ambient" in text and "Electronica" in text
+            assert all(name in text for name in ("Classic", "Organic", "Generative", "Ambient", "Electronica", "Percussion"))
             assert "OFF/OFF Perlin" in text
             assert "OFF/OFF Fractal" in text
             assert "OFF/OFF Turing" in text
             assert "OFF/OFF Current" in text
             assert "OFF/OFF Pump" in text
+            assert "OFF/OFF Euclid" in text
             assert "fm-drift-classic-nano-new-bootloader.1.2.3.hex" in text
             assert "fm-drift-organic-nano-old-bootloader.1.2.3.hex" in text
             assert "fm-drift-generative-nano-new-bootloader.1.2.3.hex" in text
             assert "fm-drift-ambient-nano-old-bootloader.1.2.3.hex" in text
             assert "fm-drift-electronica-nano-new-bootloader.1.2.3.hex" in text
+            assert "fm-drift-percussion-nano-old-bootloader.1.2.3.hex" in text
             assert "BUILD-INFO-classic-nano-old.1.2.3.txt" in text
             assert "BUILD-INFO-organic-nano-new.1.2.3.txt" in text
             assert "BUILD-INFO-generative-nano-old.1.2.3.txt" in text
             assert "BUILD-INFO-ambient-nano-new.1.2.3.txt" in text
             assert "BUILD-INFO-electronica-nano-old.1.2.3.txt" in text
+            assert "BUILD-INFO-percussion-nano-new.1.2.3.txt" in text
             assert "drift-user-manual.1.2.3.odt" in text
             assert "PDF generated from that frozen source" in text
 

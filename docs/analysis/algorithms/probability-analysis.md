@@ -76,6 +76,10 @@ Primary steps remain guaranteed and require no boost.
 
 The result is a gradual phrase-end increase in density rather than a completely separate random fill generator.
 
+### Percussion clock-source contract
+
+In this bank, Speed CV is repurposed as a **0..5 V quarter-note clock input** rather than being summed with the Speed knob. Two valid rising edges acquire external timing; loss for more than 2.5 measured periods returns automatically to the Speed-knob clock. The original hardware is not specified for 10 V trigger inputs, so 10 V clocks are explicitly unsupported until the analogue input stage is revised.
+
 ## 4. Reference algorithm
 
 At every sixteenth boundary:

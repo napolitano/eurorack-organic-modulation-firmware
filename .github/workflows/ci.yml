@@ -151,6 +151,29 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_electronica -f ${{ matrix.suite }}
 
+  native-percussion-tests:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - unit/test_algorithms
+          - unit/test_euclid_algorithm
+          - unit/test_repeat_algorithm
+          - unit/test_probability_algorithm
+          - unit/test_humanize_algorithm
+          - integration/test_selection
+          - integration/test_runtime
+          - property/test_invariants
+          - system/test_signal_path
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_percussion -f ${{ matrix.suite }}
+
   native-coverage:
     runs-on: ubuntu-24.04
     steps:
@@ -163,10 +186,10 @@ jobs:
       - run: |
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion)/.*' \
             --xml-pretty --output coverage/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion)/.*' \
             --txt
           python scripts/check_native_coverage.py coverage/coverage.xml
 
@@ -183,10 +206,10 @@ jobs:
       - run: |
           mkdir -p coverage-organic
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica|percussion)/.*' \
             --xml-pretty --output coverage-organic/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica|percussion)/.*' \
             --txt
           python scripts/check_native_coverage.py coverage-organic/coverage.xml
 
@@ -202,10 +225,10 @@ jobs:
       - run: |
           mkdir -p coverage-generative
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica|percussion)/.*' \
             --xml-pretty --output coverage-generative/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica|percussion)/.*' \
             --txt
           python scripts/check_native_coverage.py coverage-generative/coverage.xml
 
@@ -221,7 +244,7 @@ jobs:
       - run: |
           mkdir -p coverage-ambient
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|generative|electronica)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|generative|electronica|percussion)/.*' \
             --xml-pretty --output coverage-ambient/coverage.xml
           python scripts/check_native_coverage.py coverage-ambient/coverage.xml
 
@@ -237,9 +260,25 @@ jobs:
       - run: |
           mkdir -p coverage-electronica
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient)/.*' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient|percussion)/.*' \
             --xml-pretty --output coverage-electronica/coverage.xml
           python scripts/check_native_coverage.py coverage-electronica/coverage.xml
+
+  native-percussion-coverage:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_percussion_coverage
+      - run: |
+          mkdir -p coverage-percussion
+          gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient|electronica)/.*' \
+            --xml-pretty --output coverage-percussion/coverage.xml
+          python scripts/check_native_coverage.py coverage-percussion/coverage.xml
 
   native-sanitizers:
     runs-on: ubuntu-24.04
@@ -292,6 +331,16 @@ jobs:
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_electronica_sanitized
 
+  native-percussion-sanitizers:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_percussion_sanitized
+
   avr-build:
     runs-on: ubuntu-24.04
     strategy:
@@ -308,6 +357,8 @@ jobs:
           - nanoatmega328_ambient
           - nanoatmega328new_electronica
           - nanoatmega328_electronica
+          - nanoatmega328new_percussion
+          - nanoatmega328_percussion
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0
@@ -322,7 +373,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing, nanoatmega328new_ambient_timing, nanoatmega328new_electronica_timing]
+        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing, nanoatmega328new_ambient_timing, nanoatmega328new_electronica_timing, nanoatmega328new_percussion_timing]
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0

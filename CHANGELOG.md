@@ -6,6 +6,9 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
+- Percussion Speed CV can now act as an optional **0–5 V quarter-note clock input**. Two rising edges acquire external timing; clock loss after 2.5 periods automatically falls back to the Speed-knob 30–240 BPM source without resetting the running phrase.
+- Added explicit current-hardware safety warnings to the main README, Percussion guide and user manual: the original Speed CV stage is not specified as a 10 V Eurorack trigger input, so 10 V clocks/triggers are unsupported until the input hardware is revised.
+- Corrected Humanize positive-jitter scheduling so delayed hits count their offset from the nominal grid boundary rather than from event preparation.
 - Percussion-bank design specification defining Euclid, Repeat, Probability and Humanize as four event-oriented rhythm modes, with a shared 16-step bar, 4/8/12/16-bar phrase engine and phrase-aware fills for Euclid, Repeat and Probability while Humanize preserves event count.
 - Dedicated engineering analyses for all four proposed Percussion algorithms, covering Euclidean/Bjorklund provenance, exact fill/repeat/probability/humanization contracts, ATmega328P feasibility, verification strategy and explicit musical assessment.
 - Electronica release/CI delivery is now guarded end-to-end: CI must qualify Electronica natively, under coverage and sanitizers, and build both Nano bootloader variants plus the timing image; tagged releases must package both Electronica HEX/ELF pairs and both BUILD-INFO provenance files before checksums or upload.

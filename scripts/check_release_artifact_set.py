@@ -14,7 +14,7 @@ import re
 from pathlib import Path
 
 VERSION_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
-VALID_BANKS = ("classic", "organic", "generative", "ambient", "electronica")
+VALID_BANKS = ("classic", "organic", "generative", "ambient", "electronica", "percussion")
 BOOTLOADERS = ("new", "old")
 FIRMWARE_EXTENSIONS = ("hex", "elf")
 

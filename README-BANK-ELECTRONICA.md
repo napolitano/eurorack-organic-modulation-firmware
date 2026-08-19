@@ -1,6 +1,6 @@
 # Free Modular Drift — Electronica Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Engineering design](docs/analysis/algorithm-banks/electronica-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Engineering design](docs/analysis/algorithm-banks/electronica-bank-design.md) · [Percussion bank](README-BANK-PERCUSSION.md)
 
 The **Electronica bank** is a compile-time Drift bank for rhythmically legible CV in house, acid, techno and adjacent electronic styles. It contains **Pump, Acid, Shuffle and Polymeter**. The bank remains free-running on the original hardware: there is no external clock input, so documented BPM values describe the internal scheduler rather than transport lock.
 
