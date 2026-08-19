@@ -1,6 +1,6 @@
 # Drift algorithm engineering analyses
 
-These documents analyze each supported Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The optional **Organic** documents use the same engineering structure but describe project-defined algorithms with no upstream implementation to preserve. Proposed **Generative** documents extend that structure with an explicit musical assessment because phrase memory, repetition and controlled variation are part of the algorithm contract rather than merely side effects.
+These documents analyze each supported or proposed Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The **Organic** and **Generative** documents use the same engineering structure for project-defined algorithms with no upstream implementation to preserve. Proposed **Ambient** documents extend the same contract into long-form continuous modulation and retain the explicit musical assessment because musical differentiation from the existing banks is part of the design requirement.
 
 > [!IMPORTANT]
 > The analyses are engineering notes, not criticism of the upstream project. A finding is classified according to the available evidence. Unusual behavior is not automatically a defect. Where analysis establishes a defect and a stronger mathematical contract can be stated, the unreleased firmware may correct it directly; the intentional difference is then documented and regression-tested.
@@ -20,13 +20,21 @@ These documents analyze each supported Drift algorithm independently. The four *
 - [Attractor / Hénon map](attractor-analysis.md)
 - [Organic bank architecture and control contract](../algorithm-banks/organic-bank-design.md)
 
-### Proposed Generative bank
+### Generative bank
 
 - [Turing / evolving shift register](turing-analysis.md)
 - [Markov state grammar](markov-analysis.md)
 - [Motif phrase transformation](motif-analysis.md)
 - [Urn reinforced preference](urn-analysis.md)
 - [Generative bank architecture, duplication audit and musical contract](../algorithm-banks/generative-bank-design.md)
+
+### Proposed Ambient bank
+
+- [Current / quasi-periodic long-form motion](current-analysis.md)
+- [Anchor / mean-reverting stochastic motion](anchor-analysis.md)
+- [Breath / stochastic recurrent swell](breath-analysis.md)
+- [Fog / smooth bipolar stochastic cloud](fog-analysis.md)
+- [Ambient bank architecture, duplication audit and musical contract](../algorithm-banks/ambient-bank-design.md)
 
 ## Common analysis contract
 

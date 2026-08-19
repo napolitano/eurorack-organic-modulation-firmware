@@ -6,6 +6,9 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
+- Ambient-bank design specification defining Current, Anchor, Breath and Fog as four distinct forms of long-form continuous modulation, with an explicit duplication audit against Classic, Organic and Generative.
+- Dedicated engineering analyses for all four proposed Ambient algorithms, covering mathematical foundations, control contracts, ATmega328P feasibility, verification strategy and explicit musical assessment.
+- The initial Ambient working title `Tide` is replaced by `Current` to avoid confusion with Mutable Instruments Tides in the Eurorack context.
 - Generative-bank design specification defining Turing, Markov, Motif and Urn as four distinct forms of discrete musical memory, with a duplication audit against Classic and Organic.
 - Dedicated engineering analyses for all four Generative algorithms, including mathematical contracts, AVR cost/test strategy and explicit musical assessment.
 - Implemented the Generative compile-time bank with Turing, Markov, Motif and Urn production algorithms, shared pure integer math primitives and dedicated PlatformIO build/test/timing environments for both Nano bootloaders.
