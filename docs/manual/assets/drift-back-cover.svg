@@ -17,18 +17,19 @@
     <text x="110" y="1340" font-size="31" font-weight="300">Module design</text>
     <text x="110" y="1390" font-size="38" font-weight="600">Quinn Freedman · Free Modular</text>
 
-    <text x="110" y="1490" font-size="31" font-weight="300">Algorithm banks</text>
-    <text x="110" y="1540" font-size="31" font-weight="600">Classic  Perlin · Brownian · Bézier · LFO</text>
-    <text x="110" y="1590" font-size="31" font-weight="600">Organic  Fractal · Vector · Rain · Attractor</text>
-    <text x="110" y="1640" font-size="31" font-weight="600">Generative  Turing · Markov · Motif · Urn</text>
-    <text x="110" y="1690" font-size="31" font-weight="600">Ambient  Current · Anchor · Breath · Fog</text>
-    <text x="110" y="1740" font-size="31" font-weight="600">Electronica  Pump · Acid · Shuffle · Polymeter</text>
+    <text x="110" y="1460" font-size="31" font-weight="300">Algorithm banks</text>
+    <text x="110" y="1510" font-size="29" font-weight="600">Classic  Perlin · Brownian · Bézier · LFO</text>
+    <text x="110" y="1555" font-size="29" font-weight="600">Organic  Fractal · Vector · Rain · Attractor</text>
+    <text x="110" y="1600" font-size="29" font-weight="600">Generative  Turing · Markov · Motif · Urn</text>
+    <text x="110" y="1645" font-size="29" font-weight="600">Ambient  Current · Anchor · Breath · Fog</text>
+    <text x="110" y="1690" font-size="29" font-weight="600">Electronica  Pump · Acid · Shuffle · Polymeter</text>
+    <text x="110" y="1735" font-size="29" font-weight="600">Percussion  Euclid · Repeat · Probability · Humanize</text>
 
-    <text x="110" y="1825" font-size="31" font-weight="300">Manual licence</text>
-    <text x="110" y="1875" font-size="38" font-weight="600">CC BY-NC 4.0</text>
+    <text x="110" y="1815" font-size="31" font-weight="300">Manual licence</text>
+    <text x="110" y="1865" font-size="38" font-weight="600">CC BY-NC 4.0</text>
 
-    <text x="110" y="1950" font-size="31" font-weight="300">Independent, unofficial manual.</text>
-    <text x="110" y="2000" font-size="31" font-weight="300">Not affiliated with Free Modular.</text>
+    <text x="110" y="1940" font-size="31" font-weight="300">Independent, unofficial manual.</text>
+    <text x="110" y="1990" font-size="31" font-weight="300">Not affiliated with Free Modular.</text>
 
     <text x="505" y="2070" text-anchor="middle" font-size="31" font-weight="500">From Munich with</text>
     <path d="M764 2043 C750 2023 716 2031 716 2059 C716 2089 764 2120 764 2120 C764 2120 812 2089 812 2059 C812 2031 778 2023 764 2043Z" fill="#ffffff"/>

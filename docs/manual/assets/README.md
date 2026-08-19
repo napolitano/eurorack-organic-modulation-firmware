@@ -12,7 +12,7 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 | SVG | Manual source | Purpose |
 |---|---|---|
 | `drift-front-cover.svg` | Vector replacement for the original composed cover raster | User-manual cover covering the current firmware-bank scope |
-| `drift-back-cover.svg` | Vector replacement for the original composed back-cover raster | Credits, licence and Classic/Organic/Generative/Ambient/Electronica bank summary |
+| `drift-back-cover.svg` | Vector replacement for the original composed back-cover raster | Credits, licence and Classic/Organic/Generative/Ambient/Electronica/Percussion bank summary |
 | `drift-front-panel.svg` | `Pictures/10000000000004D000000764D6EF55BF.png` | Numbered front-panel control reference |
 | `config-perlin.svg` | `Pictures/10000000000001C2000001203D7620D3.png` | Perlin configuration-switch position |
 | `config-brownian.svg` | `Pictures/10000000000001C200000120799504B3.png` | Brownian configuration-switch position |
@@ -62,8 +62,16 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 | `acid-contour.svg` | Generated from the implemented 16-step level/accent/slide grammar | Acid level vocabulary with accent/slide markers |
 | `shuffle-timing.svg` | Generated from the implemented second-onset timing law | Straight and maximum 3:1 Shuffle pair timing |
 | `polymeter-cycle.svg` | Generated from the implemented 4-against-odd-meter model | Example 4-against-7 recurrence and coincidence accents |
+| `config-euclid.svg` | Generated from the Percussion bank DIP mapping | Euclid configuration-switch position |
+| `config-repeat.svg` | Generated from the Percussion bank DIP mapping | Repeat configuration-switch position |
+| `config-probability.svg` | Generated from the Percussion bank DIP mapping | Probability configuration-switch position |
+| `config-humanize.svg` | Generated from the Percussion bank DIP mapping | Humanize configuration-switch position |
+| `euclid-pattern.svg` | Generated from the implemented `E(k,16)`/fill contract | Euclidean core pattern and phrase-end tail fill |
+| `repeat-ratchets.svg` | Generated from the implemented Repeat placement contract | Single/double/four-pulse ratchet placement |
+| `probability-grid.svg` | Generated from the implemented metric class probabilities | Primary/secondary/ghost rhythm positions |
+| `humanize-timing.svg` | Generated from the implemented bounded Humanize contract | Nominal grid versus timing/level deviation |
 
-The Organic-bank configuration diagrams and five Organic-bank explanatory figures are generated deterministically by `scripts/generate_organic_manual_assets.py`. The Generative DIP diagrams, compact slot symbols and four Generative explanatory figures are generated deterministically by `scripts/generate_generative_manual_assets.py`. The Ambient DIP diagrams and four Ambient explanatory figures are generated deterministically by `scripts/generate_ambient_manual_assets.py`. The Electronica DIP diagrams and four Electronica explanatory figures are generated deterministically by `scripts/generate_electronica_manual_assets.py`. They are explanatory visualisations of the implemented control laws rather than oscilloscope captures.
+The Organic-bank configuration diagrams and five Organic-bank explanatory figures are generated deterministically by `scripts/generate_organic_manual_assets.py`. The Generative DIP diagrams, compact slot symbols and four Generative explanatory figures are generated deterministically by `scripts/generate_generative_manual_assets.py`. The Ambient DIP diagrams and four Ambient explanatory figures are generated deterministically by `scripts/generate_ambient_manual_assets.py`. The Electronica DIP diagrams and four Electronica explanatory figures are generated deterministically by `scripts/generate_electronica_manual_assets.py`. The Percussion DIP diagrams, four Percussion explanatory figures and six-bank cover artwork are generated deterministically by `scripts/generate_percussion_manual_assets.py`. They are explanatory visualisations of the implemented control laws rather than oscilloscope captures.
 
 The ODT now embeds the reusable vector front/back covers from this directory. Creative Commons marks, callout-number circles and small decorative symbols remain embedded document artwork because they do not add reusable technical information outside the composed manual pages.
 
@@ -75,7 +83,7 @@ The ODT now embeds the reusable vector front/back covers from this directory. Cr
 - Prefer the manual palette and Ubuntu-family typography.
 - Do not add generated release-version strings to asset filenames.
 - If the corresponding figure in the ODT changes materially, update the SVG and this source mapping together.
-- Regenerate the Organic figures with `python scripts/generate_organic_manual_assets.py`, the Generative figures with `python scripts/generate_generative_manual_assets.py`, the Ambient figures with `python scripts/generate_ambient_manual_assets.py`, and the Electronica figures with `python scripts/generate_electronica_manual_assets.py`; do not hand-edit generated geometry.
+- Regenerate the Organic figures with `python scripts/generate_organic_manual_assets.py`, the Generative figures with `python scripts/generate_generative_manual_assets.py`, the Ambient figures with `python scripts/generate_ambient_manual_assets.py`, the Electronica figures with `python scripts/generate_electronica_manual_assets.py`, and the Percussion figures/covers with `python scripts/generate_percussion_manual_assets.py`; do not hand-edit generated geometry.
 
 Run `python scripts/check_manual_assets.py` to verify the vector-asset contract.
 
@@ -88,3 +96,4 @@ These assets are part of the end-user manual and are licensed under CC BY-NC 4.0
   From Munich with <img src="../../assets/drift-heart.svg" alt="an orange-red heart" width="16" height="16">
 </p>
 <!-- drift-footer:end -->
+

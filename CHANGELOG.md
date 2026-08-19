@@ -3,6 +3,7 @@
 This changelog records release-relevant changes to the firmware and repository. New work remains under `Unreleased` until a release is explicitly prepared. A versioned release section is created only as part of release preparation and must begin with a `### Release summary` prose paragraph; the release workflow uses that paragraph as the opening of the generated GitHub Release notes.
 
 ## Unreleased
+- User manual expanded to the Percussion bank with six-bank / twenty-four-algorithm overviews, Euclid/Repeat/Probability/Humanize pages, bank-specific DIP diagrams, deterministic rhythm figures and repeated 0–5 V-only clock-input safety guidance.
 
 ### Added
 
@@ -47,6 +48,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 - New vector front/back manual covers that identify Classic, Organic, Generative and Ambient and the current sixteen-algorithm scope.
 
 ### Changed
+- Added a deliberately dry note to the main README and the user-manual Algorithm banks introduction about the very real problem of choosing among 24 algorithms in six banks, and the entirely reasonable architectural response of owning more than one Drift.
 - User-manual bank overview, origin/musical-value table, cover/back-cover scope and Signals-at-a-glance now describe five compile-time banks and twenty algorithms; Electronica is presented as a free-running rhythm-first bank rather than an externally synchronized clocked source.
 - Refactored the portable domain source tree so bank-owned algorithms and bank-specific math are grouped under matching `domain/classic`, `domain/organic`, `domain/generative` and `domain/ambient` subdirectories. Shared `DriftEngine`, types, fixed-point/frequency/RNG support and cross-bank algorithm math remain at the domain root; include paths, tests and architecture/contributor documentation were updated without changing algorithm behavior.
 - Expanded the user manual and publication documentation to cover the Ambient bank (Current, Anchor, Breath and Fog), bringing the maintained end-user scope to four banks and sixteen algorithms. Added bank-specific DIP diagrams, four deterministic Ambient explanatory SVGs, mathematical foundations, musical-value/origin entries and updated four-bank release documentation.

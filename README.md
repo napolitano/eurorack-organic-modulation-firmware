@@ -30,6 +30,9 @@ This firmware now supports six compile-time algorithm banks:
 | **Electronica** | Pump · Acid · Shuffle · Polymeter | Optional compile-time bank; currently `Unreleased` | **[README-BANK-ELECTRONICA.md](README-BANK-ELECTRONICA.md)** |
 | **Percussion** | Euclid · Repeat · Probability · Humanize | Optional compile-time bank; currently `Unreleased` | **[README-BANK-PERCUSSION.md](README-BANK-PERCUSSION.md)** |
 
+> [!TIP]
+> ### A small problem of abundance
+> With **24 algorithms across 6 banks**, this firmware leaves the user with the rather luxurious problem of deciding which four algorithms to have loaded today. Since one Drift can, by stubborn physical reality, run only one bank at a time, owning a second Drift is an entirely defensible engineering response. A third begins to look like sensible redundancy. Beyond that, the distinction between *need* and *system architecture* becomes increasingly academic. Strictly speaking, it is difficult to demonstrate that one can have too many Drifts.
 
 > [!IMPORTANT]
 > **Flashing chooses the algorithm bank.** The two rear DIP switches then choose one of four algorithms inside the flashed bank. A DIP setting cannot switch between Classic, Organic, Generative, Ambient, Electronica and Percussion.
@@ -315,7 +318,7 @@ Matching `.elf` files are included for debugging/provenance. A six-bank release 
 
 ## User manual
 
-The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It currently documents Classic, Organic, Generative, Ambient and Electronica. Percussion is implemented in firmware but intentionally remains blocked from tagged publication until Euclid, Repeat, Probability and Humanize are added to the maintained and frozen user manual. The current manual includes bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
+The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It documents Classic, Organic, Generative, Ambient, Electronica and Percussion, including the Percussion 0–5 V clock-input warning and automatic fallback to the Speed-knob clock. The current manual includes bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
 
 The manual repository area contains:
 
