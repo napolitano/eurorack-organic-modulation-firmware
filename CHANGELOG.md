@@ -6,6 +6,8 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
+- Percussion-bank design specification defining Euclid, Repeat, Probability and Humanize as four event-oriented rhythm modes, with a shared 16-step bar, 4/8/12/16-bar phrase engine and phrase-aware fills for Euclid, Repeat and Probability while Humanize preserves event count.
+- Dedicated engineering analyses for all four proposed Percussion algorithms, covering Euclidean/Bjorklund provenance, exact fill/repeat/probability/humanization contracts, ATmega328P feasibility, verification strategy and explicit musical assessment.
 - Electronica release/CI delivery is now guarded end-to-end: CI must qualify Electronica natively, under coverage and sanitizers, and build both Nano bootloader variants plus the timing image; tagged releases must package both Electronica HEX/ELF pairs and both BUILD-INFO provenance files before checksums or upload.
 - Expanded the maintained user manual to the Electronica bank (Pump, Acid, Shuffle and Polymeter), bringing the end-user scope to five banks and twenty algorithms. Added four bank-specific DIP diagrams, four deterministic Electronica explanatory SVGs, exact implemented mathematical foundations, musical-value/origin entries and free-running 30–240 BPM limitations.
 

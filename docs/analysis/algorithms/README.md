@@ -1,6 +1,6 @@
 # Drift algorithm engineering analyses
 
-These documents analyze each supported or proposed Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The **Organic**, **Generative**, **Ambient** and **Electronica** documents use the same engineering structure for project-defined algorithms with no upstream implementation to preserve. Ambient extends the contract into long-form continuous modulation; Electronica specifies tempo/grid-oriented CV behavior for house, acid, techno and adjacent styles. The explicit musical assessment remains part of every new-bank analysis because musical differentiation from the existing banks is a design requirement.
+These documents analyze each supported or proposed Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The **Organic**, **Generative**, **Ambient**, **Electronica** and proposed **Percussion** documents use the same engineering structure for project-defined algorithms with no upstream implementation to preserve. Ambient extends the contract into long-form continuous modulation; Electronica specifies tempo/grid-oriented CV behavior for house, acid, techno and adjacent styles; Percussion specifies event-oriented rhythm generation with multi-bar phrase structure. The explicit musical assessment remains part of every new-bank analysis because musical differentiation from the existing banks is a design requirement.
 
 > [!IMPORTANT]
 > The analyses are engineering notes, not criticism of the upstream project. A finding is classified according to the available evidence. Unusual behavior is not automatically a defect. Where analysis establishes a defect and a stronger mathematical contract can be stated, the unreleased firmware may correct it directly; the intentional difference is then documented and regression-tested.
@@ -44,6 +44,14 @@ These documents analyze each supported or proposed Drift algorithm independently
 - [Polymeter / dual-cycle accent structure](polymeter-analysis.md)
 - [Electronica bank architecture, duplication audit and musical contract](../algorithm-banks/electronica-bank-design.md)
 
+### Percussion bank
+
+- [Euclid / phrase-aware Euclidean rhythm](euclid-analysis.md)
+- [Repeat / ratchet and phrase-fill generator](repeat-analysis.md)
+- [Probability / metrically weighted stochastic rhythm](probability-analysis.md)
+- [Humanize / bounded microtiming and pulse-level variation](humanize-analysis.md)
+- [Percussion bank architecture, phrase engine, duplication audit and musical contract](../algorithm-banks/percussion-bank-design.md)
+
 ## Common analysis contract
 
 Each document addresses the same questions:
@@ -64,7 +72,7 @@ Equations in these analyses use GitHub's native MathJax rendering: inline expres
 
 ## Shared implementation context
 
-Three Classic modes — Perlin, Bézier, and LFO — use the common upstream `shared.rs::get_delta_t()` V/oct phase-increment mapping. Brownian intentionally does not. The Organic Fractal, Vector and Attractor modes reuse the corrected C++ equivalent of that Speed mapping; Rain intentionally uses direct Speed-to-decay control instead. The Ambient bank reuses the common Speed mapping and then applies its documented 1/16 macro-time scale; Anchor additionally uses a generated Speed-compensation table for its bounded triangular innovation. The Electronica bank defines a bank-local nominal 30..240 BPM tempo mapping because its algorithms are explicitly grid-oriented; this remains free-running on current hardware because Drift has no dedicated external clock input. Findings in shared paths are repeated only where they materially affect the algorithm being analyzed.
+Three Classic modes — Perlin, Bézier, and LFO — use the common upstream `shared.rs::get_delta_t()` V/oct phase-increment mapping. Brownian intentionally does not. The Organic Fractal, Vector and Attractor modes reuse the corrected C++ equivalent of that Speed mapping; Rain intentionally uses direct Speed-to-decay control instead. The Ambient bank reuses the common Speed mapping and then applies its documented 1/16 macro-time scale; Anchor additionally uses a generated Speed-compensation table for its bounded triangular innovation. The Electronica bank defines a bank-local nominal 30..240 BPM tempo mapping because its algorithms are explicitly grid-oriented. The proposed Percussion bank reuses that tempo range, adds a fixed 16-step bar and a 4/8/12/16-bar phrase engine for Euclid, Repeat and Probability; Humanize deliberately preserves a fixed event count. Both banks remain free-running on current hardware because Drift has no dedicated external clock/reset input. Findings in shared paths are repeated only where they materially affect the algorithm being analyzed.
 
 The authoritative upstream references remain:
 
