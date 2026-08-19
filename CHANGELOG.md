@@ -21,6 +21,10 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Changed
 
+- Dependabot CI dependency updates are now consolidated across GitHub Actions and Python into one monthly multi-ecosystem pull request instead of one pull request per ecosystem.
+- Tagged-release manual dependency installation now uses only the Ubuntu package source, canonical HTTPS Ubuntu mirrors, bounded APT retry/network timeouts and the minimal `libreoffice-writer` package set.
+- The release job now has an explicit 60-minute ceiling and the manual dependency installation step a 10-minute ceiling, preventing a transient package mirror from holding a release indefinitely.
+- Release runs for the same tag now share a concurrency group; retriggering a tag cancels an obsolete in-progress run instead of consuming Actions time in parallel.
 - `DriftEngine` now owns and dispatches only the compile-time-selected algorithm bank, so inactive-bank algorithm state does not consume SRAM in the resulting firmware image.
 - Generic selection, integration, property and system tests are bank-aware and exercise the four slots of the active compile-time bank.
 - CI, coverage, sanitizer, AVR resource-budget and timing qualification now cover Classic and Organic builds independently.

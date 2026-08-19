@@ -12,10 +12,15 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-release:
     name: Build release firmware
     runs-on: ubuntu-24.04
+    timeout-minutes: 60
     steps:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
@@ -120,10 +125,50 @@ jobs:
           pio run -e nanoatmega328new_organic_timing
 
       - name: Install manual publication dependencies
+        timeout-minutes: 10
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libreoffice fonts-ubuntu poppler-utils
+          set -euo pipefail
+
+          # GitHub's Ubuntu runner uses an Azure-first mirror list. A stalled
+          # Azure mirror must not be able to hold a tagged release for hours.
+          # Keep the runner's Ubuntu source definition but prefer the canonical
+          # HTTPS archive/security mirrors for this release-only installation.
+          if [[ -f /etc/apt/apt-mirrors.txt ]]; then
+            sudo sed -i \
+              -e 's#http://azure\.archive\.ubuntu\.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' \
+              -e 's#http://archive\.ubuntu\.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' \
+              -e 's#http://security\.ubuntu\.com/ubuntu#https://security.ubuntu.com/ubuntu#g' \
+              /etc/apt/apt-mirrors.txt
+            echo "APT mirror list used for manual publication:"
+            cat /etc/apt/apt-mirrors.txt
+          fi
+
+          apt_options=(
+            -o Acquire::Retries=2
+            -o Acquire::http::Timeout=15
+            -o Acquire::https::Timeout=15
+            -o Acquire::ForceIPv4=true
+            -o Acquire::Languages=none
+          )
+
+          # Avoid unrelated Microsoft/Chrome/etc. repositories on the hosted
+          # image. The manual needs packages from Ubuntu only.
+          if [[ -f /etc/apt/sources.list.d/ubuntu.sources ]]; then
+            apt_options+=(
+              -o Dir::Etc::sourcelist=/etc/apt/sources.list.d/ubuntu.sources
+              -o Dir::Etc::sourceparts=-
+              -o APT::Get::List-Cleanup=0
+            )
+          fi
+
+          sudo apt-get "${apt_options[@]}" update
+          sudo env DEBIAN_FRONTEND=noninteractive apt-get "${apt_options[@]}" install \
+            -y --no-install-recommends \
+            libreoffice-writer fonts-ubuntu poppler-utils
+
           fc-cache -f
+          libreoffice --version || soffice --version
           echo "Resolved manual fonts:"
           fc-match -f "Ubuntu Regular -> %{family} | %{style} | %{file}\n" "Ubuntu:style=Regular"
           fc-match -f "Ubuntu Light   -> %{family} | %{style} | %{file}\n" "Ubuntu Light:style=Regular"
