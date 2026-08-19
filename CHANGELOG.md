@@ -6,6 +6,8 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
+- Electronica-bank design specification defining Pump, Acid, Shuffle and Polymeter as four deterministic tempo/grid-oriented CV modes for house, acid, techno and adjacent electronic styles, including a duplication audit against all existing banks and the planned Percussion concepts.
+- Dedicated engineering analyses for all four proposed Electronica algorithms, covering mathematical contracts, provenance boundaries, ATmega328P cost, verification strategy and explicit musical assessment. The initial `Groove` working title is refined to `Shuffle` so the mode specifies deterministic long-short timing rather than an undefined combination of groove dimensions.
 - Ambient-bank design specification defining Current, Anchor, Breath and Fog as four distinct forms of long-form continuous modulation, with an explicit duplication audit against Classic, Organic and Generative.
 - Dedicated engineering analyses for all four Ambient algorithms, covering mathematical foundations, control contracts, ATmega328P feasibility, verification strategy and explicit musical assessment.
 - The initial Ambient working title `Tide` is replaced by `Current` to avoid confusion with Mutable Instruments Tides in the Eurorack context.

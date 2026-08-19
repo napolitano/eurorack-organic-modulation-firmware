@@ -145,6 +145,9 @@ jobs:
           set -euo pipefail
           python scripts/check_requirement_traceability.py
           python scripts/check_code_documentation.py
+          if [[ -f scripts/check_domain_bank_layout.py ]]; then
+            python scripts/check_domain_bank_layout.py
+          fi
           python scripts/check_markdown_footer.py
           python scripts/check_markdown_math.py
           python scripts/test_generate_release_notes.py
@@ -205,7 +208,7 @@ jobs:
           pio test -e native_coverage
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
+            --exclude 'lib/fmd/src/domain/(organic|generative|ambient)/.*' \
             --xml-pretty --output coverage/coverage.xml
           python scripts/check_native_coverage.py coverage/coverage.xml
 
@@ -215,7 +218,7 @@ jobs:
           pio test -e native_organic_coverage
           mkdir -p coverage-organic
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
+            --exclude 'lib/fmd/src/domain/(classic|generative|ambient)/.*' \
             --xml-pretty --output coverage-organic/coverage.xml
           python scripts/check_native_coverage.py coverage-organic/coverage.xml
 
@@ -225,7 +228,7 @@ jobs:
           pio test -e native_generative_coverage
           mkdir -p coverage-generative
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm)\.cpp$' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|ambient)/.*' \
             --xml-pretty --output coverage-generative/coverage.xml
           python scripts/check_native_coverage.py coverage-generative/coverage.xml
 
@@ -235,7 +238,7 @@ jobs:
           pio test -e native_ambient_coverage
           mkdir -p coverage-ambient
           gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(BezierAlgorithm|BrownianAlgorithm|LfoAlgorithm|PerlinAlgorithm|AttractorAlgorithm|FractalAlgorithm|OrganicAlgorithmMath|RainAlgorithm|VectorAlgorithm|GenerativeAlgorithmMath|TuringAlgorithm|MarkovAlgorithm|MotifAlgorithm|UrnAlgorithm)\.cpp$' \
+            --exclude 'lib/fmd/src/domain/(classic|organic|generative)/.*' \
             --xml-pretty --output coverage-ambient/coverage.xml
           python scripts/check_native_coverage.py coverage-ambient/coverage.xml
 
