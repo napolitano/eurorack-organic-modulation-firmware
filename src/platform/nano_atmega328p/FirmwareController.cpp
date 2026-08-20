@@ -64,7 +64,7 @@ void FirmwareController::begin() {
   ledOutput.begin();
 
   driftRuntime = new (runtimeStorage) DriftRuntime(
-      algorithmFromConfig(configInput1Low, configInput2Low),
+      startupAlgorithm(configInput1Low, configInput2Low),
       randomSeed,
       analogInputs,
       dacOutput,

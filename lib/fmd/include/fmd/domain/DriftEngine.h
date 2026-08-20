@@ -1,6 +1,6 @@
 /**
  * @file DriftEngine.h
- * Declares compile-time algorithm-bank selection and the portable Drift processing core.
+ * Declares compile-time algorithm-bank/target selection and the portable Drift processing core.
  *
  * @author Axel Napolitano
  * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
@@ -14,70 +14,111 @@
 
 #include <stdint.h>
 
-#include "fmd/config/AlgorithmBankConfig.h"
+#include "fmd/config/AlgorithmTargetConfig.h"
 #include "fmd/domain/Types.h"
 #include "fmd/ports/ReferenceTables.h"
 
 #if FMD_ALGORITHM_BANK == FMD_BANK_CLASSIC
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BEZIER
 #include "fmd/domain/classic/BezierAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BROWNIAN
 #include "fmd/domain/classic/BrownianAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_LFO
 #include "fmd/domain/classic/LfoAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_PERLIN
 #include "fmd/domain/classic/PerlinAlgorithm.h"
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_ORGANIC
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_ATTRACTOR
 #include "fmd/domain/organic/AttractorAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_FRACTAL
 #include "fmd/domain/organic/FractalAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_RAIN
 #include "fmd/domain/organic/RainAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_VECTOR
 #include "fmd/domain/organic/VectorAlgorithm.h"
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_GENERATIVE
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_MARKOV
 #include "fmd/domain/generative/MarkovAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_MOTIF
 #include "fmd/domain/generative/MotifAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_TURING
 #include "fmd/domain/generative/TuringAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_URN
 #include "fmd/domain/generative/UrnAlgorithm.h"
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_AMBIENT
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_ANCHOR
 #include "fmd/domain/ambient/AnchorAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BREATH
 #include "fmd/domain/ambient/BreathAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_CURRENT
 #include "fmd/domain/ambient/CurrentAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_FOG
 #include "fmd/domain/ambient/FogAlgorithm.h"
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_ACID
 #include "fmd/domain/electronica/AcidAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_POLYMETER
 #include "fmd/domain/electronica/PolymeterAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_PUMP
 #include "fmd/domain/electronica/PumpAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_SHUFFLE
 #include "fmd/domain/electronica/ShuffleAlgorithm.h"
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_EUCLID
 #include "fmd/domain/percussion/EuclidAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_HUMANIZE
 #include "fmd/domain/percussion/HumanizeAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_PROBABILITY
 #include "fmd/domain/percussion/ProbabilityAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_REPEAT
 #include "fmd/domain/percussion/RepeatAlgorithm.h"
+#endif
 #endif
 
 namespace fmd {
 
 /**
- * @brief Own all state for the compile-time-selected algorithm bank and dispatch samples.
+ * @brief Own state for the compile-time-selected bank or named developer target.
  *
- * A firmware image contains one four-algorithm bank only. The rear DIP switches
- * select one of those four algorithms at startup. Conditional member layout is
- * deliberate: inactive-bank algorithm objects are not retained in SRAM merely
- * to support a compile-time option that cannot be reached in the running image.
+ * Normal firmware contains one four-algorithm bank and the rear DIP switches select
+ * one algorithm at startup. A developer build with FMD_FORCED_ALGORITHM set keeps
+ * only the named algorithm referenced by DriftEngine, allowing linker garbage
+ * collection to remove the other three bank algorithms from the final image.
  */
 class DriftEngine {
  public:
   /**
-   * @brief Construct the selected-bank algorithms and choose one active mode.
-   * @param algorithm Algorithm fixed for this engine lifetime; normally returned
-   *                  by algorithmFromConfig().
+   * @brief Construct the selected algorithm state and choose one active mode.
+   * @param algorithm Algorithm fixed for this engine lifetime; normally returned by startupAlgorithm().
    * @param randomSeed Deterministic 16-bit seed shared by stochastic algorithms.
-   * @param referenceTables Read-only exponential, inverse-CDF and gamma lookup provider.
+   * @param referenceTables Read-only numerical lookup provider.
    */
-  DriftEngine(Algorithm algorithm,
-              uint16_t randomSeed,
-              const IReferenceTables& referenceTables);
+  DriftEngine(Algorithm algorithm, uint16_t randomSeed, const IReferenceTables& referenceTables);
 
-  /**
-   * @brief Advance the selected algorithm by one sample.
-   * @param controls Coherent knob/CV snapshot.
-   * @return 12-bit DAC code 0..4095, or zero for an algorithm absent from this bank.
-   */
+  /** @brief Advance the selected algorithm by one sample. */
   uint16_t step(const ControlFrame& controls);
 
   /** @return Algorithm selected when this engine was constructed. */
@@ -87,54 +128,96 @@ class DriftEngine {
   Algorithm selectedAlgorithm_;  ///< Active algorithm for this power cycle.
 
 #if FMD_ALGORITHM_BANK == FMD_BANK_CLASSIC
-  PerlinAlgorithm perlinAlgorithm_;       ///< Classic-bank Perlin state.
-  BrownianAlgorithm brownianAlgorithm_;   ///< Classic-bank Brownian state.
-  BezierAlgorithm bezierAlgorithm_;       ///< Classic-bank Bézier state.
-  LfoAlgorithm lfoAlgorithm_;             ///< Classic-bank LFO state.
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_PERLIN
+  PerlinAlgorithm perlinAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BROWNIAN
+  BrownianAlgorithm brownianAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BEZIER
+  BezierAlgorithm bezierAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_LFO
+  LfoAlgorithm lfoAlgorithm_;
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_ORGANIC
-  FractalAlgorithm fractalAlgorithm_;     ///< Organic-bank multi-scale noise state.
-  VectorAlgorithm vectorAlgorithm_;       ///< Organic-bank 2D flow state.
-  RainAlgorithm rainAlgorithm_;           ///< Organic-bank shot-noise state.
-  AttractorAlgorithm attractorAlgorithm_; ///< Organic-bank Hénon traversal state.
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_FRACTAL
+  FractalAlgorithm fractalAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_VECTOR
+  VectorAlgorithm vectorAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_RAIN
+  RainAlgorithm rainAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_ATTRACTOR
+  AttractorAlgorithm attractorAlgorithm_;
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_GENERATIVE
-  TuringAlgorithm turingAlgorithm_;       ///< Generative-bank shift-register state.
-  MarkovAlgorithm markovAlgorithm_;       ///< Generative-bank Markov grammar state.
-  MotifAlgorithm motifAlgorithm_;         ///< Generative-bank phrase-transform state.
-  UrnAlgorithm urnAlgorithm_;             ///< Generative-bank reinforced-state process.
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_TURING
+  TuringAlgorithm turingAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_MARKOV
+  MarkovAlgorithm markovAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_MOTIF
+  MotifAlgorithm motifAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_URN
+  UrnAlgorithm urnAlgorithm_;
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_AMBIENT
-  CurrentAlgorithm currentAlgorithm_;     ///< Ambient deterministic long-form motion.
-  AnchorAlgorithm anchorAlgorithm_;       ///< Ambient mean-reverting stochastic motion.
-  BreathAlgorithm breathAlgorithm_;       ///< Ambient recurrent swell state.
-  FogAlgorithm fogAlgorithm_;             ///< Ambient bounded cloudlet process.
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_CURRENT
+  CurrentAlgorithm currentAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_ANCHOR
+  AnchorAlgorithm anchorAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BREATH
+  BreathAlgorithm breathAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_FOG
+  FogAlgorithm fogAlgorithm_;
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_ELECTRONICA
-  PumpAlgorithm pumpAlgorithm_;            ///< Electronica duck/recovery contour.
-  AcidAlgorithm acidAlgorithm_;            ///< Electronica deterministic riff contour.
-  ShuffleAlgorithm shuffleAlgorithm_;      ///< Electronica long/short timing state.
-  PolymeterAlgorithm polymeterAlgorithm_;  ///< Electronica polymetric accent state.
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_PUMP
+  PumpAlgorithm pumpAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_ACID
+  AcidAlgorithm acidAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_SHUFFLE
+  ShuffleAlgorithm shuffleAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_POLYMETER
+  PolymeterAlgorithm polymeterAlgorithm_;
+#endif
 #elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
-  EuclidAlgorithm euclidAlgorithm_;          ///< Percussion Euclidean phrase state.
-  RepeatAlgorithm repeatAlgorithm_;          ///< Percussion ratchet phrase state.
-  ProbabilityAlgorithm probabilityAlgorithm_;///< Percussion stochastic metric state.
-  HumanizeAlgorithm humanizeAlgorithm_;      ///< Percussion microtiming state.
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_EUCLID
+  EuclidAlgorithm euclidAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_REPEAT
+  RepeatAlgorithm repeatAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_PROBABILITY
+  ProbabilityAlgorithm probabilityAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_HUMANIZE
+  HumanizeAlgorithm humanizeAlgorithm_;
+#endif
 #endif
 };
 
-/**
- * @brief Decode the two active-low rear configuration inputs for the compiled bank.
- * @param configInput1Low true when firmware CONFIG 1 is pulled low.
- * @param configInput2Low true when firmware CONFIG 2 is pulled low.
- * @return Algorithm occupying that DIP slot in the selected AlgorithmBank.
- *
- * The electrical four-way mapping remains unchanged. Only the semantic contents
- * of each slot differ between the compile-time firmware banks.
- */
+/** @brief Decode the two active-low rear configuration inputs for the compiled bank. */
 Algorithm algorithmFromConfig(bool configInput1Low, bool configInput2Low);
 
 /**
- * @brief Return the algorithm occupying a logical DIP slot in the compiled bank.
- * @param slotIndex Slot 0..3 in OFF/OFF, OFF/ON, ON/OFF, ON/ON firmware-pin order.
- * @return Selected-bank algorithm, or the bank's first slot for an invalid index.
+ * @brief Select the startup algorithm for this firmware image.
+ * @return Forced developer algorithm when configured, otherwise the rear-DIP selection.
  */
+Algorithm startupAlgorithm(bool configInput1Low, bool configInput2Low);
+
+/** @brief Return the algorithm occupying a logical DIP slot in the compiled bank. */
 Algorithm algorithmForBankSlot(uint8_t slotIndex);
 
 }  // namespace fmd

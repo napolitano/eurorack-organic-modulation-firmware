@@ -255,7 +255,9 @@ Production C++ uses complete provenance/licence headers and Doxygen contracts. S
 
 ## Build from source
 
-End users do not need to build the firmware; use the prebuilt release HEX files and the [installation guide](docs/installation/README.md). Developers can build any bank with PlatformIO.
+End users do not need to build the firmware; use the prebuilt release HEX files and the [installation guide](docs/installation/README.md). Developers have two deliberately different PlatformIO workflows: build/flash a **complete bank** with normal rear-DIP selection, or build/flash a **named algorithm target** that ignores the DIP switches for on-device testing.
+
+### Build or flash a complete bank
 
 | Bank | New Nano bootloader | Old Nano bootloader |
 |---|---|---|
@@ -266,7 +268,48 @@ End users do not need to build the firmware; use the prebuilt release HEX files 
 | Electronica | `pio run -e nanoatmega328new_electronica` | `pio run -e nanoatmega328_electronica` |
 | Percussion | `pio run -e nanoatmega328new_percussion` | `pio run -e nanoatmega328_percussion` |
 
-For native tests, sanitizers, coverage and timing targets, see [README_TESTING.md](README_TESTING.md).
+Append `-t upload` to flash the selected bank. The resulting firmware behaves like a normal release image: both rear DIP switches remain active and select one of the bank's four algorithms at startup.
+
+### Build or flash one algorithm by name
+
+For bench/on-device testing, the firmware can instead be compile-time locked to a **named algorithm**. The algorithm name determines its bank automatically and the rear DIP switches are ignored in that developer build. `DriftEngine` references only that selected algorithm, so normal AVR linker garbage collection can discard the other three bank algorithms from the final developer image. No numeric slot or algorithm ID is part of the user-facing command.
+
+The easiest cross-platform interface is the target helper:
+
+```bash
+# Flash the complete Ambient bank; DIP switches remain active.
+python scripts/flash_drift.py bank ambient
+
+# Flash only the Breath developer target; DIP switches are ignored.
+python scripts/flash_drift.py algorithm breath
+
+# Compile without uploading.
+python scripts/flash_drift.py --build-only algorithm euclid
+
+# Select the old Nano bootloader and an explicit serial port.
+python scripts/flash_drift.py --bootloader old --port COM5 algorithm markov
+```
+
+The same mechanism can be invoked directly through PlatformIO. On Linux/macOS:
+
+```bash
+FMD_FORCE_ALGORITHM=breath pio run -e nanoatmega328new_ambient -t upload
+```
+
+PowerShell:
+
+```powershell
+$env:FMD_FORCE_ALGORITHM = "breath"
+pio run -e nanoatmega328new_ambient -t upload
+Remove-Item Env:FMD_FORCE_ALGORITHM
+```
+
+Valid algorithm names are: `perlin`, `brownian`, `bezier`, `lfo`, `fractal`, `vector`, `rain`, `attractor`, `turing`, `markov`, `motif`, `urn`, `current`, `anchor`, `breath`, `fog`, `pump`, `acid`, `shuffle`, `polymeter`, `euclid`, `repeat`, `probability`, `humanize`. Names are case-insensitive; `Bézier` is normalised to `bezier`.
+
+> [!IMPORTANT]
+> **Named algorithm builds are developer/test images, not release flavours.** A normal bank build and every tagged release leave the override unset, so rear-DIP selection remains functional. The build tooling also rejects an algorithm name when it does not belong to the selected PlatformIO bank environment.
+
+For native tests, sanitizers, coverage, timing targets and the named-target verification path, see [README_TESTING.md](README_TESTING.md).
 
 ## Release artifacts
 

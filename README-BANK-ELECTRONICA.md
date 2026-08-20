@@ -223,6 +223,20 @@ There is **no external clock or reset semantic in Electronica**. This is an inte
 
 The Electronica implementation is deterministic for fixed controls and uses fixed-point arithmetic and fixed-size state. No heap allocation or floating-point arithmetic is required in the AVR hot path. The same flash, SRAM and 2.5 kHz timing policies apply as to every other bank.
 
+## Named developer target
+
+For on-device testing, this bank can be flashed normally with rear-DIP selection or locked to one algorithm by name. For example:
+
+```bash
+# Complete Electronica bank: rear DIP switches remain active.
+pio run -e nanoatmega328new_electronica -t upload
+
+# Named developer target: DIP switches are ignored.
+FMD_FORCE_ALGORITHM=pump pio run -e nanoatmega328new_electronica -t upload
+```
+
+The cross-platform helper `python scripts/flash_drift.py algorithm pump` infers this bank automatically. Named targets are developer/test builds only; tagged releases always contain the complete four-algorithm bank.
+
 ## Build and verification
 
 Firmware:

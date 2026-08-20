@@ -7,7 +7,7 @@ This guide explains how to install a **prebuilt tagged release** on the original
 Changing the firmware is also how you change the **algorithm bank**. The rear DIP switches select only one of four algorithms inside the bank that is currently flashed.
 
 > [!IMPORTANT]
-> This is the end-user installation path. Developers building or uploading directly from source should use the [build section in the main README](../../README.md#build-from-source) and the repository's PlatformIO configuration.
+> This is the end-user installation path. Developers building or uploading directly from source should use the [build section in the main README](../../README.md#build-from-source). That developer workflow can either flash a complete bank with normal DIP selection or lock a test build directly to a named algorithm such as `breath`, `markov` or `euclid`.
 
 ## Contents
 

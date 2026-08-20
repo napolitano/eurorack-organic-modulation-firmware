@@ -35,6 +35,9 @@ jobs:
     name: Build release firmware
     runs-on: ubuntu-24.04
     timeout-minutes: 60
+    env:
+      # Named algorithm locks are developer-only and must never affect release bank images.
+      FMD_FORCE_ALGORITHM: ""
     steps:
       - name: Check out repository
         uses: actions/checkout@v6.0.2
@@ -185,6 +188,18 @@ jobs:
           fi
           if [[ -f scripts/test_freeze_user_manual.py ]]; then
             python scripts/test_freeze_user_manual.py
+          fi
+          if [[ -f scripts/test_firmware_target_tooling.py ]]; then
+            python scripts/test_firmware_target_tooling.py
+          fi
+
+      - name: Confirm release builds are not algorithm-locked
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "${FMD_FORCE_ALGORITHM:-}" ]]; then
+            echo "Release builds must not set FMD_FORCE_ALGORITHM; publish complete bank images only." >&2
+            exit 1
           fi
 
       - name: Run complete native regression suite once

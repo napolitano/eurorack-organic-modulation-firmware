@@ -212,6 +212,20 @@ A correction is accepted only where the intended mathematics or state behavior c
 
 See [original firmware analysis](docs/analysis/original-firmware-analysis.md) for the broader evidence chain.
 
+## Named developer target
+
+For on-device testing, this bank can be flashed normally with rear-DIP selection or locked to one algorithm by name. For example:
+
+```bash
+# Complete Classic bank: rear DIP switches remain active.
+pio run -e nanoatmega328new -t upload
+
+# Named developer target: DIP switches are ignored.
+FMD_FORCE_ALGORITHM=perlin pio run -e nanoatmega328new -t upload
+```
+
+The cross-platform helper `python scripts/flash_drift.py algorithm perlin` infers this bank automatically. Named targets are developer/test builds only; tagged releases always contain the complete four-algorithm bank.
+
 ## Build and verification
 
 Firmware:

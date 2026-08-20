@@ -158,6 +158,29 @@ pio run -e nanoatmega328new_percussion_timing
 
 Generic integration, property and system suites use `algorithmForBankSlot()` so they exercise the four algorithms compiled into the selected bank rather than assuming enum values from Classic. Algorithm-specific suites remain explicit.
 
+## Named on-device algorithm targets
+
+The normal AVR environments build one complete bank and retain rear-DIP selection. For hardware bring-up and algorithm-specific bench testing, `FMD_FORCE_ALGORITHM=<name>` can lock the startup selection to one algorithm by name. The name is resolved by `scripts/platformio_algorithm_target.py`; the corresponding bank must match the PlatformIO environment or the build fails.
+
+Examples:
+
+```bash
+# Normal bank image: all four Ambient algorithms selectable by DIP.
+pio run -e nanoatmega328new_ambient -t upload
+
+# Developer image: Breath always starts, whatever the DIP position.
+FMD_FORCE_ALGORITHM=breath pio run -e nanoatmega328new_ambient -t upload
+
+# Cross-platform helper; bank is inferred from the name.
+python scripts/flash_drift.py algorithm breath
+```
+
+The helper also supports `bank <name>`, `--bootloader new|old`, `--port`, `--build-only` and `--dry-run`. Internally the 24 names map to stable compile-time IDs, but those numbers are deliberately not part of the developer-facing interface. `AlgorithmTargetConfig.h` statically rejects a forced algorithm outside the compiled bank.
+
+CI runs `scripts/test_firmware_target_tooling.py` to verify all six bank names, all twenty-four algorithm names, bootloader-environment mapping, wrapper command generation and compile-time bank/algorithm mismatch rejection. The selection integration suite additionally verifies that normal builds follow the rear DIP inputs while a forced build ignores all four DIP combinations.
+
+Tagged release builds must never set `FMD_FORCE_ALGORITHM`; release artifacts remain complete four-algorithm bank images.
+
 ## PlatformIO test dependency discovery
 
 PlatformIO's Library Dependency Finder starts from the active test translation unit. Test suites that exercise `DriftRuntime` through `test/support/DriftTestRig.h` therefore include `fmd/application/DriftRuntime.h` directly as an explicit production dependency. This mirrors the Quantizer test pattern and prevents the test from depending on transitive discovery through a non-library support include path.

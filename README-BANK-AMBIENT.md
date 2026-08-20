@@ -210,6 +210,20 @@ The AVR implementation uses fixed-point arithmetic and fixed-size state. Current
 
 The common repository resource and timing policies still apply: application flash at or below 85%, static SRAM at or below 65%, strict native compilation, sanitizer coverage and dedicated 2.5 kHz timing qualification.
 
+## Named developer target
+
+For on-device testing, this bank can be flashed normally with rear-DIP selection or locked to one algorithm by name. For example:
+
+```bash
+# Complete Ambient bank: rear DIP switches remain active.
+pio run -e nanoatmega328new_ambient -t upload
+
+# Named developer target: DIP switches are ignored.
+FMD_FORCE_ALGORITHM=breath pio run -e nanoatmega328new_ambient -t upload
+```
+
+The cross-platform helper `python scripts/flash_drift.py algorithm breath` infers this bank automatically. Named targets are developer/test builds only; tagged releases always contain the complete four-algorithm bank.
+
 ## Build and verification
 
 Firmware:

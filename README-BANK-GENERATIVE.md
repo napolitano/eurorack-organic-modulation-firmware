@@ -227,6 +227,20 @@ The bank uses fixed-size state only: one 16-bit register for Turing, eight-state
 
 The same repository guardrails apply as for every bank: application flash at or below 85%, static SRAM at or below 65%, strict native builds, sanitizer coverage and dedicated timing qualification against the 2.5 kHz processing deadline.
 
+## Named developer target
+
+For on-device testing, this bank can be flashed normally with rear-DIP selection or locked to one algorithm by name. For example:
+
+```bash
+# Complete Generative bank: rear DIP switches remain active.
+pio run -e nanoatmega328new_generative -t upload
+
+# Named developer target: DIP switches are ignored.
+FMD_FORCE_ALGORITHM=turing pio run -e nanoatmega328new_generative -t upload
+```
+
+The cross-platform helper `python scripts/flash_drift.py algorithm turing` infers this bank automatically. Named targets are developer/test builds only; tagged releases always contain the complete four-algorithm bank.
+
 ## Build and verification
 
 Firmware:

@@ -65,6 +65,27 @@ void test_selected_bank_config_pin_mapping() {
     TEST_ASSERT_EQUAL_INT(static_cast<int>(expected[slotIndex]),
                           static_cast<int>(fmd::algorithmForBankSlot(slotIndex)));
   }
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO
+  TEST_ASSERT_EQUAL_INT(
+      static_cast<int>(fmd::algorithmFromConfig(false, false)),
+      static_cast<int>(fmd::startupAlgorithm(false, false)));
+  TEST_ASSERT_EQUAL_INT(
+      static_cast<int>(fmd::algorithmFromConfig(false, true)),
+      static_cast<int>(fmd::startupAlgorithm(false, true)));
+  TEST_ASSERT_EQUAL_INT(
+      static_cast<int>(fmd::algorithmFromConfig(true, false)),
+      static_cast<int>(fmd::startupAlgorithm(true, false)));
+  TEST_ASSERT_EQUAL_INT(
+      static_cast<int>(fmd::algorithmFromConfig(true, true)),
+      static_cast<int>(fmd::startupAlgorithm(true, true)));
+#else
+  constexpr int forcedExpected = FMD_FORCED_ALGORITHM;
+  TEST_ASSERT_EQUAL_INT(forcedExpected, static_cast<int>(fmd::startupAlgorithm(false, false)));
+  TEST_ASSERT_EQUAL_INT(forcedExpected, static_cast<int>(fmd::startupAlgorithm(false, true)));
+  TEST_ASSERT_EQUAL_INT(forcedExpected, static_cast<int>(fmd::startupAlgorithm(true, false)));
+  TEST_ASSERT_EQUAL_INT(forcedExpected, static_cast<int>(fmd::startupAlgorithm(true, true)));
+#endif
+
 }
 
 void test_invalid_bank_slot_falls_back_to_default_slot() {

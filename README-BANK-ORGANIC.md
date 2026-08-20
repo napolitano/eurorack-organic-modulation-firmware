@@ -277,6 +277,20 @@ The bank is designed around ATmega328P constraints rather than desktop DSP assum
 
 The bank-level architecture, duplication audit and musical rationale are documented in [Organic algorithm bank design](docs/analysis/algorithm-banks/organic-bank-design.md).
 
+## Named developer target
+
+For on-device testing, this bank can be flashed normally with rear-DIP selection or locked to one algorithm by name. For example:
+
+```bash
+# Complete Organic bank: rear DIP switches remain active.
+pio run -e nanoatmega328new_organic -t upload
+
+# Named developer target: DIP switches are ignored.
+FMD_FORCE_ALGORITHM=fractal pio run -e nanoatmega328new_organic -t upload
+```
+
+The cross-platform helper `python scripts/flash_drift.py algorithm fractal` infers this bank automatically. Named targets are developer/test builds only; tagged releases always contain the complete four-algorithm bank.
+
 ## Build and verification
 
 Firmware builds:

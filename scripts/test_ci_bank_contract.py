@@ -161,6 +161,15 @@ def main() -> int:
         if checker not in text:
             missing.append(f"{bank}/scoped coverage policy: {checker}")
 
+    for fragment in (
+        "named-target-smoke:",
+        "FMD_FORCE_ALGORITHM: breath",
+        "pio test -e native_ambient -f integration/test_selection",
+        "python scripts/test_firmware_target_tooling.py",
+    ):
+        if fragment not in text:
+            missing.append(f"named algorithm target CI contract: {fragment}")
+
     if "native-percussion-tests:" not in text:
         missing.append("percussion/native job: native-percussion-tests")
     if "native-percussion-coverage:" not in text:

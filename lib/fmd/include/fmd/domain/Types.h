@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 
-#include "fmd/config/AlgorithmBankConfig.h"
+#include "fmd/config/AlgorithmTargetConfig.h"
 
 namespace fmd {
 
@@ -26,30 +26,30 @@ namespace fmd {
  * tooling to describe all banks without changing the hardware DIP interface.
  */
 enum class Algorithm : uint8_t {
-  Perlin = 0,     ///< Classic: two-octave gradient-noise modulation; default.
-  Brownian = 1,   ///< Classic: bounded random walk with first-order smoothing.
-  Bezier = 2,     ///< Classic: random destinations joined by morphed cubic curves.
-  Lfo = 3,        ///< Classic: deterministic skewable triangle / saw LFO.
-  Fractal = 4,    ///< Organic: three-scale procedural gradient-noise fractal.
-  Vector = 5,     ///< Organic: cross-coupled two-dimensional toroidal phase flow.
-  Rain = 6,       ///< Organic: stochastic impulse / decaying-envelope process.
-  Attractor = 7,  ///< Organic: smoothed Hénon-map traversal.
-  Turing = 8,     ///< Generative: mutating 16-bit shift-register loop.
-  Markov = 9,     ///< Generative: finite-state stochastic transition grammar.
-  Motif = 10,     ///< Generative: explicit phrase with structural transformations.
-  Urn = 11,       ///< Generative: bounded leaky reinforced-state process.
-  Current = 12,   ///< Ambient: deterministic quasi-periodic-inspired long motion.
-  Anchor = 13,    ///< Ambient: bounded mean-reverting stochastic modulation.
-  Breath = 14,    ///< Ambient: recurrent smooth swells with cycle variation.
-  Fog = 15,       ///< Ambient: overlapping smooth bipolar stochastic cloudlets.
-  Pump = 16,      ///< Electronica: free-running duck/recovery contour.
-  Acid = 17,      ///< Electronica: deterministic accented/sliding 16-step contour.
-  Shuffle = 18,   ///< Electronica: deterministic long/short timing modulation.
-  Polymeter = 19, ///< Electronica: four-against-odd-meter accent process.
-  Euclid = 20,     ///< Percussion: phrase-aware 16-step Euclidean pulse rhythm.
-  Repeat = 21,     ///< Percussion: quarter-note anchors with ratchet clusters.
-  Probability = 22,///< Percussion: metrically weighted stochastic pulse rhythm.
-  Humanize = 23    ///< Percussion: bounded timing/amplitude variation.
+  Perlin = FMD_ALGORITHM_PERLIN,     ///< Classic: two-octave gradient-noise modulation; default.
+  Brownian = FMD_ALGORITHM_BROWNIAN,   ///< Classic: bounded random walk with first-order smoothing.
+  Bezier = FMD_ALGORITHM_BEZIER,     ///< Classic: random destinations joined by morphed cubic curves.
+  Lfo = FMD_ALGORITHM_LFO,        ///< Classic: deterministic skewable triangle / saw LFO.
+  Fractal = FMD_ALGORITHM_FRACTAL,    ///< Organic: three-scale procedural gradient-noise fractal.
+  Vector = FMD_ALGORITHM_VECTOR,     ///< Organic: cross-coupled two-dimensional toroidal phase flow.
+  Rain = FMD_ALGORITHM_RAIN,       ///< Organic: stochastic impulse / decaying-envelope process.
+  Attractor = FMD_ALGORITHM_ATTRACTOR,  ///< Organic: smoothed Hénon-map traversal.
+  Turing = FMD_ALGORITHM_TURING,     ///< Generative: mutating 16-bit shift-register loop.
+  Markov = FMD_ALGORITHM_MARKOV,     ///< Generative: finite-state stochastic transition grammar.
+  Motif = FMD_ALGORITHM_MOTIF,     ///< Generative: explicit phrase with structural transformations.
+  Urn = FMD_ALGORITHM_URN,       ///< Generative: bounded leaky reinforced-state process.
+  Current = FMD_ALGORITHM_CURRENT,   ///< Ambient: deterministic quasi-periodic-inspired long motion.
+  Anchor = FMD_ALGORITHM_ANCHOR,    ///< Ambient: bounded mean-reverting stochastic modulation.
+  Breath = FMD_ALGORITHM_BREATH,    ///< Ambient: recurrent smooth swells with cycle variation.
+  Fog = FMD_ALGORITHM_FOG,       ///< Ambient: overlapping smooth bipolar stochastic cloudlets.
+  Pump = FMD_ALGORITHM_PUMP,      ///< Electronica: free-running duck/recovery contour.
+  Acid = FMD_ALGORITHM_ACID,      ///< Electronica: deterministic accented/sliding 16-step contour.
+  Shuffle = FMD_ALGORITHM_SHUFFLE,   ///< Electronica: deterministic long/short timing modulation.
+  Polymeter = FMD_ALGORITHM_POLYMETER, ///< Electronica: four-against-odd-meter accent process.
+  Euclid = FMD_ALGORITHM_EUCLID,     ///< Percussion: phrase-aware 16-step Euclidean pulse rhythm.
+  Repeat = FMD_ALGORITHM_REPEAT,     ///< Percussion: quarter-note anchors with ratchet clusters.
+  Probability = FMD_ALGORITHM_PROBABILITY,///< Percussion: metrically weighted stochastic pulse rhythm.
+  Humanize = FMD_ALGORITHM_HUMANIZE    ///< Percussion: bounded timing/amplitude variation.
 };
 
 /**

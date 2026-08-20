@@ -31,6 +31,20 @@ jobs:
       - run: python scripts/test_ci_bank_contract.py
       - run: python scripts/test_native_coverage_policy.py
       - run: python scripts/test_freeze_user_manual.py
+      - run: python scripts/test_firmware_target_tooling.py
+
+  named-target-smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - name: Verify named algorithm override ignores DIP selection
+        env:
+          FMD_FORCE_ALGORITHM: breath
+        run: pio test -e native_ambient -f integration/test_selection
 
   native-tests:
     runs-on: ubuntu-24.04

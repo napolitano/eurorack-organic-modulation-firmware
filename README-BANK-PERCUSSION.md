@@ -250,6 +250,20 @@ The clock is sampled through the existing analogue input path, not a dedicated i
 
 All phrase, repeat and scheduler state is statically allocated. No heap allocation is required in the AVR hot path. The common flash/SRAM resource policies and 2.5 kHz timing qualification apply to Percussion as well.
 
+## Named developer target
+
+For on-device testing, this bank can be flashed normally with rear-DIP selection or locked to one algorithm by name. For example:
+
+```bash
+# Complete Percussion bank: rear DIP switches remain active.
+pio run -e nanoatmega328new_percussion -t upload
+
+# Named developer target: DIP switches are ignored.
+FMD_FORCE_ALGORITHM=euclid pio run -e nanoatmega328new_percussion -t upload
+```
+
+The cross-platform helper `python scripts/flash_drift.py algorithm euclid` infers this bank automatically. Named targets are developer/test builds only; tagged releases always contain the complete four-algorithm bank.
+
 ## Build and verification
 
 Firmware:

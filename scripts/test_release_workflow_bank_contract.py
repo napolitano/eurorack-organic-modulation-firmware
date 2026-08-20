@@ -204,6 +204,9 @@ COMMON_FRAGMENTS = (
     '"Ubuntu-L.ttf"',
     "manual_diagnostics()",
     "trap manual_diagnostics ERR",
+    'FMD_FORCE_ALGORITHM: ""',
+    "Confirm release builds are not algorithm-locked",
+    "python scripts/test_firmware_target_tooling.py",
 )
 
 FORBIDDEN_FRAGMENTS = (
