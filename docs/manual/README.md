@@ -54,6 +54,8 @@ python scripts/check_user_manual.py \
 
 A local visual smoke build may use `--allow-font-substitution` with the checker when Ubuntu is deliberately unavailable. Such a PDF is **not release-grade**.
 
+On Ubuntu 24.04, the classic Ubuntu 0.83 font metadata has a long-standing interoperability quirk: `Ubuntu-M.ttf` is also advertised through fontconfig as part of the `Ubuntu Light` family. LibreOffice can therefore report/embed source text authored as **Ubuntu Light** under the PDF font name **Ubuntu-Medium**. Release validation accepts that specific alias only when the ODT source explicitly declares `Ubuntu Light`; generic font substitution remains a hard failure.
+
 The PDF validator intentionally does **not** treat the ODT `meta:page-count` field as a release contract. That value is a cached Writer statistic and can be stale after legitimate source edits. Release validation instead checks page geometry and requires embedded Ubuntu/Ubuntu Light fonts; the ODT content contract is validated separately.
 
 ## Reusable vector assets

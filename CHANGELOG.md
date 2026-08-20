@@ -4,12 +4,6 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ## Unreleased
 
-### Fixed
-
-- Removed repeated full 194-case test-suite execution from CI/release qualification: the complete native regression suite now runs once, while bank wiring, sanitizer and coverage stages use explicit PlatformIO suite filters.
-- Hardened tagged/manual release publication on Ubuntu 24.04 by using the classic static Ubuntu font package, validating exact Ubuntu Regular/Light resolution before LibreOffice export, and emitting font/PDF diagnostics on failure.
-- Updated the PlatformIO cache action from `actions/cache@v4.2.0` to the Node.js 24-compatible `actions/cache@v6.1.0`.
-
 ## 0.2.0 — 2026-08-19
 
 ### Release summary
@@ -50,6 +44,10 @@ Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baselin
 - Corrected the shared Electronica/Percussion tempo mapping so the documented endpoints are actually **30–240 BPM** rather than the previous factor-of-four-under-scaled 7.5–60 BPM runtime behavior.
 - Corrected Humanize positive-jitter scheduling so delayed events are offset from their nominal grid boundary rather than from event preparation, preserving the intended no-drift timing contract.
 - Corrected coverage/release metadata and workflow guards after the domain-by-bank refactor so nested bank sources remain included in the intended qualification paths.
+- Removed repeated full 194-case test-suite execution from CI/release qualification: the complete native regression suite now runs once, while bank wiring, sanitizer and coverage stages use explicit PlatformIO suite filters.
+- Hardened tagged/manual release publication on Ubuntu 24.04 by using the classic static Ubuntu font package, validating exact Ubuntu Regular/Light resolution before LibreOffice export, and emitting font/PDF diagnostics on failure.
+- Corrected release-manual validation for LibreOffice/Noble's `Ubuntu Light` → `Ubuntu-Medium` PDF naming quirk: the alias is accepted only when the ODT source explicitly requests Ubuntu Light; real font substitution still fails.
+- Updated the PlatformIO cache action from `actions/cache@v4.2.0` to the Node.js 24-compatible `actions/cache@v6.1.0`.
 
 ## 0.1.0 — 2026-08-19
 

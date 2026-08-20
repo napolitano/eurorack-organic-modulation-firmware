@@ -24,6 +24,24 @@ BBBBBB+Ubuntu-Light                  TrueType          WinAnsi          yes yes 
 """
     validate_fonts(hyphenated, False)
 
+    libreoffice_noble = """name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+BAAAAA+Ubuntu                        TrueType          WinAnsi          yes yes yes   2101  0
+CAAAAA+Ubuntu-Bold                   TrueType          WinAnsi          yes yes yes   2086  0
+DAAAAA+Ubuntu-Medium                 TrueType          WinAnsi          yes yes yes   2091  0
+EAAAAA+DejaVuSans                    TrueType          WinAnsi          yes yes yes   2096  0
+"""
+    # LibreOffice on Ubuntu/Noble may report source-requested Ubuntu Light as
+    # Ubuntu-Medium because of the classic Ubuntu font metadata. This alias is
+    # accepted only when the caller has verified that the ODT requests Light.
+    validate_fonts(libreoffice_noble, False, allow_ubuntu_medium_for_light=True)
+    try:
+        validate_fonts(libreoffice_noble, False, allow_ubuntu_medium_for_light=False)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("expected Ubuntu-Medium alias to require source proof of Ubuntu Light")
+
     substituted = """name                                 type              encoding         emb sub uni object ID
 ------------------------------------ ----------------- ---------------- --- --- --- ---------
 AAAAAA+Ubuntu                        TrueType          WinAnsi          yes yes yes     10  0
