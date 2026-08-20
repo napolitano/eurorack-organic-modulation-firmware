@@ -393,11 +393,31 @@ jobs:
             -f regression/test_upstream_behaviour \
             -f system/test_signal_path
           mkdir -p coverage
-          gcovr --root . --filter lib/fmd/src --exclude test \
+          gcovr --root . --exclude test \
+            --filter 'lib/fmd/src/application/.*' \
+            --filter 'lib/fmd/src/domain/classic/.*' \
+            --filter 'lib/fmd/src/domain/(AlgorithmMath|DriftEngine|FixedMath|FrequencyMapping|ParallelLfsr)\.cpp' \
             --exclude-throw-branches --exclude-unreachable-branches \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion|dubstep)/.*' \
             --xml-pretty --output coverage/coverage.xml
           python scripts/check_native_coverage.py coverage/coverage.xml --scope classic
+
+      - name: Enforce shared ClockSource native coverage policy
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Shared ClockSource was introduced after 0.2.0. Historical tags that
+          # predate this environment remain refreshable with the current workflow.
+          if [[ ! -f lib/fmd/src/domain/ClockSource.cpp ]] \
+            || ! grep -q '^\[env:native_clock_coverage\]$' platformio.ini; then
+            echo "Shared ClockSource coverage: not present in ${RELEASE_TAG}; skipping."
+            exit 0
+          fi
+          pio test -e native_clock_coverage -f unit/test_clock_source
+          mkdir -p coverage-clock
+          gcovr --root . --filter 'lib/fmd/src/domain/ClockSource\.cpp' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
+            --xml-pretty --output coverage-clock/coverage.xml
+          python scripts/check_native_coverage.py coverage-clock/coverage.xml --scope clock
 
       - name: Enforce Organic-bank native coverage policy
         if: contains(steps.release-context.outputs.banks, 'organic')
@@ -504,7 +524,6 @@ jobs:
             -f unit/test_repeat_algorithm \
             -f unit/test_probability_algorithm \
             -f unit/test_humanize_algorithm \
-            -f unit/test_clock_source \
             -f integration/test_selection \
             -f integration/test_runtime \
             -f property/test_invariants \
@@ -528,7 +547,6 @@ jobs:
             -f unit/test_growl_algorithm \
             -f unit/test_chop_algorithm \
             -f unit/test_build_algorithm \
-            -f unit/test_clock_source \
             -f integration/test_selection \
             -f integration/test_runtime \
             -f property/test_invariants \

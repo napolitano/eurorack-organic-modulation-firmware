@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "scopes": {
     "classic": {
       "line_min_percent": 95.0,
@@ -7,7 +7,24 @@
       "file_line_min_percent": 90.0,
       "file_branch_min_percent": 65.0,
       "path_prefix": null,
-      "note": "Classic plus shared production code retains the established release floor."
+      "note": "Classic plus explicitly allow-listed universal production core. Shared ClockSource has its own scope and must not dilute Classic coverage.",
+      "allowed_path_prefixes": [
+        "lib/fmd/src/application/",
+        "lib/fmd/src/domain/classic/",
+        "lib/fmd/src/domain/AlgorithmMath.cpp",
+        "lib/fmd/src/domain/DriftEngine.cpp",
+        "lib/fmd/src/domain/FixedMath.cpp",
+        "lib/fmd/src/domain/FrequencyMapping.cpp",
+        "lib/fmd/src/domain/ParallelLfsr.cpp"
+      ]
+    },
+    "clock": {
+      "line_min_percent": 97.0,
+      "branch_min_percent": 90.0,
+      "file_line_min_percent": 95.0,
+      "file_branch_min_percent": 80.0,
+      "path_prefix": "lib/fmd/src/domain/ClockSource.cpp",
+      "note": "Shared quarter-note clock infrastructure used by Percussion and Dubstep/Bass is qualified independently from every algorithm bank."
     },
     "organic": {
       "line_min_percent": 97.0,
@@ -61,7 +78,7 @@
   "measurement_rules": {
     "exclude_throw_branches": true,
     "exclude_unreachable_branches": true,
-    "note": "Bank scopes measure only bank-owned production sources. Compiler-generated exception and unreachable branches are excluded so branch coverage tracks executable project decisions rather than toolchain artefacts."
+    "note": "Classic, shared-clock and bank-owned scopes are measured separately. Compiler-generated exception and unreachable branches are excluded so branch coverage tracks executable project decisions rather than toolchain artefacts."
   },
   "note": "Do not lower release coverage floors to accommodate regressions. Add tests or document and exclude genuinely unreachable/generated branches instead."
 }

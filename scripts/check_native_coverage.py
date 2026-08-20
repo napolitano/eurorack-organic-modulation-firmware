@@ -70,6 +70,21 @@ def main() -> int:
                 "scope contains non-bank sources: " + ", ".join(unexpected)
             )
 
+    allowed_prefixes = selected.get("allowed_path_prefixes")
+    if allowed_prefixes:
+        unexpected = sorted(
+            c.attrib.get("filename", "")
+            for c in classes
+            if not any(
+                c.attrib.get("filename", "").startswith(allowed)
+                for allowed in allowed_prefixes
+            )
+        )
+        if unexpected:
+            failures.append(
+                "scope contains non-allowlisted sources: " + ", ".join(unexpected)
+            )
+
     for class_element in classes:
         filename = class_element.attrib.get("filename", "<unknown>")
         file_line = percentage(class_element.attrib.get("line-rate", "0"))

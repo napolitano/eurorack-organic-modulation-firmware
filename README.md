@@ -224,7 +224,7 @@ Release 0.3.0 contains **236 native test cases across 39 suites** and **64 accep
 - AVR flash/SRAM and timing guardrails;
 - bank-owned coverage gates.
 
-The five extended banks each enforce **97% aggregate line / 90% branch coverage**, plus **95% line / 80% branch per production file**. Classic retains its established compatibility/core coverage contract. Coverage is a regression floor, not a substitute for mathematical or requirement-level verification.
+The six extended banks each enforce **97% aggregate line / 90% branch coverage**, plus **95% line / 80% branch per production file**. Classic retains its established compatibility/core coverage contract, while the shared `ClockSource` is qualified independently at **97% line / 90% branch** so it is not misattributed to Classic, Percussion or Dubstep/Bass. Coverage is a regression floor, not a substitute for mathematical or requirement-level verification.
 
 AVR release guardrails are deliberately stricter than the ATmega328P hard limits:
 

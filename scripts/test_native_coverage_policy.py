@@ -97,6 +97,41 @@ def main() -> int:
         assert result.returncode == 1
         assert "non-bank sources" in result.stderr
 
+        # Shared ClockSource is a first-class scope and must not be charged to Classic.
+        write_report(
+            report,
+            filename="lib/fmd/src/domain/ClockSource.cpp",
+            line=0.99,
+            branch=0.95,
+        )
+        assert run(report, "clock").returncode == 0
+
+        write_report(
+            report,
+            filename="lib/fmd/src/domain/ClockSource.cpp",
+            line=0.96,
+            branch=0.89,
+        )
+        assert run(report, "clock").returncode == 1
+
+        write_report(
+            report,
+            filename="lib/fmd/src/domain/ClockSource.cpp",
+            line=0.99,
+            branch=0.95,
+        )
+        classic_contamination = run(report, "classic")
+        assert classic_contamination.returncode == 1
+        assert "non-allowlisted sources" in classic_contamination.stderr
+
+        write_report(
+            report,
+            filename="lib/fmd/src/domain/FrequencyMapping.cpp",
+            line=0.99,
+            branch=0.90,
+        )
+        assert run(report, "classic").returncode == 0
+
         unknown = run(report, "unknown")
         assert unknown.returncode == 2
 

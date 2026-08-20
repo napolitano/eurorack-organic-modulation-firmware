@@ -23,6 +23,10 @@ Version 0.3.0 expands Free Modular Drift to seven banks and twenty-eight algorit
 - Extracted Percussion's proven Speed-CV clock detector into a shared `ClockSource` domain component and reused the identical two-edge-lock / 2.5-period-fallback contract for Dubstep/Bass rather than maintaining a second clock implementation.
 - Release tooling now detects and qualifies the seventh bank and knows its two Nano images, provenance files and artifact names, while an explicit frozen-manual guard prevents publishing the bank before Wobble/Growl/Chop/Build are added to the maintained user manual.
 
+### Fixed
+
+- Corrected the 0.3.0 coverage scope after extracting the shared `ClockSource`: Classic now uses an explicit positive source allow-list, the shared clock has its own 97%/90% coverage gate, and Percussion/Dubstep bank-owned reports no longer test-but-ignore that shared file. Structural policy tests prevent a future root-level shared component from silently diluting Classic coverage.
+
 ## 0.2.0 — 2026-08-19
 
 ### Release summary

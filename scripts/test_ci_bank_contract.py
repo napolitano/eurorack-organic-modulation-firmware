@@ -13,6 +13,7 @@ from __future__ import annotations
 from pathlib import Path
 
 WORKFLOW = Path(".github/workflows/ci.yml")
+PLATFORMIO = Path("platformio.ini")
 
 BANKS = {
     "classic": {
@@ -70,6 +71,7 @@ BANKS = {
 
 UNFILTERED_HEAVY_COMMANDS = (
     "pio test -e native_coverage",
+    "pio test -e native_clock_coverage",
     "pio test -e native_organic_coverage",
     "pio test -e native_generative_coverage",
     "pio test -e native_ambient_coverage",
@@ -135,7 +137,11 @@ ELECTRONICA_SUITES = (
 
 def main() -> int:
     text = WORKFLOW.read_text(encoding="utf-8")
+    platformio = PLATFORMIO.read_text(encoding="utf-8")
     missing: list[str] = []
+
+    if "[env:native_clock_coverage]" not in platformio:
+        missing.append("shared clock coverage environment: native_clock_coverage")
 
     for bank, stages in BANKS.items():
         for stage, fragments in stages.items():
@@ -179,6 +185,36 @@ def main() -> int:
     for fragment in ("--exclude-throw-branches", "--exclude-unreachable-branches"):
         if fragment not in text:
             missing.append(f"meaningful branch coverage option: {fragment}")
+
+    for fragment in (
+        "native-clock-coverage:",
+        "pio test -e native_clock_coverage -f unit/test_clock_source",
+        "--filter 'lib/fmd/src/domain/ClockSource\\.cpp'",
+        "python scripts/check_native_coverage.py coverage-clock/coverage.xml --scope clock",
+    ):
+        if fragment not in text:
+            missing.append(f"shared clock coverage contract: {fragment}")
+
+    for fragment in (
+        "--filter 'lib/fmd/src/application/.*'",
+        "--filter 'lib/fmd/src/domain/classic/.*'",
+        "--filter 'lib/fmd/src/domain/(AlgorithmMath|DriftEngine|FixedMath|FrequencyMapping|ParallelLfsr)\\.cpp'",
+    ):
+        if fragment not in text:
+            missing.append(f"Classic positive coverage filter: {fragment}")
+    if "--filter lib/fmd/src --exclude test" in text:
+        missing.append("Classic coverage must not use the broad lib/fmd/src root filter")
+
+    for job, next_job in (
+        ("native-percussion-coverage:", "native-dubstep-coverage:"),
+        ("native-dubstep-coverage:", "native-sanitizers:"),
+    ):
+        start = text.find(job)
+        end = text.find(next_job, start + len(job))
+        block = text[start:end if end >= 0 else None]
+        if "unit/test_clock_source" in block:
+            missing.append(f"{job} must not charge shared ClockSource tests to bank-owned coverage")
+
     for bank in EXTENDED_BANKS:
         coverage_filter = f"--filter 'lib/fmd/src/domain/{bank}/.*'"
         checker = f"python scripts/check_native_coverage.py coverage-{bank}/coverage.xml --scope {bank}"

@@ -222,6 +222,7 @@ UNFILTERED_RELEASE_COMMANDS = (
     "pio test -e native_percussion_sanitized",
     "pio test -e native_dubstep_sanitized",
     "pio test -e native_coverage",
+    "pio test -e native_clock_coverage",
     "pio test -e native_organic_coverage",
     "pio test -e native_generative_coverage",
     "pio test -e native_ambient_coverage",
@@ -284,6 +285,37 @@ def main() -> int:
     for fragment in ("--exclude-throw-branches", "--exclude-unreachable-branches"):
         if fragment not in text:
             missing.append(f"release/meaningful branch coverage option: {fragment}")
+
+    for fragment in (
+        "Enforce shared ClockSource native coverage policy",
+        "pio test -e native_clock_coverage -f unit/test_clock_source",
+        "--filter 'lib/fmd/src/domain/ClockSource\\.cpp'",
+        "python scripts/check_native_coverage.py coverage-clock/coverage.xml --scope clock",
+        "grep -q '^\\[env:native_clock_coverage\\]$' platformio.ini",
+    ):
+        if fragment not in text:
+            missing.append(f"release/shared clock coverage contract: {fragment}")
+
+    for fragment in (
+        "--filter 'lib/fmd/src/application/.*'",
+        "--filter 'lib/fmd/src/domain/classic/.*'",
+        "--filter 'lib/fmd/src/domain/(AlgorithmMath|DriftEngine|FixedMath|FrequencyMapping|ParallelLfsr)\\.cpp'",
+    ):
+        if fragment not in text:
+            missing.append(f"release/Classic positive coverage filter: {fragment}")
+    if "--filter lib/fmd/src --exclude test" in text:
+        missing.append("release/Classic coverage must not use the broad lib/fmd/src root filter")
+
+    for step, next_step in (
+        ("Enforce Percussion-bank native coverage policy", "Enforce Dubstep/Bass-bank native coverage policy"),
+        ("Enforce Dubstep/Bass-bank native coverage policy", "Build release firmware"),
+    ):
+        start = text.find(step)
+        end = text.find(next_step, start + len(step))
+        block = text[start:end if end >= 0 else None]
+        if "unit/test_clock_source" in block:
+            missing.append(f"release/{step} must not charge shared ClockSource tests to bank-owned coverage")
+
     for bank in EXTENDED_BANKS:
         coverage_filter = f"--filter 'lib/fmd/src/domain/{bank}/.*'"
         checker = f"python scripts/check_native_coverage.py coverage-{bank}/coverage.xml --scope {bank}"

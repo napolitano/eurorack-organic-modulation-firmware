@@ -241,16 +241,39 @@ jobs:
             -f system/test_signal_path
       - run: |
           mkdir -p coverage
-          gcovr --root . --filter lib/fmd/src --exclude test \
+          gcovr --root . --exclude test \
+            --filter 'lib/fmd/src/application/.*' \
+            --filter 'lib/fmd/src/domain/classic/.*' \
+            --filter 'lib/fmd/src/domain/(AlgorithmMath|DriftEngine|FixedMath|FrequencyMapping|ParallelLfsr)\.cpp' \
             --exclude-throw-branches --exclude-unreachable-branches \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion|dubstep)/.*' \
             --xml-pretty --output coverage/coverage.xml
-          gcovr --root . --filter lib/fmd/src --exclude test \
+          gcovr --root . --exclude test \
+            --filter 'lib/fmd/src/application/.*' \
+            --filter 'lib/fmd/src/domain/classic/.*' \
+            --filter 'lib/fmd/src/domain/(AlgorithmMath|DriftEngine|FixedMath|FrequencyMapping|ParallelLfsr)\.cpp' \
             --exclude-throw-branches --exclude-unreachable-branches \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion|dubstep)/.*' \
             --txt
           python scripts/check_native_coverage.py coverage/coverage.xml --scope classic
 
+
+  native-clock-coverage:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_clock_coverage -f unit/test_clock_source
+      - run: |
+          mkdir -p coverage-clock
+          gcovr --root . --filter 'lib/fmd/src/domain/ClockSource\.cpp' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
+            --xml-pretty --output coverage-clock/coverage.xml
+          gcovr --root . --filter 'lib/fmd/src/domain/ClockSource\.cpp' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
+            --txt
+          python scripts/check_native_coverage.py coverage-clock/coverage.xml --scope clock
 
   native-organic-coverage:
     runs-on: ubuntu-24.04
@@ -397,7 +420,6 @@ jobs:
             -f unit/test_repeat_algorithm \
             -f unit/test_probability_algorithm \
             -f unit/test_humanize_algorithm \
-            -f unit/test_clock_source \
             -f integration/test_selection \
             -f integration/test_runtime \
             -f property/test_invariants \
@@ -428,7 +450,6 @@ jobs:
             -f unit/test_growl_algorithm \
             -f unit/test_chop_algorithm \
             -f unit/test_build_algorithm \
-            -f unit/test_clock_source \
             -f integration/test_selection \
             -f integration/test_runtime \
             -f property/test_invariants \
