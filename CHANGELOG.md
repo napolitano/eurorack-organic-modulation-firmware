@@ -4,6 +4,10 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ## Unreleased
 
+### Added
+
+- Named PlatformIO developer targets for all 24 algorithms: a complete bank can still be built/flashed with normal rear-DIP selection, while `FMD_FORCE_ALGORITHM=<name>` or `scripts/flash_drift.py algorithm <name>` locks an on-device test image directly to a named algorithm and rejects bank/name mismatches at compile time.
+
 ## 0.2.0 — 2026-08-19
 
 ### Release summary
@@ -12,7 +16,6 @@ Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baselin
 
 ### Added
 
-- Named PlatformIO developer targets for all 24 algorithms: a complete bank can still be built/flashed with normal rear-DIP selection, while `FMD_FORCE_ALGORITHM=<name>` or `scripts/flash_drift.py algorithm <name>` locks an on-device test image directly to a named algorithm and rejects bank/name mismatches at compile time.
 - End-user firmware installation and bank-switching documentation modelled on the proven Quantizer update flow, including explicit bank/bootloader asset selection, USB-only flashing safety, rear-DIP algorithm selection, AVRDUDE/AVRDUDESS procedures, troubleshooting and bootloader recovery.
 - Numbered AVRDUDESS 2.20 / AVRDUDE 8.1 reference screenshot reused from the companion Quantizer documentation for the Windows 11 flashing guide.
 - **Organic bank:** Fractal, Vector, Rain and Attractor, with fixed-point implementations, bank-specific mathematical tests, engineering analyses, documentation and dedicated native/AVR qualification environments.
