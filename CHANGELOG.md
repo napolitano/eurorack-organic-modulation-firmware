@@ -4,6 +4,20 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ## Unreleased
 
+### Added
+
+- Added a one-shot, documentation-aware GitHub issue triage agent: newly opened tickets are matched against canonical docs and repository code/tests, high-feature routing requires validated user-facing evidence, ambiguous reports receive targeted first aid, likely defects are prepared and assigned to the maintainer, and hard safety/regression/build/crash signals bypass feature routing.
+- Automated GitHub Wiki generation and publishing from canonical repository Markdown, including generated Home/sidebar/footer navigation, bank guides, installation/testing/development pages, algorithm analyses, deterministic link/image rewriting and a managed-page manifest that preserves unrelated hand-written wiki pages.
+- Maintained source-code architecture reference covering execution flow, numeric/Q-format conventions, shared-domain contracts, every bank's persistent-state invariants and the ports/AVR boundary.
+
+### Changed
+
+- Expanded source-level Doxygen contracts across Ambient, Electronica, Percussion, Dubstep/Bass and shared target/clock infrastructure: algorithm APIs now document units, Q formats, state ownership, latching/reset semantics, hardware limits and persistent state, with stronger CI guardrails against documentation regression.
+
+### Fixed
+
+- Corrected the Dubstep/Bass engineering analyses to describe the released 0.3.0 implementation rather than stale prototype assumptions: Wobble's active rate vocabulary, Growl fixed-point normalization/hot-path behavior, Chop's hard-onset articulation/mask construction and Build's internal phrase-wrap overshoot are now documented exactly.
+
 ## 0.3.0 — 2026-08-20
 
 ### Release summary

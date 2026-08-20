@@ -2,6 +2,12 @@
  * @file AlgorithmBankConfig.h
  * Defines compile-time selection of the four-algorithm firmware bank.
  *
+ * @details
+ * Bank selection is fixed when the firmware image is compiled. The two physical
+ * rear DIP inputs can represent only four slots, so they select algorithms inside
+ * the chosen bank rather than selecting among banks. Release packaging builds one
+ * image per bank and supported Nano bootloader.
+ *
  * @author Axel Napolitano
  * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
  * @copyright Copyright (C) 2026 Axel Napolitano
@@ -57,7 +63,7 @@ enum class AlgorithmBank : uint8_t {
   Dubstep = FMD_BANK_DUBSTEP ///< Wobble, Growl, Chop and Build.
 };
 
-/** Bank compiled into this firmware image. */
+/** @brief Bank compiled into this firmware image; constant for the entire binary. */
 constexpr AlgorithmBank kSelectedAlgorithmBank =
     static_cast<AlgorithmBank>(FMD_ALGORITHM_BANK);
 

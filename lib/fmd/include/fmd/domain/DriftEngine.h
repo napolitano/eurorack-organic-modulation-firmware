@@ -131,7 +131,12 @@ class DriftEngine {
    */
   DriftEngine(Algorithm algorithm, uint16_t randomSeed, const IReferenceTables& referenceTables);
 
-  /** @brief Advance the selected algorithm by one sample. */
+  /**
+   * @brief Advance the selected algorithm by exactly one scheduler sample.
+   * @param controls Current sampled 10-bit control frame. Interpretation of Speed CV
+   *        is bank-specific; rhythm banks may treat it as the optional external clock.
+   * @return Algorithm output in 12-bit DAC-domain units, normally 0..4095.
+   */
   uint16_t step(const ControlFrame& controls);
 
   /** @return Algorithm selected when this engine was constructed. */
@@ -234,16 +239,27 @@ class DriftEngine {
 #endif
 };
 
-/** @brief Decode the two active-low rear configuration inputs for the compiled bank. */
+/**
+ * @brief Decode the two active-low rear configuration inputs for the compiled bank.
+ * @param configInput1Low true when rear switch/input 1 is electrically LOW/active.
+ * @param configInput2Low true when rear switch/input 2 is electrically LOW/active.
+ * @return Algorithm occupying the resulting logical slot of the selected bank.
+ */
 Algorithm algorithmFromConfig(bool configInput1Low, bool configInput2Low);
 
 /**
  * @brief Select the startup algorithm for this firmware image.
+ * @param configInput1Low Active-low state of rear configuration input 1.
+ * @param configInput2Low Active-low state of rear configuration input 2.
  * @return Forced developer algorithm when configured, otherwise the rear-DIP selection.
  */
 Algorithm startupAlgorithm(bool configInput1Low, bool configInput2Low);
 
-/** @brief Return the algorithm occupying a logical DIP slot in the compiled bank. */
+/**
+ * @brief Return the algorithm occupying a logical DIP slot in the compiled bank.
+ * @param slotIndex Logical slot index; only the low two bits are significant.
+ * @return Bank-specific algorithm for slot 0..3.
+ */
 Algorithm algorithmForBankSlot(uint8_t slotIndex);
 
 }  // namespace fmd

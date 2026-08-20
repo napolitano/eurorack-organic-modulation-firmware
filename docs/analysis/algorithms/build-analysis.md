@@ -5,7 +5,7 @@
 > **Implementation status — released in 0.3.0:** Implemented under `domain/dubstep/` with the 8/4/2/1-bar Texture mapping, cubic-smoothstep macro rise, quarter/eighth/sixteenth/thirty-second micro stages and deterministic phrase restart on external-clock acquisition. The one-bar endpoint remains explicitly subject to later listening evaluation.
 
 
-Build is the proposed fourth mode of the working Dubstep/Bass bank. It creates a repeating **multi-bar tension CV** whose macro level rises while a tempo-synchronised micro modulation accelerates toward the phrase boundary.
+Build is the fourth mode of the released Dubstep/Bass bank. It creates a repeating **multi-bar tension CV** whose macro level rises while a tempo-synchronised micro modulation accelerates toward the phrase boundary.
 
 The mode does not generate audio, a snare roll or a complete arrangement. It provides one CV gesture that can drive a filter, VCA, effect, wavetable or other destination through a recognisable build-to-reset trajectory.
 
@@ -29,7 +29,7 @@ These sources support the **general tension/rate-acceleration concept**. The exa
 
 ## 3. Phrase model
 
-Let phrase length be $N$ bars. The initial candidate set is
+Let phrase length be $N$ bars. The released phrase-length set is
 
 $$
 N\in\{8,4,2,1\}.
@@ -72,7 +72,7 @@ Divide each phrase into four equal temporal quarters. The micro modulation perio
 | 2 | $[1/2,3/4)$ | sixteenth note |
 | 3 | $[3/4,1)$ | thirty-second note |
 
-Let $Q(u)$ be a unipolar triangle carrier at the selected micro rate. The proposed composite output is
+Let $Q(u)$ be a unipolar triangle carrier at the selected micro rate. The released composite output is
 
 $$
 Y(u)=M(u)\left(\frac14+\frac34Q(u)\right).
@@ -89,7 +89,7 @@ The reset is musically intentional and represents the transition/release point.
 
 ## 5. Texture mapping
 
-A candidate mapping is:
+The released mapping is:
 
 | Texture region | Phrase length |
 |---:|---:|
@@ -98,15 +98,15 @@ A candidate mapping is:
 | 2 | 2 bars |
 | 3 | 1 bar |
 
-Texture changes should latch only when a phrase completes. Changing Texture in the middle of an eight-bar build must not suddenly reinterpret the current phase as a one-bar build.
+Texture changes latch only when a phrase completes. Changing Texture in the middle of an eight-bar build must not suddenly reinterpret the current phase as a one-bar build.
 
-The one-bar option is the weakest part of the proposal. Research support is stronger for two- and four-bar bass-music risers. Listening tests should compare `{8,4,2,1}` against alternatives such as `{8,4,2,2}` or `{16,8,4,2}` before implementation is frozen.
+Research support is stronger for two- and four-bar bass-music risers than for a one-bar macro build. Nevertheless `{8,4,2,1}` is frozen as the 0.3.0 mapping. Alternatives such as `{8,4,2,2}` or `{16,8,4,2}` remain future listening experiments and would be explicit behavior changes.
 
 ## 6. Clock-source contract
 
 Build is phrase-sensitive and therefore benefits strongly from external sync.
 
-Recommended behavior:
+Released 0.3.0 behavior:
 
 - internal mode derives bars from the Speed knob;
 - external mode treats each accepted Speed-CV rising edge as a quarter note;
@@ -121,7 +121,7 @@ The 0..5 V current-hardware clock restriction remains mandatory.
 At every processing sample:
 
 1. obtain the current quarter-note period;
-2. advance quarter/bar/phrase counters while preserving overshoot;
+2. advance the fixed-point phrase phase from the active quarter increment; external quarter boundaries are re-anchored exactly, while an internal phrase wrap currently resets phase to zero and discards sub-sample overshoot;
 3. compute normalized phrase phase $u$ in fixed point;
 4. select one of four micro-rate stages from the top two bits/quadrants of phrase phase;
 5. advance the micro triangle phase at quarter/eighth/sixteenth/thirty-second rate;
@@ -152,7 +152,7 @@ Wobble's primary information is the repeated rate phrase. Build's primary inform
 
 ## 9. Computational cost on ATmega328P
 
-At the proposed 280 BPM maximum, a 32nd note lasts approximately
+At the released 280 BPM maximum, a 32nd note lasts approximately
 
 $$
 \frac{60}{280\cdot8}\approx26.8\ \mathrm{ms}.
@@ -189,7 +189,7 @@ Required tests:
 - micro stage boundaries occur at exact 1/4, 1/2 and 3/4 phrase positions;
 - stage rates are exactly quarter/eighth/sixteenth/thirty-second relative to the current quarter clock;
 - composite output remains 0..4095;
-- phrase-end reset is deterministic and produces no accumulated phase error;
+- phrase-end reset is deterministic; external timing is re-anchored on every accepted quarter edge, while internal free-running mode may discard less than one scheduler sample of phrase overshoot at each phrase reset and must not be documented as mathematically drift-free;
 - no RNG state is consumed;
 - internal and external clocks produce equivalent build timing for equal quarter periods;
 - clock fallback does not restart the phrase;
@@ -197,7 +197,7 @@ Required tests:
 - maximum-tempo 32nd stage remains safely inside scheduler resolution;
 - AVR timing remains below 400 microseconds.
 
-Golden vectors should cover full phrases for all four Texture regions. For the eight-bar region this is long but deterministic and should be generated offline rather than hand-authored.
+The current unit suite locks all four phrase lengths, exact micro-stage boundaries/rates, monotone macro rise, bounded deterministic runtime and external-acquisition reset. Full-phrase golden vectors remain desirable, especially if internal wrap handling is later changed to preserve residual overshoot.
 
 ## 12. Musical assessment
 
@@ -218,7 +218,7 @@ Its weakness is that builds and risers are not uniquely dubstep. The slot must j
 
 Build is computationally straightforward and mathematically transparent. The design uncertainty lies in **form length and usability without a dedicated reset input**. Because current Drift can only reset the phrase implicitly through start/re-lock, a repeating automatic build may be less useful than the concept suggests on paper.
 
-It should therefore be prototyped, but it is the strongest candidate for replacement if the four-slot bank needs revision after listening tests.
+Build is frozen as the 0.3.0 fourth slot. It remains the most plausible future replacement option if hardware listening shows that automatic repeating builds are less useful than another bass-modulation primitive, but that is a future product decision.
 
 <!-- drift-footer:start -->
 <p align="center">

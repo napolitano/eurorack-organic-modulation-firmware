@@ -1,12 +1,13 @@
 # Doxygen configuration for the portable and AVR production code.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-PROJECT_NAME           = "Eurorack Organic Modulation Firmware"
+PROJECT_NAME           = "Free Modular Drift Firmware"
 PROJECT_BRIEF          = "Alternative C++17/PlatformIO firmware for Free Modular Drift"
 OUTPUT_DIRECTORY       = .doxygen
-INPUT                  = lib/fmd/include lib/fmd/src src
+INPUT                  = docs/development/source-code-reference.md lib/fmd/include lib/fmd/src src
 FILE_PATTERNS           = *.h *.hpp *.cpp
 RECURSIVE               = YES
+USE_MDFILE_AS_MAINPAGE  = docs/development/source-code-reference.md
 EXCLUDE_PATTERNS        = */config/generated/*
 
 EXTRACT_ALL             = NO

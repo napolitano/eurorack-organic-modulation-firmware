@@ -5,7 +5,7 @@
 > **Implementation status — released in 0.3.0:** Implemented under `domain/dubstep/` with fixed anchors `{0,8}`, the documented ordered candidate set, bar-boundary Texture latching and a half-step hold / half-step linear decay articulation. It reuses the shared 0–5 V quarter-note clock source.
 
 
-Chop is the proposed third mode of the working Dubstep/Bass bank. It creates a deterministic, tempo-synchronised **sparse/syncopated articulation CV** for chopping sustained basses, drones or effects.
+Chop is the third mode of the released Dubstep/Bass bank. It creates a deterministic, tempo-synchronised **sparse/syncopated articulation CV** for chopping sustained basses, drones or effects.
 
 Unlike Percussion Probability, Chop does not randomise whether a hit exists. Unlike Electronica Acid, it does not sequence a set of melodic modulation levels with accents and slides. Its identity is **rhythmic presence versus space** on a 16-step bar.
 
@@ -79,9 +79,9 @@ It increases monotonically from two to ten events per bar.
 
 ## 4. Articulation contour
 
-Chop should not emit the same fixed 10 ms pulse as the Percussion bank. It is intended to articulate sustained audio through a VCA/filter, so the event should occupy a musically meaningful fraction of the sixteenth.
+Chop does not emit the same fixed 10 ms pulse as the Percussion bank. It is intended to articulate sustained audio through a VCA/filter, so the event should occupy a musically meaningful fraction of the sixteenth.
 
-Let local step phase be $x\in[0,1)$. A candidate unipolar gate-like contour is
+Let local step phase be $x\in[0,1)$. The released unipolar gate-like contour is
 
 $$
 C(x)=
@@ -93,9 +93,9 @@ $$
 
 Thus each active step holds full scale for the first half of the sixteenth and then decays linearly to zero by the next step. Inactive steps output zero.
 
-This avoids a raw one-sample edge while remaining far more gate-like than Electronica Pump or Ambient envelopes.
+This avoids a narrow 10 ms trigger and gives each onset a musically substantial articulation window. It **does not** remove the hard 0-to-full-scale transition at an active step boundary, so direct VCA patches can still click; that remains a documented hardware-listening consideration.
 
-A short fixed-point attack ramp may be added during implementation if direct VCA patches click objectionably; that would be a hardware-listening revision, not part of the initial mathematical core.
+No attack ramp is present in 0.3.0. Adding one later would change the released articulation contour and therefore requires an explicit behavior/documentation update rather than being treated as an implementation detail.
 
 ## 5. Texture behavior
 
@@ -112,7 +112,7 @@ The mode does not become a full 16th-note gate even at maximum Texture; six step
 
 ## 6. Clock-source contract
 
-Chop should use the shared Dubstep/Bass clock behavior. Every accepted quarter note defines four sixteenth subdivisions.
+Chop uses the shared `clock::ClockSource` behavior. Every accepted quarter note defines four sixteenth subdivisions.
 
 On external lock, the second accepted quarter edge establishes step 0 / bar origin. Clock loss falls back to the Speed knob while preserving running bar position; later re-lock establishes a fresh deterministic bar origin.
 
@@ -135,7 +135,7 @@ No RNG is required.
 
 ## 8. Efficient mask representation
 
-Because Texture has only nine possible onset counts ($k=0..8$), the implementation can precompute nine 16-bit masks offline or at compile time.
+Texture has only nine possible onset counts ($k=0..8$). The released implementation constructs the 16-bit mask from the eight-entry candidate list when the bar-latched Texture value changes; it does not store a nine-mask lookup table.
 
 The reference mask for each $k$ is simply
 
@@ -143,7 +143,7 @@ $$
 M_k=A\cup\{C_0,\ldots,C_{k-1}\}.
 $$
 
-This avoids per-sample membership tests and makes golden-vector verification straightforward.
+The resulting mask is then reused for per-sample membership tests, so the hot path remains a single bit test while the small reconstruction cost occurs only when a new bar-latched density is applied.
 
 ## 9. Duplication boundaries
 
@@ -166,8 +166,8 @@ Chop has no phrase memory, mutations or edit operations. The pattern is a direct
 ## 10. Findings and design risks
 
 - **Musical strength:** the mode exposes negative space and syncopation rather than another continuous curve.
-- **Deterministic requirement:** first implementation should consume no RNG.
-- **Boundary requirement:** Texture changes should latch at bar boundaries to prevent pattern tearing.
+- **Deterministic contract:** the released implementation consumes no RNG.
+- **Boundary contract:** Texture changes latch at bar boundaries to prevent pattern tearing.
 - **Pattern risk:** the candidate order is intentionally project-defined and may sound too mechanical or stylistically narrow.
 - **Output risk:** a gate-like CV may click when patched directly to some VCAs; edge shaping must be listening-tested.
 - **Naming risk:** “Chop” is descriptive but generic. That is preferable to falsely claiming a historically canonical bass phrase.
@@ -197,10 +197,10 @@ Required tests:
 - step 3 precedes strong step 4 and step 11 precedes strong step 12 as designed;
 - active-step contour is exactly 4095 during the first half and reaches zero at step end within fixed-point quantisation;
 - inactive steps are exactly zero;
-- Texture changes mid-bar take effect only at next bar boundary;
+- Texture changes mid-bar take effect only at the next bar boundary;
 - one bar remains exactly 16 sixteenths under internal and external timing;
 - no RNG state is consumed;
-- long-run timing has no accumulated phase drift;
+- internal/external sixteenth timing remains bounded and external quarter edges re-anchor the local grid;
 - AVR timing remains below 400 microseconds.
 
 A hardware test should patch Chop directly to both a linear VCA and a filter cutoff and listen specifically for objectionable edge clicks.
@@ -224,7 +224,7 @@ The sparse low-Texture states are particularly important. The mode should preser
 
 ## 14. Engineering assessment
 
-Chop is extremely cheap and highly testable. Its principal uncertainty is musical, not technical: whether the proposed candidate order produces enough stylistic usefulness across different bass-music patches. It is a strong prototype candidate and should be listening-tested alongside Wobble early.
+Chop is extremely cheap and highly testable. The candidate order is frozen 0.3.0 behavior and covered by an exact mask-order test. Its remaining uncertainty is musical rather than technical: later listening may justify a deliberately versioned phrase-grammar change, but the current release contract is no longer provisional.
 
 <!-- drift-footer:start -->
 <p align="center">

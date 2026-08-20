@@ -17,7 +17,7 @@ Generated lookup-table fragments are intentionally different: they carry generat
 
 ## API documentation
 
-Public classes, ports and functions use Doxygen comments to document behaviour, units, fixed-point formats, valid ranges, state effects and return values where those details matter. Private helpers are documented when their contract is not obvious from the name alone.
+Public classes, ports and functions use Doxygen comments to document behaviour, units, fixed-point formats, valid ranges, state effects and return values. Algorithm classes additionally document constructor dependencies, `step()` semantics, latching/reset rules and persistent state members. Private helpers are documented when their contract is not obvious from the name alone.
 
 Examples of information that belongs in Doxygen documentation include:
 
@@ -56,7 +56,7 @@ Run:
 python scripts/check_code_documentation.py
 ```
 
-The check verifies the standard file headers, generated-table provenance and a 140-character source-line limit across production and native-test C++ files.
+The check verifies standard file headers, generated-table provenance and a 140-character source-line limit. It also enforces a minimum semantic API contract for every algorithm header, requires parameter/return documentation in all bank math headers, and protects the shared `ClockSource` safety/timing contract.
 
 A project `Doxyfile` is included for local API-documentation generation:
 
@@ -64,7 +64,7 @@ A project `Doxyfile` is included for local API-documentation generation:
 doxygen Doxyfile
 ```
 
-Generated Doxygen output is local-only under `.doxygen/` and is not committed or packaged as a release artifact.
+Generated Doxygen output is local-only under `.doxygen/` and is not committed or packaged as a release artifact. The maintained architectural map and representation/state invariants are documented separately in [Source-code reference](source-code-reference.md).
 
 <!-- drift-footer:start -->
 <p align="center">

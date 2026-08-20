@@ -79,6 +79,54 @@ def validate_generated_tables() -> list[str]:
     return problems
 
 
+
+def validate_algorithm_api_documentation() -> list[str]:
+    """Require a minimum semantic Doxygen contract for every algorithm API."""
+    problems: list[str] = []
+    domain_root = ROOT / "lib/fmd/include/fmd/domain"
+    for path in sorted(domain_root.rglob("*Algorithm.h")):
+        if path.name.endswith("AlgorithmMath.h"):
+            continue
+        text = path.read_text(encoding="utf-8")
+        relative = path.relative_to(ROOT)
+        checks = (
+            (text.count("@brief") >= 3, "needs class, constructor and step @brief documentation"),
+            (text.count("@param") >= 2, "needs constructor/step parameter documentation"),
+            (text.count("@return") >= 1, "needs explicit step return-value documentation"),
+            (text.count("///<") >= 3, "needs semantic documentation for persistent state members"),
+        )
+        for ok, message in checks:
+            if not ok:
+                problems.append(f"{relative}: {message}")
+    return problems
+
+
+def validate_math_api_documentation() -> list[str]:
+    """Ensure bank math headers describe units/ranges through param/return docs."""
+    problems: list[str] = []
+    domain_root = ROOT / "lib/fmd/include/fmd/domain"
+    for path in sorted(domain_root.rglob("*AlgorithmMath.h")):
+        text = path.read_text(encoding="utf-8")
+        relative = path.relative_to(ROOT)
+        if "@param" not in text:
+            problems.append(f"{relative}: mathematical API has no @param documentation")
+        if "@return" not in text:
+            problems.append(f"{relative}: mathematical API has no @return documentation")
+    return problems
+
+
+def validate_shared_clock_documentation() -> list[str]:
+    """Protect the cross-bank clock contract from regressing to terse comments."""
+    path = ROOT / "lib/fmd/include/fmd/domain/ClockSource.h"
+    text = path.read_text(encoding="utf-8")
+    problems: list[str] = []
+    for marker in ("@details", "0..5 V", "@param", "@return"):
+        if marker not in text:
+            problems.append(f"{path.relative_to(ROOT)}: missing shared-clock contract marker {marker!r}")
+    if text.count("///<") < 5:
+        problems.append(f"{path.relative_to(ROOT)}: persistent clock state is insufficiently documented")
+    return problems
+
 def main() -> int:
     problems: list[str] = []
     files = source_files()
@@ -88,6 +136,9 @@ def main() -> int:
             problems.append(f"{path.relative_to(ROOT)}: {problem}")
 
     problems.extend(validate_generated_tables())
+    problems.extend(validate_algorithm_api_documentation())
+    problems.extend(validate_math_api_documentation())
+    problems.extend(validate_shared_clock_documentation())
 
     if problems:
         for problem in problems:
@@ -96,7 +147,7 @@ def main() -> int:
 
     print(
         f"code documentation: {len(files)} C++/header files validated; "
-        f"generated-table provenance present"
+        f"generated-table provenance and semantic API contracts present"
     )
     return 0
 

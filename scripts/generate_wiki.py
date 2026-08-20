@@ -36,6 +36,7 @@ def page_map() -> dict[Path, str]:
         Path("docs/installation/avrdudess/README.md"): "Windows-AVRDUDESS.md",
         Path("docs/development/code-documentation.md"): "Code-Documentation.md",
         Path("docs/development/source-code-reference.md"): "Source-Code-Reference.md",
+        Path("docs/development/issue-triage-agent.md"): "Issue-Triage-Agent.md",
         Path("docs/development/release-process.md"): "Release-Process.md",
         Path("docs/development/compatibility-plan.md"): "Compatibility-Plan.md",
         Path("docs/analysis/algorithms/README.md"): "Algorithm-Analysis-Index.md",
@@ -219,6 +220,7 @@ This wiki is the long-form navigation layer for users and developers. The root R
 
 - [Original firmware analysis](Original-Firmware-Analysis)
 - [Release process](Release-Process)
+- [Issue triage agent](Issue-Triage-Agent)
 - [Compatibility plan](Compatibility-Plan)
 - [Contributing](Contributing)
 
@@ -255,6 +257,7 @@ def sidebar(mapping: dict[Path, str]) -> str:
         f"- [Source code]({page('docs/development/source-code-reference.md')})",
         f"- [Code documentation]({page('docs/development/code-documentation.md')})",
         f"- [Release process]({page('docs/development/release-process.md')})",
+        f"- [Issue triage agent]({page('docs/development/issue-triage-agent.md')})",
         f"- [Contributing]({page('CONTRIBUTING.md')})",
         "",
         "## Analysis",

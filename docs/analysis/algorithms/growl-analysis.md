@@ -5,9 +5,9 @@
 > **Implementation status — released in 0.3.0:** Implemented under `domain/dubstep/` as a deterministic CV gesture. The Q0.12 component weights are normalized when Texture changes, sum exactly to unity and avoid per-sample division. Release 0.3.0 retains the public name **Growl**; the implemented mathematical contour is the behavioral contract.
 
 
-Growl is the proposed second mode of the working Dubstep/Bass bank. Its purpose is to generate a short, beat-synchronised **multi-lobed timbral-motion CV** suitable for destinations such as wavetable position, formant/filter position, FM amount, wavefolding or distortion control.
+Growl is the second mode of the released Dubstep/Bass bank. Its purpose is to generate a short, beat-synchronised **multi-lobed timbral-motion CV** suitable for destinations such as wavetable position, formant/filter position, FM amount, wavefolding or distortion control.
 
-The name is intentionally provisional. Drift cannot synthesize audio and therefore cannot create a growl bass by itself. If the CV shape does not reliably produce growl-like articulation when patched to suitable voices, a less presumptive name such as **Formant**, **Talk** or **Snarl** would be more accurate.
+The name was provisional during analysis; release 0.3.0 retains **Growl** with an explicit semantic limitation. Drift cannot synthesize audio and therefore cannot create a growl bass by itself. If the CV shape does not reliably produce growl-like articulation when patched to suitable voices, a less presumptive name such as **Formant**, **Talk** or **Snarl** would be more accurate.
 
 There is no Quinn Freedman Growl mode to preserve.
 
@@ -41,7 +41,7 @@ $$
 b(\tau)=\frac12\tau^2.
 $$
 
-The proposed contour is
+The released ideal contour is
 
 $$
 G(\phi,\tau)=
@@ -56,7 +56,7 @@ $$
 0\le G(\phi,\tau)\le1.
 $$
 
-This avoids output clipping and gives Texture a mathematically monotone meaning: it increases the contribution of higher-order lobes while retaining the fundamental gesture.
+This avoids output clipping. In the real Q0.12 implementation, the second and third normalized component weights are rounded independently and the remaining unity residual is assigned to the fundamental. The second contribution is monotone; the third can move backward by at most one Q0.12 LSB at an isolated Texture code because the normalization denominator is quantized. Tests explicitly permit only that one-LSB effect.
 
 At Texture zero,
 
@@ -68,21 +68,21 @@ At higher Texture the second and third components create increasingly complex wi
 
 ## 4. Tempo and phase contract
 
-The first prototype should run one complete Growl gesture per **half note**:
+The released algorithm runs one complete Growl gesture per **half note**:
 
 $$
 f_g=\frac12 f_q.
 $$
 
-At the working bank's 140 BPM centre, one gesture therefore lasts approximately 857 ms. This leaves enough time for multiple internal lobes to be heard as articulation rather than as high-speed buzz.
+At the released bank's 140 BPM centre, one gesture therefore lasts approximately 857 ms. This leaves enough time for multiple internal lobes to be heard as articulation rather than as high-speed buzz.
 
-The phase should be transport-relative and reset on external-clock acquisition/re-lock so the gesture has deterministic bar placement. During normal running it should wrap continuously every half note.
+The phase is transport-relative. Internal mode advances at half the quarter-note phase increment. External acquisition resets the gesture to phase zero; subsequent accepted quarter boundaries snap it alternately to phase 1/2 and phase 0, correcting accumulated sub-quarter quantisation while preserving a half-note gesture period.
 
-A later listening test may compare half-note and quarter-note base periods. That is a musical design decision, not a numerical optimization.
+A future listening test may still compare half-note and quarter-note base periods, but the half-note period is frozen behavior for 0.3.0.
 
 ## 5. Texture mapping
 
-Texture should remain continuous for Growl rather than stepped. Saturated 10-bit Texture code maps to a fixed-point approximation of
+Texture remains continuous for Growl rather than stepped. Saturated 10-bit Texture code maps to a fixed-point approximation of
 
 $$
 \tau=\frac{T}{1023}.
@@ -109,7 +109,7 @@ No RNG is required.
 
 ## 7. Why this is not just another LFO
 
-The proposed mode intentionally does **not** expose waveform choice or arbitrary frequency. Its defining contract is:
+The released mode intentionally does **not** expose waveform choice or arbitrary frequency. Its defining contract is:
 
 - tempo-relative gesture duration;
 - fixed phase relationships between one-, two- and three-lobe components;
@@ -118,7 +118,7 @@ The proposed mode intentionally does **not** expose waveform choice or arbitrary
 
 Classic LFO remains the general periodic source. Growl is a single purpose-built compound modulation gesture.
 
-If listening tests show that this distinction is not perceptually strong enough, Growl should be replaced rather than kept for completeness.
+If later listening shows that this distinction is not perceptually strong enough, replacing or renaming Growl would be a future product decision rather than an undocumented 0.3.0 change.
 
 ## 8. Relationship to actual growl synthesis
 
@@ -144,13 +144,13 @@ The algorithm is still modest:
 - three multiply-accumulate terms;
 - one normalization.
 
-The normalization denominator depends only on Texture and should be cached when Texture changes. The AVR hot path should multiply by a cached reciprocal rather than perform general division at 2.5 kHz.
+The released implementation recalculates normalized Q0.12 component weights only when the saturated Texture code changes. The integer divisions needed for normalization therefore sit in `updateTexture()`, not in the steady-state sample hot path. Per-sample rendering is three triangle evaluations plus three multiply-accumulate terms and one Q-format downshift; no cached reciprocal is used.
 
 The quadratic $\tau^2$ term can be evaluated in Q-format with one multiply when Texture is updated.
 
 ## 10. Optimization opportunities
 
-- Cache $a$, $b$ and reciprocal normalization from Texture.
+- Keep the current cache of fully normalized Q0.12 weights and avoid recomputing them when Texture is unchanged.
 - Derive $2\phi$ and $3\phi$ with adds/shifts rather than general multiplication.
 - Implement the phase offsets as unsigned fixed-point constants.
 - Reuse one branch-light triangle primitive.
@@ -162,8 +162,8 @@ Required tests:
 
 - dense sweep proves output is always 0..4095;
 - Texture zero exactly reduces to the fundamental triangle;
-- $a(\tau)$ and $b(\tau)$ are monotone over all 1024 Texture codes;
-- $b$ grows no faster than the documented quadratic relation;
+- normalized second-component weight is monotone over all 1024 Texture codes and the third component never reverses by more than one Q0.12 LSB;
+- the unnormalized third component follows the documented quadratic Texture relation before fixed-point normalization;
 - fixed-point contour matches a double-precision reference within an explicit code tolerance;
 - phase wrap is continuous to the expected triangle quantisation;
 - second and third component phase offsets are exact;
@@ -174,7 +174,7 @@ Required tests:
 - external lock/re-lock produces deterministic gesture phase;
 - AVR timing remains below the 400 microsecond processing deadline.
 
-Golden vectors should include Texture 0, 1/4, 1/2, 3/4 and maximum over at least two complete gestures.
+The unit suite already verifies the exact Texture-zero reduction, unity-sum weights over all 1024 Texture codes, bounded dense phase/Texture output, a real high-Texture shape change, deterministic runtime and external re-lock origin. Floating-reference golden vectors at representative Texture values remain a useful future precision test.
 
 ## 12. Musical assessment
 
@@ -188,7 +188,7 @@ This algorithm should therefore receive an explicit A/B listening test against a
 
 ## 13. Engineering assessment
 
-The proposed weighted-triangle model is bounded, deterministic, cheap and easy to verify. It is suitable for prototyping. It should **not** be considered frozen until hardware listening confirms that the compound contour produces a recognisable and useful timbral gesture across multiple Eurorack voices.
+The weighted-triangle model is bounded, deterministic, cheap and frozen as the 0.3.0 behavior. Hardware listening still matters for the **product question** of whether the name Growl communicates the result well across different destination patches; it no longer blocks the engineering contract.
 
 <!-- drift-footer:start -->
 <p align="center">

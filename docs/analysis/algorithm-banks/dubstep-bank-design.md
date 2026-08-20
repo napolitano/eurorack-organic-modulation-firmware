@@ -5,18 +5,18 @@
 > **Implementation status — released in 0.3.0:** The bank is implemented as compile-time bank `FMD_BANK_DUBSTEP` with slots Wobble / Growl / Chop / Build. Release 0.3.0 freezes the 70–280 BPM mapping, reuses the shared Percussion-derived `ClockSource`, uses the 8/4/2/1-bar Build mapping described below, and publishes the user-facing bank name **Dubstep / Bass**; the code identifier remains `dubstep`.
 
 
-This document evaluates a proposed seventh Drift algorithm bank with the working name **Dubstep**. The bank is intended to cover a part of electronic modulation that the existing six banks do not address directly: **tempo-synchronised bass-motion phrases, syncopated gating and build/drop-scale modulation**.
+This document records the design rationale and the released 0.3.0 contract of Drift's seventh algorithm bank, published as **Dubstep / Bass**. The bank covers a part of electronic modulation that the previous six banks did not address directly: **tempo-synchronised bass-motion phrases, syncopated gating and build/drop-scale modulation**.
 
-The working four-mode set is:
+The released four-mode set is:
 
 - **Wobble** — a tempo-synchronised modulation oscillator whose rate changes according to a deterministic musical phrase;
 - **Growl** — a beat-synchronised, multi-lobed timbral-motion contour intended for wavetable, formant, filter, FM or waveshaping destinations;
 - **Chop** — a deterministic sparse/syncopated gate-CV phrase for rhythmically chopping a sustained bass or modulation destination;
 - **Build** — a repeating multi-bar tension contour that combines a macro rise with progressively faster tempo-locked modulation before a phrase reset.
 
-There is no Quinn Freedman implementation of these modes. The complete bank would be project-defined.
+There is no Quinn Freedman implementation of these modes. The complete bank is project-defined.
 
-The bank name is deliberately **not frozen by this analysis**. “Dubstep” is immediately understandable, but risks reducing a broad genre to the later wobble/growl/drop vocabulary. Sound On Sound explicitly cautions that dubstep is more than an automated wobble bass, while historical work describes the genre's earlier half-step, sub-bass and spatial emphasis. A public-facing name such as **Bass**, **Bass Music** or **Dubstep / Bass** may therefore achieve better genre accuracy and community acceptance without changing the algorithms themselves:
+The original analysis treated the bank name as provisional because “Dubstep” can reduce a broad genre to the later wobble/growl/drop vocabulary. Sound On Sound explicitly cautions that dubstep is more than an automated wobble bass, while historical work describes the genre's earlier half-step, sub-bass and spatial emphasis. Release 0.3.0 resolves that naming question by publishing the user-facing name **Dubstep / Bass** while retaining the compact code identifier `dubstep`:
 
 - <https://www.soundonsound.com/techniques/dubstep-basics>
 - <https://research-information.bris.ac.uk/ws/portalfiles/portal/390601980/Final_Copy_2024_03_08_Mouraviev_IN_PhD.pdf>
@@ -41,22 +41,22 @@ Jeremy W. Smith's research on continuous processes in EDM identifies wobble bass
 
 These references support a bank centred on tempo-locked modulation and phrase-scale motion. They do **not** support treating one specific wobble pattern, growl shape or build phrase as canonical. Those details must remain documented project design choices.
 
-## 3. Proposed bank slot mapping
+## 3. Released bank slot mapping
 
-| Slot | DIP 1 | DIP 2 | Proposed algorithm |
+| Slot | DIP 1 | DIP 2 | Algorithm |
 |---:|---|---|---|
 | 0 | OFF | OFF | Wobble |
 | 1 | ON | OFF | Growl |
 | 2 | OFF | ON | Chop |
 | 3 | ON | ON | Build |
 
-As with the existing banks, the normal firmware image would contain all four modes and the rear DIP switches would select one at startup. The named-algorithm developer target mechanism introduced in 0.3.0 provides direct on-device builds for `wobble`, `growl`, `chop` and `build` without changing the user-facing bank contract.
+As with the existing banks, the normal firmware image contains all four modes and the rear DIP switches select one at startup. The named-algorithm developer target mechanism introduced in 0.3.0 provides direct on-device builds for `wobble`, `growl`, `chop` and `build` without changing the user-facing bank contract.
 
-## 4. Proposed shared tempo contract
+## 4. Released shared tempo contract
 
-A Dubstep-specific internal tempo mapping should make the genre's centre of gravity easy to reach rather than reusing the very broad 30..240 BPM Electronica/Percussion range uncritically.
+The released bank uses a Dubstep-specific internal tempo mapping so that the genre's centre of gravity is easy to reach instead of reusing the broader 30..240 BPM Electronica/Percussion range.
 
-A useful candidate is
+The 0.3.0 contract is
 
 $$
 B(u)=70\cdot2^{2u}\ \mathrm{BPM},\qquad u\in[0,1].
@@ -80,11 +80,11 @@ This is attractive for three reasons:
 2. the two-octave span covers half-time and double-time interpretations around that centre;
 3. the narrower span provides better manual resolution around the typical 135..145 BPM region than the current three-octave Electronica mapping.
 
-This mapping is **a design recommendation, not yet an implementation contract**. Listening/on-device tests should compare it with reusing the established 30..240 BPM mapping before firmware is frozen.
+This mapping is the **0.3.0 implementation contract**. `dubstepmath::quarterNotePhaseIncrement()` evaluates it through the shared fixed-point exponential reference table; endpoint and midpoint behavior are covered by the Wobble mathematical suite. A future release may revise the musical range only as an explicit behavior change.
 
-## 5. External clock recommendation
+## 5. External clock contract
 
-The proposed bank benefits enough from transport-relative timing that it should reuse the already qualified Percussion clock-source model:
+The released bank reuses the shared `clock::ClockSource` model extracted from Percussion:
 
 - Speed CV is repurposed as an optional **0..5 V quarter-note clock input**;
 - Speed knob supplies internal tempo when there is no valid external lock;
@@ -94,7 +94,7 @@ The proposed bank benefits enough from transport-relative timing that it should 
 
 This reuse avoids inventing a second clock detector and gives Wobble, Chop and Build deterministic musical boundaries.
 
-> **Current-hardware electrical limitation:** the original Speed CV input is not a protected general-purpose Eurorack trigger input. Any proposed Dubstep/Bass clock feature must retain the existing **0..5 V only** restriction. Raw 10 V Eurorack clocks/triggers remain unsupported until the analogue input stage is revised.
+> **Current-hardware electrical limitation:** the original Speed CV input is not a protected general-purpose Eurorack trigger input. The Dubstep/Bass clock feature therefore retains the existing **0..5 V only** restriction. Raw 10 V Eurorack clocks/triggers remain unsupported until the analogue input stage is revised.
 
 ## 6. Shared control contract
 
@@ -107,9 +107,9 @@ This reuse avoids inventing a second clock detector and gives Wobble, Chop and B
 
 Texture remains a saturated 10-bit firmware macro. Attenuation remains analogue after the DAC and therefore should not be consumed as an internal algorithm parameter.
 
-## 7. Wobble concept
+## 7. Wobble implementation contract
 
-Wobble should **not** become “another LFO shape selector”. Its differentiator is a tempo-locked **rate phrase**.
+Wobble is deliberately not “another LFO shape selector”. Its differentiator is a tempo-locked **rate phrase**.
 
 A fixed unipolar triangle carrier is sufficient:
 
@@ -117,21 +117,21 @@ $$
 W(\phi)=1-\left|2\phi-1\right|,\qquad \phi\in[0,1).
 $$
 
-The phase remains continuous while its rate changes only at musically defined phrase boundaries. Candidate rate ratios, expressed as cycles per quarter note, are
+The phase remains continuous while its rate changes only at musically defined phrase boundaries. The rate helper supports eight exact rational codes, expressed as cycles per quarter note:
 
 $$
 R=\left\{\frac12,\frac23,1,\frac43,\frac32,2,3,4\right\}.
 $$
 
-These correspond to familiar tempo-relative periods including half note, dotted quarter, quarter, 3/16, quarter-note triplet, eighth, eighth-note triplet and sixteenth. The Native Instruments 3/16 example provides direct evidence that non-power-of-two ratios belong in the useful vocabulary.
+These correspond to familiar tempo-relative periods including half note, dotted quarter, quarter, 3/16, quarter-note triplet, eighth, eighth-note triplet and sixteenth. The Native Instruments 3/16 example provides direct evidence that non-power-of-two ratios belong in the useful vocabulary. **The released four Texture vocabularies use codes 2..7 only; the 1/2 and 2/3 helper codes are implemented and tested but are not selected by the 0.3.0 phrase table.**
 
-Texture should select increasingly complex **project-defined rate phrases**, not random rates. The phrase set must be original rather than copied from a specific commercial track.
+Texture selects increasingly complex **project-defined rate phrases**, not random rates. The released phrase set is original project material rather than a transcription of a commercial track.
 
-## 8. Growl concept
+## 8. Growl implementation contract
 
-“Growl” is the most semantically risky candidate because Drift outputs CV, not audio. A growl bass in production normally depends on timbral synthesis and processing — wavetable position, FM, formant filtering, distortion and related movement — none of which Drift can create by itself. A user patch can, however, use a sufficiently structured CV contour to drive those destinations.
+“Growl” is the most semantically risky mode name because Drift outputs CV, not audio. A growl bass in production normally depends on timbral synthesis and processing — wavetable position, FM, formant filtering, distortion and related movement — none of which Drift can create by itself. A user patch can, however, use a sufficiently structured CV contour to drive those destinations.
 
-The proposed scalar approximation is a weighted sum of phase-related triangle components:
+The released scalar model is a normalized weighted sum of phase-related triangle components:
 
 $$
 T(x)=1-\left|2\,\mathrm{frac}(x)-1\right|,
@@ -162,19 +162,19 @@ $$
 
 without clipping. Low Texture is a simple one-lobe movement; increasing Texture introduces additional lobes and asymmetry suitable for timbral destinations.
 
-The public name may need to become **Formant**, **Snarl** or **Talk** if listening tests show that “Growl” overpromises what a single CV output can cause.
+Release 0.3.0 retains the public name **Growl**, but user-facing documentation explicitly describes it as a timbral-motion CV gesture rather than audio synthesis. A future rename would therefore be a product-language decision, not a correction to the mathematical model.
 
-## 9. Chop concept
+## 9. Chop implementation contract
 
 Chop targets the sparse, syncopated rhythmic space left around a half-time bass framework. It is intentionally deterministic so it does not duplicate Percussion Probability or Generative Markov/Motif.
 
-The initial model uses a 16-step bar. Two structural anchors remain fixed:
+The released model uses a 16-step bar. Two structural anchors remain fixed:
 
 $$
 A=\{0,8\}.
 $$
 
-Texture progressively adds candidate onset positions from an ordered project-defined set
+Texture progressively adds onset positions from the released ordered project-defined set
 
 $$
 C=(3,11,6,14,2,10,7,15).
@@ -200,11 +200,11 @@ $$
 
 Positions 3 and 11 deliberately anticipate strong quarter-note boundaries by one sixteenth; additional positions increase density without converting the mode into an even subdivision clock.
 
-Each onset should launch a short gate-like contour whose duration is a fixed fraction of a sixteenth rather than a 10 ms Percussion trigger. That distinction lets Chop act as VCA/filter articulation on sustained material rather than merely as another trigger sequencer.
+Each onset launches a gate-like contour across the active sixteenth: full scale for the first half-step followed by a linear decay to zero over the second half. That distinction lets Chop act as VCA/filter articulation on sustained material rather than merely as another trigger sequencer.
 
-The exact candidate order is a musical project parameter and must be listening-tested. Its purpose is to define an original deterministic grammar, not to claim a canonical dubstep bassline.
+The exact optional-onset order is frozen for 0.3.0 as a musical project parameter. It defines an original deterministic grammar and does not claim to be a canonical dubstep bassline; later listening results may motivate an explicit future behavior change.
 
-## 10. Build concept
+## 10. Build implementation contract
 
 Build operates at the largest time scale in the bank. It combines a macro rise with a micro modulation rate that doubles toward the phrase end.
 
@@ -214,7 +214,7 @@ $$
 u\in[0,1).
 $$
 
-A candidate macro contour is cubic smoothstep
+The released macro contour is cubic smoothstep
 
 $$
 M(u)=3u^2-2u^3.
@@ -233,7 +233,7 @@ This mirrors the established dance-music build technique of progressively halvin
 
 <https://www.musicradar.com/how-to/8-classic-recipes-for-a-perfect-drop>
 
-If $Q(u)$ is a unipolar triangle at the current stage rate, a useful composite CV is
+If $Q(u)$ is a unipolar triangle at the current stage rate, the released composite CV is
 
 $$
 Y(u)=M(u)\left(\frac14+\frac34Q(u)\right).
@@ -241,17 +241,17 @@ $$
 
 The macro rise therefore opens the destination over the whole phrase while the micro motion becomes progressively faster. At phrase end the output resets for the next cycle; that reset is intentional and can act as the release/drop marker.
 
-Texture may select phrase length from
+Texture selects phrase length from
 
 $$
 N\in\{8,4,2,1\}\ \text{bars}
 $$
 
-with higher Texture producing shorter, more urgent cycles. The one-bar endpoint is useful for aggressive performance but is no longer an arrangement-scale build; listening tests should determine whether the minimum should instead remain two bars.
+with higher Texture producing shorter, more urgent cycles. The one-bar endpoint is intentionally aggressive and no longer arrangement-scale; it remains a documented listening-review point for a future release, but the `{8,4,2,1}` mapping is frozen for 0.3.0.
 
 ## 11. Duplication audit
 
-| Existing algorithm | Proposed-bank boundary |
+| Existing algorithm | Dubstep/Bass-bank boundary |
 |---|---|
 | Classic LFO | Wobble has one fixed carrier shape and derives its identity from deterministic tempo-quantised **rate phrases**; Growl is a fixed multi-component beat contour rather than a waveform family |
 | Bézier / Organic Vector | no random endpoints or vector-field motion; all four modes are explicitly grid/phrase relative |
@@ -270,7 +270,7 @@ The main overlap risks are Wobble vs Classic LFO and Build vs Percussion Repeat.
 
 ## 12. ATmega328P feasibility
 
-All four proposed modes fit the current processing model comfortably in principle:
+All four released modes fit the current processing model without dynamic allocation, floating point or audio-rate processing:
 
 - no FFT, audio-rate synthesis or dynamic allocation;
 - Wobble needs one phase accumulator, phrase position and rate-table lookup;
@@ -278,7 +278,7 @@ All four proposed modes fit the current processing model comfortably in principl
 - Chop needs one 16-step counter, an onset mask and a gate/envelope phase;
 - Build needs phrase counters, one stage-rate selector, one micro phase and one smoothstep macro phase.
 
-At the proposed maximum internal tempo of 280 BPM, a 32nd-note period is approximately
+At the released maximum internal tempo of 280 BPM, a 32nd-note period is approximately
 
 $$
 \frac{60}{280\cdot8}\approx26.8\ \mathrm{ms},
@@ -286,19 +286,19 @@ $$
 
 which is about 67 processing samples at 2.5 kHz. This remains comfortably resolvable by the existing scheduler.
 
-The exact timing budget must still be measured on AVR. The analysis only establishes that no proposed mathematical primitive obviously exceeds the architecture's capabilities.
+The repository retains the AVR timing-probe gate as the authoritative hardware deadline check. The analytical estimate only establishes why the chosen subdivisions are resolvable at the 2.5 kHz scheduler rate; it is not a substitute for the AVR timing build.
 
 ## 13. Verification strategy
 
-Before implementation is accepted, the bank requires:
+The 0.3.0 verification contract requires:
 
 ### Shared timing
 
 - exact internal tempo endpoints and midpoint;
 - monotonic Speed mapping;
-- 140 BPM exactly or to the documented fixed-point quantisation at midpoint if the 70..280 mapping is adopted;
+- 140 BPM at the ideal logarithmic midpoint, with the implementation checked against its documented fixed-point quantisation;
 - external-clock acquisition/loss/re-lock behavior identical to the established contract;
-- no phrase drift from discarded phase overshoot;
+- Wobble/Chop grid phases preserve internal rollover overshoot; Build explicitly documents its different internal phrase-wrap behavior, which discards less than one scheduler sample of residual overshoot;
 - 0..5 V clock safety wording present in every user-facing location that exposes the feature.
 
 ### Wobble
@@ -332,14 +332,14 @@ Before implementation is accepted, the bank requires:
 - phrase lengths and stage transitions occur at exact bar boundaries;
 - micro rate follows the quarter/eighth/sixteenth/thirty-second sequence exactly;
 - macro contour is monotone non-decreasing inside one phrase;
-- phrase-end reset is exact and does not shift the next phrase origin;
+- external quarter edges establish exact Build phrase positions; internal phrase wrap is deterministic but currently discards sub-sample overshoot and is therefore not described as mathematically drift-free;
 - maximum-tempo 32nd modulation remains within scheduler timing limits.
 
 ## 14. Musical and product assessment
 
-The proposed bank fills a genuine gap. Existing Drift modes can certainly be patched into bass music, but none currently treats **bass-modulation phrasing itself** as the primary domain.
+The released bank fills a genuine gap. Existing Drift modes can certainly be patched into bass music, but none currently treats **bass-modulation phrasing itself** as the primary domain.
 
-Provisional value assessment:
+Released 0.3.0 value assessment:
 
 | Algorithm | Musical value | Design confidence | Main risk |
 |---|---|---|---|
@@ -348,21 +348,21 @@ Provisional value assessment:
 | **Chop** | very high | high | project-defined phrase grammar requires listening validation |
 | **Build** | high | medium-high | generic EDM technique; needs enough bass-music character to justify the slot |
 
-The strongest candidates are Wobble and Chop. Growl is technically feasible but needs semantic/listening validation. Build is musically useful, but its genre specificity is weaker than Wobble/Chop and should be compared against at least one alternative fourth mode before implementation is frozen.
+Wobble and Chop remain the strongest genre-specific modes. Growl retains a semantic/listening caveat because a scalar CV cannot create a growl by itself. Build is useful but less genre-specific; both caveats are product/listening questions for future releases rather than unresolved 0.3.0 implementation decisions.
 
-## 15. Recommendation
+## 15. 0.3.0 decision record and remaining review points
 
-Proceed to prototype only after the following analysis decisions are accepted:
+Release 0.3.0 resolves the original design-stage questions as follows:
 
-1. keep the four working concepts **Wobble / Growl / Chop / Build** for initial hardware listening;
-2. treat **Dubstep** as a working bank name, not yet a final public label;
-3. reuse the qualified Percussion 0..5 V external-clock architecture;
-4. prototype the 70..280 BPM logarithmic mapping with 140 BPM at centre and compare it on-device against the existing 30..240 mapping;
-5. keep Wobble and Chop deterministic in the first implementation so the bank has reproducible phrase identity rather than becoming another random/generative bank;
-6. do not market Growl as audio synthesis — it is a **timbral-motion CV source**;
-7. require listening tests before freezing rate phrases, Chop onset order, Growl component weights or Build phrase lengths.
+1. the released modes are **Wobble / Growl / Chop / Build**;
+2. the user-facing bank name is **Dubstep / Bass**, while code and tooling retain `dubstep`;
+3. Percussion and Dubstep/Bass share the same `ClockSource` and the current-hardware **0..5 V** restriction;
+4. internal tempo is **70..280 BPM** with approximately 140 BPM at the Speed midpoint;
+5. Wobble and Chop are deterministic and use fixed project-defined phrase grammars;
+6. Growl is documented as a **timbral-motion CV source**, never as audio synthesis;
+7. the Wobble phrase, Chop onset order, Growl contour and Build `{8,4,2,1}` phrase mapping are frozen behavior for 0.3.0.
 
-The bank is therefore **technically viable and musically justified**, but not yet implementation-frozen.
+Remaining listening questions are explicitly future-facing: whether Growl's name is ideal, whether Build should retain a one-bar mode, and whether later musical revisions justify a breaking behavior change. The bank is therefore **implemented, testable and behaviorally frozen for 0.3.0**, while still documenting the subjective questions that software tests cannot answer.
 
 <!-- drift-footer:start -->
 <p align="center">

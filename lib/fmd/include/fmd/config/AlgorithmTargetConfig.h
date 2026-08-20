@@ -2,6 +2,15 @@
  * @file AlgorithmTargetConfig.h
  * Defines optional compile-time locking to one named Drift algorithm.
  *
+ * @details
+ * Normal release images leave FMD_FORCED_ALGORITHM at FMD_ALGORITHM_AUTO so the
+ * rear DIP switches select one of the four algorithms compiled into the bank.
+ * Developer tooling may replace that sentinel with one global algorithm ID. The
+ * preprocessor checks below reject any bank/algorithm mismatch at compile time,
+ * which both prevents misleading test images and lets linker garbage collection
+ * discard unreferenced algorithms from named-target builds. Numeric IDs are an
+ * internal ABI between scripts and C++ and are not a user-facing selection API.
+ *
  * @author Axel Napolitano
  * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
  * @copyright Copyright (C) 2026 Axel Napolitano
@@ -14,6 +23,8 @@
 
 #include "fmd/config/AlgorithmBankConfig.h"
 
+/** @name Global algorithm identifiers used only by compile-time developer targets. */
+/** @{ */
 #define FMD_ALGORITHM_PERLIN 0
 #define FMD_ALGORITHM_BROWNIAN 1
 #define FMD_ALGORITHM_BEZIER 2
@@ -42,12 +53,13 @@
 #define FMD_ALGORITHM_GROWL 25
 #define FMD_ALGORITHM_CHOP 26
 #define FMD_ALGORITHM_BUILD 27
+/** @} */
 
-/** Sentinel used for normal bank firmware where the rear DIP switches select the algorithm. */
+/** @brief Sentinel for normal bank firmware where the rear DIP switches remain authoritative. */
 #define FMD_ALGORITHM_AUTO 255
 
 #ifndef FMD_FORCED_ALGORITHM
-/** Normal release/user builds use the rear DIP switches. Developer tooling may override this. */
+/** @brief Selected compile-time algorithm target; release/user builds keep the AUTO sentinel. */
 #define FMD_FORCED_ALGORITHM FMD_ALGORITHM_AUTO
 #endif
 

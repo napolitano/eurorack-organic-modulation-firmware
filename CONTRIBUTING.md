@@ -13,6 +13,8 @@ Use the repository issue forms where possible. Bug reports should identify the c
 
 Feature requests should describe the user-facing goal first. New behavior must fit the ATmega328P real-time and resource envelope unless the proposal explicitly belongs to a later hardware revision.
 
+New issues receive one automated first-pass review from the clearly identified Free Modular Drift Triage-Agent. The agent is intended to help, not bounce reports: it never closes issues or marks them invalid. It may point to a concrete documented feature, offer relevant first-aid references, or prepare and assign a likely defect. See [the triage-agent policy](docs/development/issue-triage-agent.md) for the exact thresholds and safeguards.
+
 ## Development environment
 
 The project uses PlatformIO and C++17. Primary environments are:
@@ -84,6 +86,8 @@ Correctness tests should prefer independent equations, exhaustive integer domain
 Documentation targets GitHub rendering first. Use clear heading hierarchies, relative repository links, fenced code blocks, tables for compact comparisons, Mermaid where architecture/state flow benefits, and GitHub math notation for equations. Use alerts sparingly for materially important information. Long documents should include a focused contents index.
 
 Repository Markdown documentation ends with the shared `From Munich with` Drift footer. Run `python scripts/check_markdown_footer.py` after adding or moving Markdown files; the pull-request template is intentionally excluded because it is copied into PR bodies.
+
+The GitHub Wiki is generated from canonical repository Markdown. Do not fix a generated wiki page independently; change the source file here and run `python scripts/test_wiki_generation.py`. The publisher preserves unrelated hand-written wiki pages but overwrites every page listed in its managed-page manifest.
 
 Purely editorial wording/formatting changes do not need changelog entries unless they form part of a substantial documentation release.
 

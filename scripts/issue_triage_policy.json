@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "feature_high_threshold": 75,
+  "feature_ambiguous_threshold": 50,
+  "required_high_evidence_quality": 70,
+  "max_document_candidates": 12,
+  "max_source_candidates": 8,
+  "max_test_candidates": 8,
+  "default_model": "gpt-5.6-terra",
+  "labels": {
+    "reviewed": {
+      "name": "triage: agent-reviewed",
+      "color": "6f42c1",
+      "description": "Initial automated documentation-aware triage has run"
+    },
+    "docs": {
+      "name": "triage: docs-relevant",
+      "color": "0e8a16",
+      "description": "Repository documentation appears relevant to the report"
+    },
+    "bug": {
+      "name": "triage: likely-bug",
+      "color": "d73a4a",
+      "description": "Automated first-pass triage found stronger bug than feature evidence"
+    }
+  }
+}

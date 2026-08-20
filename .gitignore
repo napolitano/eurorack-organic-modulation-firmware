@@ -35,3 +35,6 @@ __pycache__/
 
 # Local Doxygen output
 .doxygen/
+
+.wiki-preview/
+.wiki-build/

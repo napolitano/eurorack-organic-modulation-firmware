@@ -257,7 +257,9 @@ AVR ADC / DAC / LED / tables    src/platform/nano_atmega328p/
 
 The portable core never calls Arduino GPIO/SPI/timing APIs directly. Hardware dependencies terminate at small ports implemented by the Nano/ATmega328P platform layer. Algorithm code is grouped by bank under `domain/classic`, `domain/organic`, `domain/generative`, `domain/ambient`, `domain/electronica`, `domain/percussion` and `domain/dubstep`; genuinely shared fixed-point, frequency, RNG and engine support remains at the domain root.
 
-Production C++ uses complete provenance/licence headers and Doxygen contracts. See [code documentation conventions](docs/development/code-documentation.md).
+Production C++ uses complete provenance/licence headers and Doxygen contracts. See the [source-code reference](docs/development/source-code-reference.md) and [code documentation conventions](docs/development/code-documentation.md). The GitHub Wiki is a generated mirror of canonical repository documentation; its publication contract is documented under [docs/wiki](docs/wiki/README.md).
+
+New GitHub issues receive a single documentation-aware first-pass review from the clearly identified **Free Modular Drift Triage-Agent**. It never closes issues: strong documented-feature matches point to concrete user documentation, ambiguous reports get targeted first-aid references, and likely defects are prepared and assigned for maintainer review. The policy, evidence gates and security boundary are documented in the [issue triage agent reference](docs/development/issue-triage-agent.md).
 
 ## Build from source
 

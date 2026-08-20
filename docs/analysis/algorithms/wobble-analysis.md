@@ -2,12 +2,12 @@
 
 ## 1. Purpose and scope
 
-> **Implementation status — released in 0.3.0:** Implemented under `domain/dubstep/` with the documented eight-cell phrase, four Texture vocabularies, rational rate codes and the shared 0–5 V quarter-note clock source. The 70–280 BPM mapping is now the prototype firmware contract rather than a pending recommendation.
+> **Implementation status — released in 0.3.0:** Implemented under `domain/dubstep/` with the documented eight-cell phrase, four Texture vocabularies, rational rate codes and the shared 0–5 V quarter-note clock source. The 70–280 BPM mapping is the released 0.3.0 firmware contract.
 
 
-Wobble is the proposed first mode of the working Dubstep/Bass bank. It generates a continuous modulation CV whose **rate follows a deterministic tempo-synchronised phrase**.
+Wobble is the first mode of the released Dubstep/Bass bank. It generates a continuous modulation CV whose **rate follows a deterministic tempo-synchronised phrase**.
 
-The distinction from Drift's Classic LFO is fundamental: Classic LFO is a general free-running waveform source. Wobble should use one deliberately simple carrier and derive its musical identity from switching between beat-relative rate values such as quarter, 3/16, eighth and triplet subdivisions.
+The distinction from Drift's Classic LFO is fundamental: Classic LFO is a general free-running waveform source. Wobble uses one deliberately simple carrier and derives its musical identity from switching between beat-relative rate values such as quarter, 3/16, eighth and triplet subdivisions.
 
 There is no Quinn Freedman Wobble mode to preserve.
 
@@ -55,7 +55,7 @@ $$
 f_w=r f_q.
 $$
 
-The proposed rational rate vocabulary is
+The rate helper supports the rational code set
 
 $$
 R=\left\{\frac12,\frac23,1,\frac43,\frac32,2,3,4\right\}.
@@ -76,7 +76,9 @@ The corresponding carrier periods are:
 
 The phase accumulator remains continuous when $r$ changes. Only its increment changes. This avoids an output discontinuity at every rate switch.
 
-## 4. Proposed rate-phrase model
+`carrierIncrement()` implements all eight ratios as reusable/testable helper codes. The released four Texture vocabularies, however, select only $1$, $4/3$, $3/2$, $2$, $3$ and $4$. The $1/2$ and $2/3$ codes are currently unreachable from the Wobble phrase and must not be described as active musical states.
+
+## 4. Released rate-phrase model
 
 The phrase is divided into eight eighth-note cells per 4/4 bar. Each cell references one of four phrase symbols according to the project-defined index word
 
@@ -101,7 +103,7 @@ This first contract has useful properties:
 - region 3 becomes fast and aggressive without exceeding sixteenth-period carrier cycles;
 - the phrase remains deterministic and exactly one bar long.
 
-The specific word and vocabulary are **listening-test candidates**, not historical dubstep data.
+The specific word and four active vocabularies are **project-defined 0.3.0 behavior**, not historical dubstep data. Future listening tests may motivate a later explicit behavior change.
 
 ## 5. Texture mapping
 
@@ -113,11 +115,11 @@ $$
 
 with the implementation saturating the maximum input to region 3.
 
-Texture changes should be latched at the next bar boundary. A slowly moving Texture CV should not rewrite the rate vocabulary halfway through an existing phrase.
+Texture changes are latched at the next bar boundary. A slowly moving Texture CV should not rewrite the rate vocabulary halfway through an existing phrase.
 
 ## 6. Clock-source contract
 
-Wobble should use the proposed bank's shared clock behavior:
+Wobble uses the bank's shared `clock::ClockSource` behavior:
 
 - no valid Speed-CV clock: internal Speed-knob tempo;
 - valid 0..5 V Speed-CV quarter-note clock: external timing;
@@ -179,15 +181,15 @@ The hot path is inexpensive:
 - one triangle evaluation using subtraction/absolute value;
 - one 12-bit scaling.
 
-Rational rate conversion should not use general division every sample. Each vocabulary entry should resolve to a precomputed fixed-point multiplier or phase increment when tempo changes.
+The released `wobblemath::carrierIncrement()` uses an eight-way integer switch. Power-of-two rates use shifts/multiplication; the 2/3, 4/3 and 3/2 helper codes use bounded integer division. In the 0.3.0 phrase tables only 4/3, 3/2 and integer rate codes are reachable. This is still comfortably small, but caching the resolved carrier increment at cell/clock changes remains a valid future AVR optimization.
 
 State is small: carrier phase, phrase/cell counters, latched Texture region and current rate index.
 
 ## 11. Optimization opportunities
 
-- Store the four vocabularies in flash.
-- Precompute all eight rational phase multipliers.
-- Use the current cell's already-resolved multiplier until the next cell boundary.
+- The four tiny vocabularies are compile-time constants; AVR placement can be revisited if flash pressure becomes material.
+- Cache the resolved carrier increment until a cell boundary or measured clock period changes, eliminating repeated fractional integer division.
+- Keep the eight helper rate codes because they make the rational contract explicit even though codes 0 and 1 are not used by the released phrase tables.
 - Keep carrier phase in the existing unsigned fixed-point phase representation.
 - Avoid sine lookup entirely; triangle is intentional.
 
@@ -197,7 +199,7 @@ Required tests:
 
 - triangle carrier exact values at phase 0, 1/4, 1/2, 3/4 and wrap;
 - output remains 0..4095 for all phase values;
-- all eight rational rate entries match a high-precision beat-period reference;
+- all eight helper rate entries match their exact rational quarter-note ratios;
 - Native-Instruments-style 3/16 ratio is represented exactly by $r=4/3$ within the documented phase-increment quantisation;
 - each Texture region maps to the exact documented vocabulary;
 - maximum Texture saturates to region 3;
@@ -210,13 +212,13 @@ Required tests:
 - long-run bar boundaries do not drift;
 - AVR timing probe remains below 400 microseconds.
 
-Golden vectors should cover at least four complete bars for every Texture region.
+The dedicated unit suite locks the phrase word, four active Texture vocabularies, all eight helper ratios, tempo endpoints, deterministic bounded runtime behavior and external-acquisition origin. Additional full-bar golden vectors and explicit mid-bar Texture-latch vectors remain useful regression extensions rather than undocumented release assumptions.
 
 ## 13. Musical assessment
 
 **Musical value: very high.**
 
-Wobble is the clearest justification for the proposed bank. It turns Drift from a source of general movement into a source of **musically phrased movement** that can drive:
+Wobble is the clearest justification for the released bank. It turns Drift from a source of general movement into a source of **musically phrased movement** that can drive:
 
 - filter cutoff/resonance;
 - wavetable position;
@@ -231,7 +233,7 @@ The main risk is cliché and overlap. The mode must be presented as one bass-mus
 
 ## 14. Engineering assessment
 
-Wobble is low risk mathematically and computationally. The critical design work is musical: rate vocabulary, phrase word and boundary semantics. It should be the **first prototype** of the proposed bank because it can quickly validate both the new tempo mapping and the bank-wide external-clock concept.
+Wobble is low risk mathematically and computationally. The critical design work is musical: rate vocabulary, phrase word and boundary semantics. For 0.3.0 the mathematical design is frozen and implemented. The remaining engineering opportunities are performance micro-optimization and broader hardware listening, not unresolved algorithm semantics.
 
 <!-- drift-footer:start -->
 <p align="center">

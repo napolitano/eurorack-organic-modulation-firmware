@@ -1,6 +1,12 @@
 /**
  * @file AmbientAlgorithmMath.h
- * Declares pure mathematical primitives used by the optional Ambient algorithm bank.
+ * Declares fixed-point mathematical primitives shared by the Ambient algorithm bank.
+ *
+ * @details
+ * Functions in this header are deterministic and allocation-free. Units and Q
+ * formats are part of the test contract because most helpers sit directly on the
+ * 2.5 kHz scheduler hot path. Unless stated otherwise, control inputs are 10-bit
+ * ADC-domain values and DAC results are inclusive 12-bit values 0..4095.
  *
  * @author Axel Napolitano
  * @note Original Free Modular Drift concept and Rust firmware by Quinn Freedman.
@@ -16,42 +22,83 @@
 
 namespace fmd::ambientmath {
 
-/** Divide the established Drift phase rate by sixteen for Ambient macro timing. */
+/**
+ * @brief Divide the established Drift phase rate by sixteen for Ambient macro timing.
+ * @param basePhaseIncrement Unsigned 32-bit phase increment from the common frequency map.
+ * @return Rounded base increment divided by sixteen.
+ */
 uint32_t ambientPhaseIncrement(uint32_t basePhaseIncrement);
 
-/** Reproduce the saturated effective Speed control used by the common frequency map. */
+/**
+ * @brief Reproduce the saturated effective Speed control used by the common frequency map.
+ * @param speedKnobAdc Speed knob ADC code; clamped to 0..1023.
+ * @param speedCvAdc Speed-CV ADC code; clamped to 0..1023.
+ * @return Combined mapped control in the common frequency-map domain.
+ */
 uint16_t mappedSpeedControl(uint16_t speedKnobAdc, uint16_t speedCvAdc);
 
-/** Quantize mapped Speed into the 307-entry Anchor compensation-table domain. */
+/**
+ * @brief Quantize mapped Speed into the 307-entry Anchor compensation-table domain.
+ * @param speedKnobAdc Speed knob ADC code; clamped through mappedSpeedControl().
+ * @param speedCvAdc Speed-CV ADC code; clamped through mappedSpeedControl().
+ * @return Table index in the inclusive range 0..306.
+ */
 uint16_t anchorSpeedBucket(uint16_t speedKnobAdc, uint16_t speedCvAdc);
 
-/** Cubic smoothstep S(x)=3x^2-2x^3 in unsigned Q0.12. */
+/**
+ * @brief Evaluate cubic smoothstep S(x)=3x^2-2x^3 in unsigned Q0.12.
+ * @param xQ0F12 Input in Q0.12; values above 4096 are clamped to the endpoint.
+ * @return Smoothstep result in the inclusive range 0..4096.
+ */
 uint16_t smoothstepQ0F12(uint16_t xQ0F12);
 
 }  // namespace fmd::ambientmath
 
 namespace fmd::currentmath {
 
-/** Constant-sum three-current weights, denominator 1024. */
+/** @brief Constant-sum Current mixing weights with denominator 1024. */
 struct Weights {
   uint16_t primary;    ///< Fundamental-current weight.
-  uint16_t secondary;  ///< sqrt(2)-rate current weight.
-  uint16_t tertiary;   ///< golden-ratio-rate current weight.
+  uint16_t secondary;  ///< Approximate sqrt(2)-rate current weight.
+  uint16_t tertiary;   ///< Approximate golden-ratio-rate current weight.
 };
 
-/** Approximate sqrt(2) rate multiplication using 362/256. */
+/**
+ * @brief Approximate sqrt(2) rate multiplication with the rational factor 362/256.
+ * @param baseIncrement Base unsigned 32-bit phase increment.
+ * @return Rounded approximately sqrt(2)-scaled increment.
+ */
 uint32_t sqrt2Increment(uint32_t baseIncrement);
 
-/** Approximate golden-ratio rate multiplication using 414/256. */
+/**
+ * @brief Approximate golden-ratio rate multiplication with the rational factor 414/256.
+ * @param baseIncrement Base unsigned 32-bit phase increment.
+ * @return Rounded approximately phi-scaled increment.
+ */
 uint32_t phiIncrement(uint32_t baseIncrement);
 
-/** Evaluate a slope-softened bipolar triangle in approximately Q3.12. */
+/**
+ * @brief Evaluate a smooth bipolar triangle from a 32-bit phase accumulator.
+ * @param phase Unsigned 32-bit wraparound phase.
+ * @return Signed value in approximately -4096..4096, represented in the bank's Q3.12 convention.
+ */
 int16_t softTriangleQ3F12(uint32_t phase);
 
-/** Map Texture to the documented constant-sum Current weights. */
+/**
+ * @brief Map Texture to the documented constant-sum Current weights.
+ * @param textureControl Combined Texture control; clamped to 0..1023.
+ * @return Three weights that sum exactly to 1024.
+ */
 Weights weights(uint16_t textureControl);
 
-/** Mix three signed soft currents and project to 12-bit DAC code. */
+/**
+ * @brief Mix three signed Current components and project around DAC midpoint.
+ * @param primaryQ3F12 Fundamental signed component.
+ * @param secondaryQ3F12 Approximate sqrt(2)-rate signed component.
+ * @param tertiaryQ3F12 Approximate phi-rate signed component.
+ * @param weights Constant-sum denominator-1024 mixing weights.
+ * @return Saturated 12-bit DAC code in the inclusive range 0..4095.
+ */
 uint16_t mixToDac12(int16_t primaryQ3F12,
                     int16_t secondaryQ3F12,
                     int16_t tertiaryQ3F12,
@@ -61,105 +108,191 @@ uint16_t mixToDac12(int16_t primaryQ3F12,
 
 namespace fmd::anchormath {
 
-/** Maximum target stationary spread, 0.30 in signed Q1.15. */
+/** @brief Maximum target stationary spread, 0.30 represented in unsigned Q1.15. */
 constexpr uint16_t kMaximumSpreadQ1F15 = 9830U;
 
-/** Map Texture to target stationary spread. */
+/**
+ * @brief Map Texture to target stationary spread.
+ * @param textureControl Combined Texture control; clamped to 0..1023.
+ * @return Unsigned spread in Q1.15, from zero through kMaximumSpreadQ1F15.
+ */
 uint16_t spreadQ1F15(uint16_t textureControl);
 
-/** Convert Ambient phase rate to per-sample mean-reversion alpha in Q0.24. */
+/**
+ * @brief Convert Ambient phase rate to per-sample mean-reversion alpha.
+ * @param ambientPhaseIncrement Unsigned 32-bit Ambient phase increment.
+ * @return Positive Q0.24 alpha; never returns zero so very slow motion still reverts.
+ */
 uint32_t reversionAlphaQ0F24(uint32_t ambientPhaseIncrement);
 
 /**
- * Move one signed Q1.15 state toward zero while preserving fractional motion.
- * Residual state is reset when the side of zero changes.
+ * @brief Move one signed Q1.15 state toward zero while preserving fractional motion.
+ * @param stateQ1F15 Current signed Q1.15 state.
+ * @param alphaQ0F24 Positive Q0.24 reversion coefficient.
+ * @param fractionalResidualQ0F24 In/out residual that carries sub-LSB movement between samples.
+ * @param residualDirection In/out sign associated with the residual; reset when the state crosses sides.
+ * @return New signed Q1.15 state no farther from zero than the input.
  */
 int16_t revertTowardZero(int16_t stateQ1F15,
                          uint32_t alphaQ0F24,
                          uint32_t& fractionalResidualQ0F24,
                          int8_t& residualDirection);
 
-/** Scale one triangular Q1.15 innovation by Speed compensation and Texture spread. */
+/**
+ * @brief Scale one triangular innovation by Speed compensation and Texture spread.
+ * @param triangularSampleQ1F15 Signed triangular sample in Q1.15.
+ * @param innovationGainQ1F15 Unsigned speed-compensation gain in Q1.15.
+ * @param spreadQ1F15 Unsigned target spread in Q1.15.
+ * @return Saturated signed innovation in Q1.15.
+ */
 int16_t scaledInnovationQ1F15(int16_t triangularSampleQ1F15,
                              uint16_t innovationGainQ1F15,
                              uint16_t spreadQ1F15);
 
-/** Add innovation with saturation to the signed Q1.15 state domain. */
+/**
+ * @brief Add one innovation to the Anchor state with signed-16 saturation.
+ * @param stateQ1F15 Current signed Q1.15 state.
+ * @param innovationQ1F15 Signed Q1.15 innovation.
+ * @return Saturated signed Q1.15 result.
+ */
 int16_t addInnovationSaturating(int16_t stateQ1F15, int16_t innovationQ1F15);
 
-/** Project signed Q1.15 state around DAC midpoint. */
+/**
+ * @brief Project signed Q1.15 state around the 12-bit DAC midpoint.
+ * @param stateQ1F15 Signed process state.
+ * @return Unipolar DAC-domain projection in 0..4095.
+ */
 uint16_t projectToDac12(int16_t stateQ1F15);
 
 }  // namespace fmd::anchormath
 
 namespace fmd::breathmath {
 
-constexpr uint16_t kDurationMinimumQ10 = 768U;
-constexpr uint16_t kDurationNominalQ10 = 1024U;
-constexpr uint16_t kDurationMaximumQ10 = 1280U;
-constexpr uint16_t kAmplitudeMinimumDac12 = 2662U;
-constexpr uint16_t kAmplitudeNominalDac12 = 3378U;
-constexpr uint16_t kAmplitudeMaximumDac12 = 4095U;
-constexpr uint16_t kSkewMinimumQ0F12 = 1024U;
-constexpr uint16_t kSkewNominalQ0F12 = 1536U;
-constexpr uint16_t kSkewMaximumQ0F12 = 2048U;
+constexpr uint16_t kDurationMinimumQ10 = 768U;       ///< 0.75x nominal cycle duration.
+constexpr uint16_t kDurationNominalQ10 = 1024U;      ///< 1.00x nominal cycle duration.
+constexpr uint16_t kDurationMaximumQ10 = 1280U;      ///< 1.25x nominal cycle duration.
+constexpr uint16_t kAmplitudeMinimumDac12 = 2662U;   ///< 0.65 of full-scale DAC amplitude.
+constexpr uint16_t kAmplitudeNominalDac12 = 3378U;   ///< Nominal Breath peak amplitude.
+constexpr uint16_t kAmplitudeMaximumDac12 = 4095U;   ///< Full-scale Breath peak amplitude.
+constexpr uint16_t kSkewMinimumQ0F12 = 1024U;        ///< Peak at one quarter of the cycle.
+constexpr uint16_t kSkewNominalQ0F12 = 1536U;        ///< Nominal peak at 3/8 of the cycle.
+constexpr uint16_t kSkewMaximumQ0F12 = 2048U;        ///< Peak at one half of the cycle.
 
-/** Bounded signed-random interpolation around an explicit nominal point. */
+/**
+ * @brief Interpolate a bounded random parameter around an explicit nominal point.
+ * @param randomWord Uniform 16-bit PRNG word.
+ * @param textureControl Variation depth; clamped to 0..1023.
+ * @param minimumValue Lower endpoint.
+ * @param nominalValue Value returned at Texture zero.
+ * @param maximumValue Upper endpoint.
+ * @return Bounded value between minimumValue and maximumValue.
+ */
 uint16_t variedParameter(uint16_t randomWord,
                          uint16_t textureControl,
                          uint16_t minimumValue,
                          uint16_t nominalValue,
                          uint16_t maximumValue);
 
-/** Convert a duration multiplier in Q10 to reciprocal phase-rate multiplier in Q10. */
+/**
+ * @brief Convert a duration multiplier to its reciprocal phase-rate multiplier.
+ * @param durationQ10 Duration multiplier in Q10; defensively clamped to 768..1280.
+ * @return Reciprocal multiplier in Q10, with 1024 representing unity rate.
+ */
 uint16_t rateScaleQ10(uint16_t durationQ10);
 
-/** Apply reciprocal duration scale to an Ambient phase increment without 64-bit math. */
+/**
+ * @brief Apply reciprocal duration scale to an Ambient phase increment.
+ * @param ambientIncrement Unsigned Ambient phase increment.
+ * @param rateScaleQ10 Q10 rate multiplier, normally produced by rateScaleQ10().
+ * @return Scaled phase increment using 32-bit arithmetic only.
+ */
 uint32_t scaledPhaseIncrement(uint32_t ambientIncrement, uint16_t rateScaleQ10);
 
-/** Compute a Q12 reciprocal for one attack/release segment length. */
+/**
+ * @brief Compute a Q12 reciprocal for one attack/release segment length.
+ * @param segmentLengthQ0F12 Segment length in Q0.12 phase units.
+ * @return Rounded Q12 reciprocal; zero when segment length is zero.
+ */
 uint16_t segmentReciprocalQ12(uint16_t segmentLengthQ0F12);
 
-/** Evaluate the complete gesture using rollover-cached branch reciprocals. */
+/**
+ * @brief Evaluate the complete asymmetric smoothstep Breath envelope.
+ * @param phaseQ0F12 Current cycle phase in Q0.12; values above 4095 are clamped.
+ * @param skewQ0F12 Latched peak position; clamped to the qualified skew range.
+ * @param attackReciprocalQ12 Cached reciprocal of the attack segment length.
+ * @param releaseReciprocalQ12 Cached reciprocal of the release segment length.
+ * @return Normalized envelope in the inclusive Q0.12 range 0..4096.
+ */
 uint16_t envelopeQ0F12(uint16_t phaseQ0F12,
                        uint16_t skewQ0F12,
                        uint16_t attackReciprocalQ12,
                        uint16_t releaseReciprocalQ12);
 
-/** Apply one cycle's amplitude to the normalized envelope. */
+/**
+ * @brief Apply one cycle's peak amplitude to a normalized envelope.
+ * @param envelopeQ0F12 Normalized Q0.12 envelope.
+ * @param amplitudeDac12 Peak amplitude in 12-bit DAC units.
+ * @return Scaled 12-bit DAC-domain value.
+ */
 uint16_t applyAmplitude(uint16_t envelopeQ0F12, uint16_t amplitudeDac12);
 
 }  // namespace fmd::breathmath
 
 namespace fmd::fogmath {
 
-constexpr uint8_t kVoiceCount = 4U;
-constexpr uint8_t kMinimumOccupancyEighths = 1U;   ///< 0.125 expected voices.
-constexpr uint8_t kMaximumOccupancyEighths = 24U; ///< 3.0 expected voices.
+constexpr uint8_t kVoiceCount = 4U;                  ///< Fixed cloudlet voice pool size.
+constexpr uint8_t kMinimumOccupancyEighths = 1U;    ///< 0.125 expected active voices.
+constexpr uint8_t kMaximumOccupancyEighths = 24U;   ///< 3.0 expected active voices.
 
-/** One fixed-memory smooth cloudlet voice. */
+/** @brief Fixed-memory state of one smooth Fog cloudlet. */
 struct Voice {
-  uint32_t phase;      ///< Unsigned cloudlet phase accumulator.
-  int16_t amplitude;   ///< Signed DAC-domain peak amplitude.
-  bool active;         ///< true while the cloudlet is alive.
+  uint32_t phase;     ///< Unsigned 32-bit cloudlet phase accumulator.
+  int16_t amplitude;  ///< Signed DAC-domain peak amplitude.
+  bool active;        ///< True while the cloudlet is alive.
 };
 
-/** Quartic compact cloudlet kernel g(u)=16u^2(1-u)^2 in Q0.12. */
+/**
+ * @brief Evaluate quartic compact kernel g(u)=16u^2(1-u)^2.
+ * @param phaseQ0F12 Cloudlet phase in Q0.12.
+ * @return Kernel amplitude in the inclusive Q0.12 range 0..4096.
+ */
 uint16_t kernelQ0F12(uint16_t phaseQ0F12);
 
-/** Map Texture to target mean occupancy in eighths of a voice. */
+/**
+ * @brief Map Texture to target mean active-voice occupancy.
+ * @param textureControl Combined Texture control; clamped to 0..1023.
+ * @return Expected occupancy expressed in eighths of a voice, from 1 through 24.
+ */
 uint8_t targetOccupancyEighths(uint16_t textureControl);
 
-/** Convert duration and target occupancy to a 32-bit Bernoulli cutoff. */
+/**
+ * @brief Convert cloudlet duration and target occupancy to a Bernoulli cutoff.
+ * @param ambientIncrement Unsigned phase increment defining cloudlet lifetime.
+ * @param occupancyEighths Target mean occupancy in eighths of a voice.
+ * @return Unsigned 32-bit cutoff compared directly against a uniform PRNG word.
+ */
 uint32_t eventCutoffQ0F32(uint32_t ambientIncrement, uint8_t occupancyEighths);
 
-/** Map one random word to symmetric signed cloudlet amplitude. */
+/**
+ * @brief Map one random word to a symmetric signed cloudlet peak amplitude.
+ * @param randomWord Uniform 16-bit PRNG word.
+ * @return Signed DAC-domain amplitude with project-defined minimum magnitude.
+ */
 int16_t amplitudeFromRandom(uint16_t randomWord);
 
-/** Advance one voice; completed voices are deactivated. */
+/**
+ * @brief Accumulate one voice's contribution and advance/deactivate it in place.
+ * @param voice Mutable fixed-memory voice state.
+ * @param phaseIncrement Cloudlet phase increment for this scheduler sample.
+ * @return Signed DAC-domain contribution for the pre-advance phase.
+ */
 int16_t voiceContributionAndAdvance(Voice& voice, uint32_t phaseIncrement);
 
-/** Project accumulated signed cloud contributions around midpoint with saturation. */
+/**
+ * @brief Project summed bipolar cloudlets around DAC midpoint with saturation.
+ * @param signedContribution Sum of all active signed DAC-domain voice contributions.
+ * @return Saturated 12-bit DAC code in the inclusive range 0..4095.
+ */
 uint16_t projectToDac12(int32_t signedContribution);
 
 }  // namespace fmd::fogmath
