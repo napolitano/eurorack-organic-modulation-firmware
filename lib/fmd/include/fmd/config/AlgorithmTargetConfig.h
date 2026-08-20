@@ -38,6 +38,10 @@
 #define FMD_ALGORITHM_REPEAT 21
 #define FMD_ALGORITHM_PROBABILITY 22
 #define FMD_ALGORITHM_HUMANIZE 23
+#define FMD_ALGORITHM_WOBBLE 24
+#define FMD_ALGORITHM_GROWL 25
+#define FMD_ALGORITHM_CHOP 26
+#define FMD_ALGORITHM_BUILD 27
 
 /** Sentinel used for normal bank firmware where the rear DIP switches select the algorithm. */
 #define FMD_ALGORITHM_AUTO 255
@@ -71,6 +75,10 @@
 #elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
 #if FMD_FORCED_ALGORITHM < FMD_ALGORITHM_EUCLID || FMD_FORCED_ALGORITHM > FMD_ALGORITHM_HUMANIZE
 #error "Forced algorithm does not belong to the Percussion bank"
+#endif
+#elif FMD_ALGORITHM_BANK == FMD_BANK_DUBSTEP
+#if FMD_FORCED_ALGORITHM < FMD_ALGORITHM_WOBBLE || FMD_FORCED_ALGORITHM > FMD_ALGORITHM_BUILD
+#error "Forced algorithm does not belong to the Dubstep/Bass bank"
 #endif
 #endif
 #endif

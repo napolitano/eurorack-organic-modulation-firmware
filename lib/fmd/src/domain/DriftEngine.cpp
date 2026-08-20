@@ -26,6 +26,8 @@ Algorithm algorithmForBankSlot(uint8_t slotIndex) {
   constexpr Algorithm kAlgorithms[4] = {Algorithm::Pump, Algorithm::Acid, Algorithm::Shuffle, Algorithm::Polymeter};
 #elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
   constexpr Algorithm kAlgorithms[4] = {Algorithm::Euclid, Algorithm::Repeat, Algorithm::Probability, Algorithm::Humanize};
+#elif FMD_ALGORITHM_BANK == FMD_BANK_DUBSTEP
+  constexpr Algorithm kAlgorithms[4] = {Algorithm::Wobble, Algorithm::Growl, Algorithm::Chop, Algorithm::Build};
 #endif
   return kAlgorithms[slotIndex < 4U ? slotIndex : 0U];
 }
@@ -135,6 +137,19 @@ DriftEngine::DriftEngine(Algorithm algorithm,
 #if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_HUMANIZE
       , humanizeAlgorithm_(referenceTables, randomSeed)
 #endif
+#elif FMD_ALGORITHM_BANK == FMD_BANK_DUBSTEP
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_WOBBLE
+      , wobbleAlgorithm_(referenceTables)
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_GROWL
+      , growlAlgorithm_(referenceTables)
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_CHOP
+      , chopAlgorithm_(referenceTables)
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BUILD
+      , buildAlgorithm_(referenceTables)
+#endif
 #endif
 {
   (void)randomSeed;
@@ -220,6 +235,19 @@ uint16_t DriftEngine::step(const ControlFrame& controls) {
 #endif
 #if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_HUMANIZE
     case Algorithm::Humanize: return humanizeAlgorithm_.step(controls);
+#endif
+#elif FMD_ALGORITHM_BANK == FMD_BANK_DUBSTEP
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_WOBBLE
+    case Algorithm::Wobble: return wobbleAlgorithm_.step(controls);
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_GROWL
+    case Algorithm::Growl: return growlAlgorithm_.step(controls);
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_CHOP
+    case Algorithm::Chop: return chopAlgorithm_.step(controls);
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BUILD
+    case Algorithm::Build: return buildAlgorithm_.step(controls);
 #endif
 #endif
     default: break;

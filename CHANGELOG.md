@@ -6,8 +6,15 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
-- Engineering analysis for a proposed Dubstep / bass-music bank covering Wobble, Growl, Chop and Build, including genre/naming audit, mathematical contracts, duplication boundaries, current-hardware clock constraints, AVR feasibility and verification strategy; no firmware implementation is included yet.
-- Named PlatformIO developer targets for all 24 algorithms: a complete bank can still be built/flashed with normal rear-DIP selection, while `FMD_FORCE_ALGORITHM=<name>` or `scripts/flash_drift.py algorithm <name>` locks an on-device test image directly to a named algorithm and rejects bank/name mismatches at compile time.
+- **Unreleased Dubstep / Bass bank:** Wobble, Growl, Chop and Build, implementing tempo-quantised bass-motion phrases, compound timbral CV, deterministic syncopated articulation and phrase-scale escalation from the previously documented engineering contracts.
+- Named PlatformIO developer targets for all 28 algorithms: a complete bank can still be built/flashed with normal rear-DIP selection, while `FMD_FORCE_ALGORITHM=<name>` or `scripts/flash_drift.py algorithm <name>` locks an on-device test image directly to a named algorithm and rejects bank/name mismatches at compile time.
+- Dedicated Dubstep/Bass Native, sanitizer, bank-owned coverage, AVR and timing environments, plus named developer targets `wobble`, `growl`, `chop` and `build`.
+- Dubstep/Bass implementation verification adds 26 native cases across four dedicated algorithm suites and raises the current Unreleased traceability set to 64 acceptance criteria / 236 native cases / 39 suites.
+
+### Changed
+
+- Extracted Percussion's proven Speed-CV clock detector into a shared `ClockSource` domain component and reused the identical two-edge-lock / 2.5-period-fallback contract for Dubstep/Bass rather than maintaining a second clock implementation.
+- Release tooling now detects and qualifies the seventh bank and knows its two Nano images, provenance files and artifact names, while an explicit frozen-manual guard prevents publishing the bank before Wobble/Growl/Chop/Build are added to the maintained user manual.
 
 ## 0.2.0 — 2026-08-19
 

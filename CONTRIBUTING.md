@@ -91,7 +91,7 @@ Purely editorial wording/formatting changes do not need changelog entries unless
 
 Keep each pull request focused. Before submission:
 
-1. run the native test suites and sanitizers for all six compile-time banks (Classic, Organic, Generative, Ambient, Electronica and Percussion);
+1. run the native test suites and sanitizers for all seven compile-time banks present on `main` (Classic, Organic, Generative, Ambient, Electronica, Percussion and the Unreleased Dubstep/Bass bank);
 2. build both Nano bootloader environments for every compile-time bank;
 3. update algorithm/reference tests for changed behavior;
 4. update requirement traceability;

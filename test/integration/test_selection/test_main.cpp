@@ -46,9 +46,13 @@ void test_selected_bank_config_pin_mapping() {
   constexpr fmd::Algorithm expected[4] = {
       fmd::Algorithm::Pump, fmd::Algorithm::Acid, fmd::Algorithm::Shuffle, fmd::Algorithm::Polymeter,
   };
-#else
+#elif FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
   constexpr fmd::Algorithm expected[4] = {
       fmd::Algorithm::Euclid, fmd::Algorithm::Repeat, fmd::Algorithm::Probability, fmd::Algorithm::Humanize,
+  };
+#else
+  constexpr fmd::Algorithm expected[4] = {
+      fmd::Algorithm::Wobble, fmd::Algorithm::Growl, fmd::Algorithm::Chop, fmd::Algorithm::Build,
   };
 #endif
 

@@ -1,6 +1,6 @@
 # Free Modular Drift — Generative Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [Percussion bank](README-BANK-PERCUSSION.md) · [User manual](docs/manual/README.md) · [Generative engineering design](docs/analysis/algorithm-banks/generative-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [Percussion bank](README-BANK-PERCUSSION.md) · [Dubstep / Bass bank](README-BANK-DUBSTEP.md) · [User manual](docs/manual/README.md) · [Generative engineering design](docs/analysis/algorithm-banks/generative-bank-design.md)
 
 The **Generative bank** turns Drift into a memory-driven stepped-modulation source. It contains **Turing, Markov, Motif and Urn**: four algorithms whose future output depends on retained loop, state, phrase or reinforcement history rather than on a continuously evolving trajectory.
 

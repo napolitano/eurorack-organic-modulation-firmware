@@ -18,9 +18,9 @@ from flash_drift import build_command
 
 
 def assert_mapping() -> None:
-    assert len(BANKS) == 6
-    assert len(ALGORITHMS) == 24
-    assert sorted(identifier for _, identifier in ALGORITHMS.values()) == list(range(24))
+    assert len(BANKS) == 7
+    assert len(ALGORITHMS) == 28
+    assert sorted(identifier for _, identifier in ALGORITHMS.values()) == list(range(28))
     for name, (bank, identifier) in ALGORITHMS.items():
         assert canonical_algorithm(name.upper()) == name
         assert algorithm_bank(name) == bank
@@ -33,6 +33,7 @@ def assert_environment_names() -> None:
     assert platformio_environment("classic", "old") == "nanoatmega328"
     assert platformio_environment("ambient", "new") == "nanoatmega328new_ambient"
     assert platformio_environment("percussion", "old") == "nanoatmega328_percussion"
+    assert platformio_environment("dubstep", "new") == "nanoatmega328new_dubstep"
 
 
 def args(mode: str, name: str, bootloader: str = "new") -> argparse.Namespace:
@@ -70,10 +71,11 @@ def compile_config(bank: int, algorithm: int, should_succeed: bool) -> None:
 
 
 def assert_compile_guards() -> None:
-    for algorithm in range(24):
+    for algorithm in range(28):
         compile_config(algorithm // 4, algorithm, True)
     compile_config(0, 14, False)
     compile_config(5, 0, False)
+    compile_config(6, 23, False)
 
 
 
@@ -85,6 +87,7 @@ def assert_forced_engine_references_only_named_algorithm() -> None:
         (3, 14, "Breath", ("Current", "Anchor", "Fog")),
         (4, 19, "Polymeter", ("Pump", "Acid", "Shuffle")),
         (5, 20, "Euclid", ("Repeat", "Probability", "Humanize")),
+        (6, 24, "Wobble", ("Growl", "Chop", "Build")),
     )
     with tempfile.TemporaryDirectory() as directory:
         for bank, algorithm, expected, absent_names in cases:
@@ -109,7 +112,7 @@ def main() -> int:
     assert_wrapper_commands()
     assert_compile_guards()
     assert_forced_engine_references_only_named_algorithm()
-    print("firmware target tooling: PASS (6 banks, 24 named algorithms, single-target linkage, guardrails)")
+    print("firmware target tooling: PASS (7 banks, 28 named algorithms, single-target linkage, guardrails)")
     return 0
 
 

@@ -49,7 +49,11 @@ enum class Algorithm : uint8_t {
   Euclid = FMD_ALGORITHM_EUCLID,     ///< Percussion: phrase-aware 16-step Euclidean pulse rhythm.
   Repeat = FMD_ALGORITHM_REPEAT,     ///< Percussion: quarter-note anchors with ratchet clusters.
   Probability = FMD_ALGORITHM_PROBABILITY,///< Percussion: metrically weighted stochastic pulse rhythm.
-  Humanize = FMD_ALGORITHM_HUMANIZE    ///< Percussion: bounded timing/amplitude variation.
+  Humanize = FMD_ALGORITHM_HUMANIZE,   ///< Percussion: bounded timing/amplitude variation.
+  Wobble = FMD_ALGORITHM_WOBBLE,       ///< Dubstep/Bass: deterministic tempo-synchronised rate phrase.
+  Growl = FMD_ALGORITHM_GROWL,         ///< Dubstep/Bass: multi-lobed timbral-motion CV gesture.
+  Chop = FMD_ALGORITHM_CHOP,           ///< Dubstep/Bass: sparse deterministic syncopated articulation.
+  Build = FMD_ALGORITHM_BUILD          ///< Dubstep/Bass: multi-bar rising and accelerating tension contour.
 };
 
 /**
@@ -59,7 +63,7 @@ enum class Algorithm : uint8_t {
  * helpers clamp defensive out-of-range inputs where required by their contract.
  */
 struct ControlFrame {
-  uint16_t speedCv;      ///< Speed CV ADC code; Percussion interprets it as 0..5 V clock input.
+  uint16_t speedCv;      ///< Speed CV ADC code; Percussion and Dubstep/Bass interpret it as 0..5 V clock input.
   uint16_t textureCv;    ///< Texture CV input, ADC code 0..1023.
   uint16_t speedKnob;    ///< Speed potentiometer, ADC code 0..1023.
   uint16_t textureKnob;  ///< Texture potentiometer, ADC code 0..1023.

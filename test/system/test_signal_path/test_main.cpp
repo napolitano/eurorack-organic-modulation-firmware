@@ -26,8 +26,8 @@ void test_virtual_module_speed_inputs_change_active_bank_timing() {
   DriftTestRig slowRig(fmd::algorithmForBankSlot(0U), 1U);
   DriftTestRig fastRig(fmd::algorithmForBankSlot(0U), 1U);
   bool observedDifference = false;
-#if FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION
-  constexpr uint16_t kObservationSamples = 800U;
+#if FMD_ALGORITHM_BANK == FMD_BANK_PERCUSSION || FMD_ALGORITHM_BANK == FMD_BANK_DUBSTEP
+  constexpr uint16_t kObservationSamples = 1200U;
 #else
   constexpr uint16_t kObservationSamples = 512U;
 #endif
@@ -39,6 +39,10 @@ void test_virtual_module_speed_inputs_change_active_bank_timing() {
     // the bank's Speed-dependent boundary timing rather than pattern sparsity.
     const uint16_t slowOutput = slowRig.tick(0U, 1023U, 0U, 0U);
     const uint16_t fastOutput = fastRig.tick(1023U, 1023U, 1023U, 0U);
+#elif FMD_ALGORITHM_BANK == FMD_BANK_DUBSTEP
+    // Speed CV is a clock input in this bank, so compare only Speed-knob timing.
+    const uint16_t slowOutput = slowRig.tick(0U, 0U, 0U, 700U);
+    const uint16_t fastOutput = fastRig.tick(0U, 0U, 1023U, 700U);
 #else
     const uint16_t slowOutput = slowRig.tick(0U, 0U, 0U, 0U);
     const uint16_t fastOutput = fastRig.tick(1023U, 0U, 1023U, 0U);

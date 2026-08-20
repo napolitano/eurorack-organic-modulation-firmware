@@ -26,6 +26,8 @@
 #define FMD_BANK_ELECTRONICA 4
 /** Alternative Percussion bank containing Euclid, Repeat, Probability and Humanize. */
 #define FMD_BANK_PERCUSSION 5
+/** Unreleased Dubstep/Bass bank containing Wobble, Growl, Chop and Build. */
+#define FMD_BANK_DUBSTEP 6
 
 #ifndef FMD_ALGORITHM_BANK
 /** Default to the original/classic bank when no compiler flag selects another bank. */
@@ -37,8 +39,9 @@
     FMD_ALGORITHM_BANK != FMD_BANK_GENERATIVE && \
     FMD_ALGORITHM_BANK != FMD_BANK_AMBIENT && \
     FMD_ALGORITHM_BANK != FMD_BANK_ELECTRONICA && \
-    FMD_ALGORITHM_BANK != FMD_BANK_PERCUSSION
-#error "FMD_ALGORITHM_BANK must be Classic (0), Organic (1), Generative (2), Ambient (3), Electronica (4), or Percussion (5)"
+    FMD_ALGORITHM_BANK != FMD_BANK_PERCUSSION && \
+    FMD_ALGORITHM_BANK != FMD_BANK_DUBSTEP
+#error "FMD_ALGORITHM_BANK must be Classic (0), Organic (1), Generative (2), Ambient (3), Electronica (4), Percussion (5), or Dubstep (6)"
 #endif
 
 namespace fmd {
@@ -50,7 +53,8 @@ enum class AlgorithmBank : uint8_t {
   Generative = FMD_BANK_GENERATIVE, ///< Turing, Markov, Motif and Urn.
   Ambient = FMD_BANK_AMBIENT,       ///< Current, Anchor, Breath and Fog.
   Electronica = FMD_BANK_ELECTRONICA, ///< Pump, Acid, Shuffle and Polymeter.
-  Percussion = FMD_BANK_PERCUSSION ///< Euclid, Repeat, Probability and Humanize.
+  Percussion = FMD_BANK_PERCUSSION, ///< Euclid, Repeat, Probability and Humanize.
+  Dubstep = FMD_BANK_DUBSTEP ///< Wobble, Growl, Chop and Build.
 };
 
 /** Bank compiled into this firmware image. */

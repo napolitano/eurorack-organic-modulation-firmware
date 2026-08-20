@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import unicodedata
 
-BANKS = ("classic", "organic", "generative", "ambient", "electronica", "percussion")
+BANKS = ("classic", "organic", "generative", "ambient", "electronica", "percussion", "dubstep")
 
 ALGORITHMS = {
     "perlin": ("classic", 0),
@@ -31,6 +31,10 @@ ALGORITHMS = {
     "repeat": ("percussion", 21),
     "probability": ("percussion", 22),
     "humanize": ("percussion", 23),
+    "wobble": ("dubstep", 24),
+    "growl": ("dubstep", 25),
+    "chop": ("dubstep", 26),
+    "build": ("dubstep", 27),
 }
 
 

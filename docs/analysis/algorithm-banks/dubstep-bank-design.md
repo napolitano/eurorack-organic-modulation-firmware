@@ -2,6 +2,9 @@
 
 ## 1. Purpose and scope
 
+> **Implementation status — Unreleased:** The bank is now implemented in the post-0.2.0 source tree as compile-time bank `FMD_BANK_DUBSTEP` with slots Wobble / Growl / Chop / Build. The first implementation freezes the 70–280 BPM mapping, reuses the shared Percussion-derived `ClockSource`, and uses the 8/4/2/1-bar Build mapping described below. The public bank name remains open to later community/listening review; the code identifier remains `dubstep` for this development cycle.
+
+
 This document evaluates a proposed seventh Drift algorithm bank with the working name **Dubstep**. The bank is intended to cover a part of electronic modulation that the existing six banks do not address directly: **tempo-synchronised bass-motion phrases, syncopated gating and build/drop-scale modulation**.
 
 The working four-mode set is:

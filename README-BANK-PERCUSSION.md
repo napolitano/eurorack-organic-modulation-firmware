@@ -1,6 +1,6 @@
 # Free Modular Drift — Percussion Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [User manual](docs/manual/README.md) · [Percussion engineering design](docs/analysis/algorithm-banks/percussion-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [Dubstep / Bass bank](README-BANK-DUBSTEP.md) · [User manual](docs/manual/README.md) · [Percussion engineering design](docs/analysis/algorithm-banks/percussion-bank-design.md)
 
 The **Percussion bank** turns Drift into a one-output rhythm and trigger/CV generator. It contains **Euclid, Repeat, Probability and Humanize**. Rather than pretending that the hardware can become a four-track drum sequencer, each algorithm addresses a different layer of rhythmic structure: hit placement, sub-hit repetition, optional event probability or timing/level feel.
 

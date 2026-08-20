@@ -1,6 +1,6 @@
 # Free Modular Drift — Ambient Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [Percussion bank](README-BANK-PERCUSSION.md) · [User manual](docs/manual/README.md) · [Ambient engineering design](docs/analysis/algorithm-banks/ambient-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [Percussion bank](README-BANK-PERCUSSION.md) · [Dubstep / Bass bank](README-BANK-DUBSTEP.md) · [User manual](docs/manual/README.md) · [Ambient engineering design](docs/analysis/algorithm-banks/ambient-bank-design.md)
 
 The **Ambient bank** is Drift's long-form modulation bank. It contains **Current, Anchor, Breath and Fog** and deliberately slows the common Drift time scale to make room for movement that develops over phrases, sections and entire patches rather than over individual beats.
 

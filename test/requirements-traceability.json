@@ -877,22 +877,22 @@
     },
     {
       "id": "AC-58",
-      "description": "Percussion repurposes Speed CV as a hysteretic 0..5 V quarter-note clock input: internal Speed-knob timing remains active until two valid rising edges acquire external timing, steady DC cannot lock, and loss after 2.5 measured periods falls back automatically to the internal increment.",
+      "description": "Percussion and Dubstep/Bass share one hysteretic Speed-CV quarter-note clock source: internal Speed-knob timing remains active until two valid rising edges acquire external timing, steady DC cannot lock, and loss after 2.5 measured periods falls back automatically to the internal increment.",
       "tests": [
         {
-          "file": "test/unit/test_percussion_clock/test_main.cpp",
+          "file": "test/unit/test_clock_source/test_main.cpp",
           "case": "test_clock_uses_speed_knob_increment_until_two_valid_edges"
         },
         {
-          "file": "test/unit/test_percussion_clock/test_main.cpp",
+          "file": "test/unit/test_clock_source/test_main.cpp",
           "case": "test_clock_hysteresis_requires_low_release_before_next_rising_edge"
         },
         {
-          "file": "test/unit/test_percussion_clock/test_main.cpp",
+          "file": "test/unit/test_clock_source/test_main.cpp",
           "case": "test_steady_high_speed_cv_never_becomes_external_clock"
         },
         {
-          "file": "test/unit/test_percussion_clock/test_main.cpp",
+          "file": "test/unit/test_clock_source/test_main.cpp",
           "case": "test_external_clock_times_out_after_two_and_a_half_periods"
         },
         {
@@ -902,6 +902,10 @@
         {
           "file": "test/unit/test_euclid_algorithm/test_main.cpp",
           "case": "test_percussion_speed_cv_dc_does_not_modulate_internal_tempo"
+        },
+        {
+          "file": "test/unit/test_wobble_algorithm/test_main.cpp",
+          "case": "test_wobble_external_acquisition_establishes_zero_phase_origin"
         }
       ]
     },
@@ -916,6 +920,96 @@
         {
           "file": "test/unit/test_humanize_algorithm/test_main.cpp",
           "case": "test_humanize_texture_zero_is_neutral"
+        }
+      ]
+    },
+    {
+      "id": "AC-60",
+      "description": "The Dubstep/Bass compile-time bank maps the four rear DIP slots to Wobble, Growl, Chop and Build, preserves the shared electrical truth table, and uses a 70..280 BPM internal tempo mapping with approximately 140 BPM at Speed midpoint.",
+      "tests": [
+        {
+          "file": "test/integration/test_selection/test_main.cpp",
+          "case": "test_selected_bank_config_pin_mapping"
+        },
+        {
+          "file": "test/unit/test_wobble_algorithm/test_main.cpp",
+          "case": "test_dubstep_tempo_mapping_has_70_140_280_shape"
+        }
+      ]
+    },
+    {
+      "id": "AC-61",
+      "description": "Wobble uses the documented deterministic eight-cell rate phrase, Texture vocabularies and exact rational quarter-note rate ratios while remaining bounded and supporting deterministic external-clock phase acquisition.",
+      "tests": [
+        {
+          "file": "test/unit/test_wobble_algorithm/test_main.cpp",
+          "case": "test_wobble_phrase_and_texture_vocabularies_are_exact"
+        },
+        {
+          "file": "test/unit/test_wobble_algorithm/test_main.cpp",
+          "case": "test_wobble_rate_codes_match_documented_rational_ratios"
+        },
+        {
+          "file": "test/unit/test_wobble_algorithm/test_main.cpp",
+          "case": "test_wobble_algorithm_is_deterministic_and_bounded"
+        }
+      ]
+    },
+    {
+      "id": "AC-62",
+      "description": "Growl is a deterministic bounded compound CV gesture whose Texture-zero endpoint is the fundamental triangle and whose pre-normalized component weights always sum exactly to unity.",
+      "tests": [
+        {
+          "file": "test/unit/test_growl_algorithm/test_main.cpp",
+          "case": "test_growl_texture_zero_reduces_exactly_to_fundamental_triangle"
+        },
+        {
+          "file": "test/unit/test_growl_algorithm/test_main.cpp",
+          "case": "test_growl_normalized_weights_sum_to_unity_and_track_texture"
+        },
+        {
+          "file": "test/unit/test_growl_algorithm/test_main.cpp",
+          "case": "test_growl_output_is_bounded_over_dense_phase_and_texture_grid"
+        }
+      ]
+    },
+    {
+      "id": "AC-63",
+      "description": "Chop preserves fixed half-bar anchors and adds the documented syncopated candidates monotonically with Texture; active steps hold for half a sixteenth and then decay to zero without RNG.",
+      "tests": [
+        {
+          "file": "test/unit/test_chop_algorithm/test_main.cpp",
+          "case": "test_chop_masks_preserve_anchors_population_and_strict_supersets"
+        },
+        {
+          "file": "test/unit/test_chop_algorithm/test_main.cpp",
+          "case": "test_chop_candidate_order_matches_documented_syncopation_grammar"
+        },
+        {
+          "file": "test/unit/test_chop_algorithm/test_main.cpp",
+          "case": "test_chop_articulation_holds_then_decays_to_zero"
+        }
+      ]
+    },
+    {
+      "id": "AC-64",
+      "description": "Build maps Texture regions to 8/4/2/1-bar phrases, uses a monotone smoothstep macro rise and exact quarter/eighth/sixteenth/thirty-second micro-rate stages, and restarts deterministically on external-clock acquisition.",
+      "tests": [
+        {
+          "file": "test/unit/test_build_algorithm/test_main.cpp",
+          "case": "test_build_texture_regions_map_to_8_4_2_1_bars"
+        },
+        {
+          "file": "test/unit/test_build_algorithm/test_main.cpp",
+          "case": "test_build_macro_rise_is_monotone"
+        },
+        {
+          "file": "test/unit/test_build_algorithm/test_main.cpp",
+          "case": "test_build_micro_stages_have_exact_quarter_boundaries_and_rates"
+        },
+        {
+          "file": "test/unit/test_build_algorithm/test_main.cpp",
+          "case": "test_build_external_acquisition_restarts_phrase_at_zero"
         }
       ]
     }

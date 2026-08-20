@@ -143,7 +143,9 @@ BANK_FRAGMENTS = {
         ),
         "native qualification": (
                     "pio test -e native_percussion_sanitized",
+    "pio test -e native_dubstep_sanitized",
             "pio test -e native_percussion_coverage",
+    "pio test -e native_dubstep_coverage",
         ),
         "AVR builds": (
             "pio run -e nanoatmega328new_percussion",
@@ -165,11 +167,42 @@ BANK_FRAGMENTS = {
             "--environment nanoatmega328_percussion",
         ),
     },
+    "dubstep": {
+        "bank detection": (
+            "grep -q '^\\[env:native_dubstep\\]$' platformio.ini",
+            "grep -q '^\\[env:nanoatmega328new_dubstep\\]$' platformio.ini",
+            "grep -q '^\\[env:nanoatmega328_dubstep\\]$' platformio.ini",
+            'RELEASE_BANKS="${RELEASE_BANKS},dubstep"',
+        ),
+        "native qualification": (
+            "pio test -e native_dubstep_sanitized",
+            "pio test -e native_dubstep_coverage",
+        ),
+        "AVR builds": (
+            "pio run -e nanoatmega328new_dubstep",
+            "pio run -e nanoatmega328_dubstep",
+        ),
+        "resource qualification": (
+            ".pio/build/nanoatmega328new_dubstep/firmware.elf",
+            ".pio/build/nanoatmega328_dubstep/firmware.elf",
+        ),
+        "timing qualification": ("pio run -e nanoatmega328new_dubstep_timing",),
+        "manual coverage": (
+            "Require Dubstep/Bass content in frozen manual",
+            'required = ("dubstep", "wobble", "growl", "chop", "build")',
+        ),
+        "build provenance": (
+            "BUILD-INFO-dubstep-nano-new.${RELEASE_VERSION}.txt",
+            "BUILD-INFO-dubstep-nano-old.${RELEASE_VERSION}.txt",
+            "--environment nanoatmega328new_dubstep",
+            "--environment nanoatmega328_dubstep",
+        ),
+    },
 }
 
 
 
-EXTENDED_BANKS = ("organic", "generative", "ambient", "electronica", "percussion")
+EXTENDED_BANKS = ("organic", "generative", "ambient", "electronica", "percussion", "dubstep")
 
 
 BANK_WIRING_FILTERS = (
@@ -187,12 +220,14 @@ UNFILTERED_RELEASE_COMMANDS = (
     "pio test -e native_ambient_sanitized",
     "pio test -e native_electronica_sanitized",
     "pio test -e native_percussion_sanitized",
+    "pio test -e native_dubstep_sanitized",
     "pio test -e native_coverage",
     "pio test -e native_organic_coverage",
     "pio test -e native_generative_coverage",
     "pio test -e native_ambient_coverage",
     "pio test -e native_electronica_coverage",
     "pio test -e native_percussion_coverage",
+    "pio test -e native_dubstep_coverage",
 )
 
 COMMON_FRAGMENTS = (
@@ -264,6 +299,7 @@ def main() -> int:
         "native_ambient",
         "native_electronica",
         "native_percussion",
+        "native_dubstep",
     ):
         filtered_block = (
             f"pio test -e {environment}\n"
@@ -281,7 +317,7 @@ def main() -> int:
             print(f"release workflow bank contract error: {item}")
         return 2
 
-    print("release workflow six-bank contract: passed")
+    print("release workflow seven-bank contract: passed")
     return 0
 
 

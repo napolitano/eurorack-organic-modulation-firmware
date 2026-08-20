@@ -57,6 +57,13 @@ BANKS = {
         "avr": ("nanoatmega328new_percussion", "nanoatmega328_percussion"),
         "timing": ("nanoatmega328new_percussion_timing",),
     },
+    "dubstep": {
+        "native": ("pio test -e native_dubstep -f ${{ matrix.suite }}",),
+        "coverage": ("pio test -e native_dubstep_coverage",),
+        "sanitizers": ("pio test -e native_dubstep_sanitized",),
+        "avr": ("nanoatmega328new_dubstep", "nanoatmega328_dubstep"),
+        "timing": ("nanoatmega328new_dubstep_timing",),
+    },
 }
 
 
@@ -68,12 +75,14 @@ UNFILTERED_HEAVY_COMMANDS = (
     "pio test -e native_ambient_coverage",
     "pio test -e native_electronica_coverage",
     "pio test -e native_percussion_coverage",
+    "pio test -e native_dubstep_coverage",
     "pio test -e native_sanitized",
     "pio test -e native_organic_sanitized",
     "pio test -e native_generative_sanitized",
     "pio test -e native_ambient_sanitized",
     "pio test -e native_electronica_sanitized",
     "pio test -e native_percussion_sanitized",
+    "pio test -e native_dubstep_sanitized",
 )
 
 REQUIRED_FILTERED_SUITES = (
@@ -89,14 +98,27 @@ PERCUSSION_SUITES = (
     "unit/test_repeat_algorithm",
     "unit/test_probability_algorithm",
     "unit/test_humanize_algorithm",
-    "unit/test_percussion_clock",
+    "unit/test_clock_source",
     "integration/test_selection",
     "integration/test_runtime",
     "property/test_invariants",
     "system/test_signal_path",
 )
 
-EXTENDED_BANKS = ("organic", "generative", "ambient", "electronica", "percussion")
+EXTENDED_BANKS = ("organic", "generative", "ambient", "electronica", "percussion", "dubstep")
+
+
+DUBSTEP_SUITES = (
+    "unit/test_wobble_algorithm",
+    "unit/test_growl_algorithm",
+    "unit/test_chop_algorithm",
+    "unit/test_build_algorithm",
+    "unit/test_clock_source",
+    "integration/test_selection",
+    "integration/test_runtime",
+    "property/test_invariants",
+    "system/test_signal_path",
+)
 
 
 ELECTRONICA_SUITES = (
@@ -135,6 +157,10 @@ def main() -> int:
     for suite in PERCUSSION_SUITES:
         if suite not in text:
             missing.append(f"percussion/test suite: {suite}")
+
+    for suite in DUBSTEP_SUITES:
+        if suite not in text:
+            missing.append(f"dubstep/test suite: {suite}")
 
     # Coverage and sanitizer jobs must never execute the entire native
     # regression suite.  PlatformIO filters keep those expensive qualification
@@ -177,12 +203,19 @@ def main() -> int:
     if "native-percussion-sanitizers:" not in text:
         missing.append("percussion/sanitizer job: native-percussion-sanitizers")
 
+    if "native-dubstep-tests:" not in text:
+        missing.append("dubstep/native job: native-dubstep-tests")
+    if "native-dubstep-coverage:" not in text:
+        missing.append("dubstep/coverage job: native-dubstep-coverage")
+    if "native-dubstep-sanitizers:" not in text:
+        missing.append("dubstep/sanitizer job: native-dubstep-sanitizers")
+
     if missing:
         for item in missing:
             print(f"CI bank contract error: {item}")
         return 2
 
-    print("CI six-bank build/qualification contract: passed")
+    print("CI seven-bank build/qualification contract: passed")
     return 0
 
 

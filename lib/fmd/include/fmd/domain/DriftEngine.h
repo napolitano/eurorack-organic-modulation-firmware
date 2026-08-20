@@ -96,6 +96,19 @@
 #if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_REPEAT
 #include "fmd/domain/percussion/RepeatAlgorithm.h"
 #endif
+#elif FMD_ALGORITHM_BANK == FMD_BANK_DUBSTEP
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_WOBBLE
+#include "fmd/domain/dubstep/WobbleAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_GROWL
+#include "fmd/domain/dubstep/GrowlAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_CHOP
+#include "fmd/domain/dubstep/ChopAlgorithm.h"
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BUILD
+#include "fmd/domain/dubstep/BuildAlgorithm.h"
+#endif
 #endif
 
 namespace fmd {
@@ -204,6 +217,19 @@ class DriftEngine {
 #endif
 #if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_HUMANIZE
   HumanizeAlgorithm humanizeAlgorithm_;
+#endif
+#elif FMD_ALGORITHM_BANK == FMD_BANK_DUBSTEP
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_WOBBLE
+  WobbleAlgorithm wobbleAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_GROWL
+  GrowlAlgorithm growlAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_CHOP
+  ChopAlgorithm chopAlgorithm_;
+#endif
+#if FMD_FORCED_ALGORITHM == FMD_ALGORITHM_AUTO || FMD_FORCED_ALGORITHM == FMD_ALGORITHM_BUILD
+  BuildAlgorithm buildAlgorithm_;
 #endif
 #endif
 };

@@ -2,6 +2,9 @@
 
 ## 1. Purpose and scope
 
+> **Implementation status — Unreleased:** Implemented under `domain/dubstep/` with fixed anchors `{0,8}`, the documented ordered candidate set, bar-boundary Texture latching and a half-step hold / half-step linear decay articulation. It reuses the shared 0–5 V quarter-note clock source.
+
+
 Chop is the proposed third mode of the working Dubstep/Bass bank. It creates a deterministic, tempo-synchronised **sparse/syncopated articulation CV** for chopping sustained basses, drones or effects.
 
 Unlike Percussion Probability, Chop does not randomise whether a hit exists. Unlike Electronica Acid, it does not sequence a set of melodic modulation levels with accents and slides. Its identity is **rhythmic presence versus space** on a 16-step bar.

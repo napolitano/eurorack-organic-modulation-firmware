@@ -19,12 +19,12 @@ The system rig does not contain a second firmware implementation. It supplies de
 
 ## Algorithm-specific mathematical suites
 
-Each Drift mode has a dedicated suite. Classic remains the default compile-time bank; Organic, Generative, Ambient, Electronica and Percussion are exercised by their respective `native_organic*`, `native_generative*`, `native_ambient*`, `native_electronica*` and `native_percussion*` environments.
-The metadata job also runs `scripts/test_ci_bank_contract.py`, which structurally guards the six-bank native/coverage/sanitizer/AVR/timing matrix so an implemented bank cannot silently disappear from CI qualification.
+Each Drift mode has a dedicated suite. Classic remains the default compile-time bank; Organic, Generative, Ambient, Electronica, Percussion and the Unreleased Dubstep/Bass bank are exercised by their respective `native_organic*`, `native_generative*`, `native_ambient*`, `native_electronica*`, `native_percussion*` and `native_dubstep*` environments.
+The metadata job also runs `scripts/test_ci_bank_contract.py`, which structurally guards the seven-bank native/coverage/sanitizer/AVR/timing matrix so an implemented bank cannot silently disappear from CI qualification.
 
 ### CI/release execution strategy
 
-The repository contains 210 native cases, but CI and release qualification do **not** rerun all 210 cases for every compile-time bank. The unfiltered `native` environment is the single complete regression pass. Additional non-Classic native runs are filtered to the bank-dependent engine/selection/runtime/property/system suites. Sanitizer runs are split into shared/Classic coverage plus each bank's own algorithm and wiring suites, while coverage runs execute only the shared/core suites needed for the report plus the active bank's algorithms. This keeps compile-time-bank verification intact without multiplying the complete suite six times per qualification mode.
+The current Unreleased repository contains **236 native cases across 39 suites**, but CI and release qualification do **not** rerun all 236 cases for every compile-time bank. The unfiltered `native` environment is the single complete regression pass. Additional non-Classic native runs are filtered to the bank-dependent engine/selection/runtime/property/system suites. Sanitizer runs are split into shared/Classic coverage plus each bank's own algorithm and wiring suites, while coverage runs execute only the shared/core suites needed for the report plus the active bank's algorithms. This keeps compile-time-bank verification intact without multiplying the complete suite seven times per qualification mode.
 
 | Bank | Suite | Primary proof obligations |
 |---|---|---|
@@ -52,7 +52,11 @@ The repository contains 210 native cases, but CI and release qualification do **
 | Percussion | `unit/test_repeat_algorithm` | ratchet positions, repeat probability and phrase-fill escalation |
 | Percussion | `unit/test_probability_algorithm` | primary/secondary/ghost metric classes, probability bounds and fill boosts |
 | Percussion | `unit/test_humanize_algorithm` | fixed event count, bounded microtiming/intensity and non-accumulating jitter |
-| Percussion | `unit/test_percussion_clock` | 0–5 V hysteretic clock detection, two-edge lock, quarter-note period tracking and 2.5-period fallback |
+| Dubstep / Bass | `unit/test_wobble_algorithm` | 70–280 BPM mapping, exact rate phrase/vocabularies, rational rate ratios, bounds and external phase acquisition |
+| Dubstep / Bass | `unit/test_growl_algorithm` | normalized compound weights, Texture-zero reduction, dense phase/Texture bounds and deterministic re-lock |
+| Dubstep / Bass | `unit/test_chop_algorithm` | anchor/candidate masks, monotone density grammar, articulation contour and DC Speed-CV behaviour |
+| Dubstep / Bass | `unit/test_build_algorithm` | 8/4/2/1-bar mapping, monotone macro rise, exact micro stages and deterministic external phrase restart |
+| Shared clock | `unit/test_clock_source` | 0–5 V hysteretic clock detection reused by Percussion and Dubstep/Bass, two-edge lock, period tracking and 2.5-period fallback |
 
 The common frequency mapping has its own exact-rational and monotonicity suite under `unit/test_frequency`; shared fixed-point primitives are independently verified under `unit/test_fixed_math`. `unit/test_reference_tables` independently checks the generated exponential and gamma LUTs against their mathematical generation contracts.
 
@@ -74,17 +78,17 @@ Third-party Unity/PlatformIO sources are not promoted to `-Werror`.
 
 ## Coverage policy
 
-Coverage is split into two deliberately different scopes so the metric says something useful. The Classic report retains the established **95% line / 75% branch** floor for the shared production core plus Classic code. The five extended banks — Organic, Generative, Ambient, Electronica and Percussion — are measured against **bank-owned production sources only** under `lib/fmd/src/domain/<bank>/`. Each extended bank must reach at least **97% line / 90% branch coverage in aggregate**, and every individual bank-owned production file must independently reach **95% line / 80% branch coverage** when it contains branch-bearing code. A well-covered helper therefore cannot hide an algorithm wrapper with weak coverage.
+Coverage is split into two deliberately different scopes so the metric says something useful. The Classic report retains the established **95% line / 75% branch** floor for the shared production core plus Classic code. The six extended banks — Organic, Generative, Ambient, Electronica, Percussion and Dubstep/Bass — are measured against **bank-owned production sources only** under `lib/fmd/src/domain/<bank>/`. Each extended bank must reach at least **97% line / 90% branch coverage in aggregate**, and every individual bank-owned production file must independently reach **95% line / 80% branch coverage** when it contains branch-bearing code. A well-covered helper therefore cannot hide an algorithm wrapper with weak coverage.
 
 The separation is intentional. Shared runtime, engine and fixed-point code is qualified by the Classic/shared report and by the bank-aware integration/system suites; charging that same shared code to each optional bank produced misleading bank percentages and obscured the actual quality of the algorithms. Bank reports now answer the narrower question: *how thoroughly is this bank's own implementation exercised?*
 
 The gcovr reports use `--exclude-throw-branches` and `--exclude-unreachable-branches`. These remove compiler-generated exception/unreachable control-flow artefacts from the decision metric; they do not exclude ordinary project branches. Defensive project branches that are reachable through valid or explicitly guarded inputs remain in scope and are tested. Coverage floors must not be lowered to make a change pass: a regression is fixed with tests or, where a path is genuinely impossible by contract, with an explicit engineering justification rather than denominator manipulation.
 
-The released Classic strict-host GCC/gcov baseline measured on 2026-08-18 after the state/edge-case expansion is **99.45% lines / 82.82% branches**. During the 0.2.0 coverage hardening, strict-host bank-owned measurements after the added edge/guard tests were approximately **Organic 100.00/96.15**, **Generative 99.19/95.74**, **Ambient 99.67/98.36**, **Electronica 99.04/94.49** and **Percussion 98.05/95.09** percent line/branch coverage respectively. CI's PlatformIO/gcovr reports remain the authoritative release gate.
+The released Classic strict-host GCC/gcov baseline measured on 2026-08-18 after the state/edge-case expansion is **99.45% lines / 82.82% branches**. During the 0.2.0 coverage hardening, strict-host bank-owned measurements after the added edge/guard tests were approximately **Organic 100.00/96.15**, **Generative 99.19/95.74**, **Ambient 99.67/98.36**, **Electronica 99.04/94.49** and **Percussion 98.05/95.09** percent line/branch coverage respectively. The initial Unreleased Dubstep/Bass implementation measures approximately **99.04% lines / 95.30% non-throw branches** under the same strict-host/gcov style of bank-owned measurement, with every bank-owned source above the configured per-file floors. CI's PlatformIO/gcovr report remains the authoritative release gate.
 
 ## Requirements traceability
 
-`test/requirements-traceability.json` maps acceptance criteria to concrete `RUN_TEST()` cases. Release **0.2.0** contains **59 acceptance criteria and 210 native test cases across 35 suites**; the released 0.1.0 Classic baseline remains 32 criteria / 88 cases. CI runs `scripts/check_requirement_traceability.py`; missing suites, stale test names, duplicate IDs or gaps in the AC numbering fail early.
+`test/requirements-traceability.json` maps acceptance criteria to concrete `RUN_TEST()` cases. Release **0.2.0** contains **59 acceptance criteria and 210 native test cases across 35 suites**. The current Unreleased source adds Dubstep/Bass and stands at **64 acceptance criteria, 236 native test cases and 39 suites**; the released 0.1.0 Classic baseline remains 32 criteria / 88 cases. CI runs `scripts/check_requirement_traceability.py`; missing suites, stale test names, duplicate IDs or gaps in the AC numbering fail early.
 
 See [docs/testing/requirements-traceability.md](docs/testing/requirements-traceability.md).
 
@@ -177,7 +181,7 @@ python scripts/flash_drift.py algorithm breath
 
 The helper also supports `bank <name>`, `--bootloader new|old`, `--port`, `--build-only` and `--dry-run`. Internally the 24 names map to stable compile-time IDs, but those numbers are deliberately not part of the developer-facing interface. `AlgorithmTargetConfig.h` statically rejects a forced algorithm outside the compiled bank.
 
-CI runs `scripts/test_firmware_target_tooling.py` to verify all six bank names, all twenty-four algorithm names, bootloader-environment mapping, wrapper command generation and compile-time bank/algorithm mismatch rejection. The selection integration suite additionally verifies that normal builds follow the rear DIP inputs while a forced build ignores all four DIP combinations.
+CI runs `scripts/test_firmware_target_tooling.py` to verify all seven bank names, all twenty-eight algorithm names, bootloader-environment mapping, wrapper command generation and compile-time bank/algorithm mismatch rejection. The selection integration suite additionally verifies that normal builds follow the rear DIP inputs while a forced build ignores all four DIP combinations.
 
 Tagged release builds must never set `FMD_FORCE_ALGORITHM`; release artifacts remain complete four-algorithm bank images.
 

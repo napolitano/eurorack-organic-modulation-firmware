@@ -103,6 +103,11 @@ jobs:
             && grep -q '^\[env:nanoatmega328_percussion\]$' platformio.ini; then
             RELEASE_BANKS="${RELEASE_BANKS},percussion"
           fi
+          if grep -q '^\[env:native_dubstep\]$' platformio.ini \
+            && grep -q '^\[env:nanoatmega328new_dubstep\]$' platformio.ini \
+            && grep -q '^\[env:nanoatmega328_dubstep\]$' platformio.ini; then
+            RELEASE_BANKS="${RELEASE_BANKS},dubstep"
+          fi
 
           echo "Release source: ${RELEASE_TAG} @ ${SOURCE_COMMIT}"
           echo "Release operation: ${RELEASE_OPERATION}"
@@ -259,6 +264,16 @@ jobs:
           -f property/test_invariants
           -f system/test_signal_path
 
+      - name: Qualify Dubstep/Bass bank wiring
+        if: contains(steps.release-context.outputs.banks, 'dubstep')
+        run: >-
+          pio test -e native_dubstep
+          -f unit/test_algorithms
+          -f integration/test_selection
+          -f integration/test_runtime
+          -f property/test_invariants
+          -f system/test_signal_path
+
       - name: Run targeted native sanitizers
         shell: bash
         env:
@@ -338,7 +353,20 @@ jobs:
               -f unit/test_repeat_algorithm \
               -f unit/test_probability_algorithm \
               -f unit/test_humanize_algorithm \
-              -f unit/test_percussion_clock \
+              -f unit/test_clock_source \
+              -f integration/test_selection \
+              -f integration/test_runtime \
+              -f property/test_invariants \
+              -f system/test_signal_path
+          fi
+          if [[ "${RELEASE_BANKS}" == *dubstep* ]]; then
+            pio test -e native_dubstep_sanitized \
+              -f unit/test_algorithms \
+              -f unit/test_wobble_algorithm \
+              -f unit/test_growl_algorithm \
+              -f unit/test_chop_algorithm \
+              -f unit/test_build_algorithm \
+              -f unit/test_clock_source \
               -f integration/test_selection \
               -f integration/test_runtime \
               -f property/test_invariants \
@@ -367,7 +395,7 @@ jobs:
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
             --exclude-throw-branches --exclude-unreachable-branches \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion)/.*' \
+            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion|dubstep)/.*' \
             --xml-pretty --output coverage/coverage.xml
           python scripts/check_native_coverage.py coverage/coverage.xml --scope classic
 
@@ -476,7 +504,7 @@ jobs:
             -f unit/test_repeat_algorithm \
             -f unit/test_probability_algorithm \
             -f unit/test_humanize_algorithm \
-            -f unit/test_percussion_clock \
+            -f unit/test_clock_source \
             -f integration/test_selection \
             -f integration/test_runtime \
             -f property/test_invariants \
@@ -486,6 +514,30 @@ jobs:
             --exclude-throw-branches --exclude-unreachable-branches \
             --xml-pretty --output coverage-percussion/coverage.xml
           python scripts/check_native_coverage.py coverage-percussion/coverage.xml --scope percussion
+
+      - name: Enforce Dubstep/Bass-bank native coverage policy
+        if: contains(steps.release-context.outputs.banks, 'dubstep')
+        run: |
+          pio test -e native_dubstep_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_wobble_algorithm \
+            -f unit/test_growl_algorithm \
+            -f unit/test_chop_algorithm \
+            -f unit/test_build_algorithm \
+            -f unit/test_clock_source \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
+          mkdir -p coverage-dubstep
+          gcovr --root . --filter 'lib/fmd/src/domain/dubstep/.*' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
+            --xml-pretty --output coverage-dubstep/coverage.xml
+          python scripts/check_native_coverage.py coverage-dubstep/coverage.xml --scope dubstep
 
       - name: Build release firmware
         shell: bash
@@ -512,6 +564,10 @@ jobs:
           if [[ "${RELEASE_BANKS}" == *percussion* ]]; then
             pio run -e nanoatmega328new_percussion
             pio run -e nanoatmega328_percussion
+          fi
+          if [[ "${RELEASE_BANKS}" == *dubstep* ]]; then
+            pio run -e nanoatmega328new_dubstep
+            pio run -e nanoatmega328_dubstep
           fi
 
       - name: Enforce AVR resource budgets
@@ -540,6 +596,10 @@ jobs:
             python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_percussion/firmware.elf
             python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_percussion/firmware.elf
           fi
+          if [[ "${RELEASE_BANKS}" == *dubstep* ]]; then
+            python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328new_dubstep/firmware.elf
+            python scripts/check_avr_resource_budget.py .pio/build/nanoatmega328_dubstep/firmware.elf
+          fi
 
       - name: Compile timing qualification images
         shell: bash
@@ -560,6 +620,9 @@ jobs:
           fi
           if [[ "${RELEASE_BANKS}" == *percussion* ]]; then
             pio run -e nanoatmega328new_percussion_timing
+          fi
+          if [[ "${RELEASE_BANKS}" == *dubstep* ]]; then
+            pio run -e nanoatmega328new_dubstep_timing
           fi
 
       - name: Install manual publication dependencies
@@ -750,6 +813,24 @@ jobs:
           print("Percussion manual coverage: passed")
           PY
 
+      - name: Require Dubstep/Bass content in frozen manual
+        if: contains(steps.release-context.outputs.banks, 'dubstep')
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANUAL_SOURCE='${{ steps.manual-source.outputs.source }}'
+          python - "${MANUAL_SOURCE}" <<'PY'
+          import sys, xml.etree.ElementTree as ET, zipfile
+          with zipfile.ZipFile(sys.argv[1]) as archive:
+              root = ET.fromstring(archive.read("content.xml"))
+          text = " ".join(part.strip() for part in root.itertext() if part.strip()).lower()
+          required = ("dubstep", "wobble", "growl", "chop", "build")
+          missing = [term for term in required if term not in text]
+          if missing:
+              raise SystemExit("release manual does not yet document the Dubstep/Bass bank: missing " + ", ".join(missing))
+          print("Dubstep/Bass manual coverage: passed")
+          PY
+
       - name: Build and verify user manual
         shell: bash
         run: |
@@ -899,6 +980,20 @@ jobs:
               --git-commit "${SOURCE_COMMIT}" \
               --git-ref "${RELEASE_TAG}" \
               --output "dist/BUILD-INFO-percussion-nano-old.${RELEASE_VERSION}.txt"
+          fi
+          if [[ "${RELEASE_BANKS}" == *dubstep* ]]; then
+            python "${TOOLING_ROOT}/write_build_info.py" \
+              --bank dubstep \
+              --environment nanoatmega328new_dubstep \
+              --git-commit "${SOURCE_COMMIT}" \
+              --git-ref "${RELEASE_TAG}" \
+              --output "dist/BUILD-INFO-dubstep-nano-new.${RELEASE_VERSION}.txt"
+            python "${TOOLING_ROOT}/write_build_info.py" \
+              --bank dubstep \
+              --environment nanoatmega328_dubstep \
+              --git-commit "${SOURCE_COMMIT}" \
+              --git-ref "${RELEASE_TAG}" \
+              --output "dist/BUILD-INFO-dubstep-nano-old.${RELEASE_VERSION}.txt"
           fi
 
       - name: Validate exact release artifact set

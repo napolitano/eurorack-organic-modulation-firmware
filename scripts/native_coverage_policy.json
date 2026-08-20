@@ -48,6 +48,14 @@
       "file_branch_min_percent": 80.0,
       "path_prefix": "lib/fmd/src/domain/percussion/",
       "note": "Extended-bank release floor: high aggregate decision coverage plus a per-file floor to prevent helpers from masking weak algorithm coverage."
+    },
+    "dubstep": {
+      "line_min_percent": 97.0,
+      "branch_min_percent": 90.0,
+      "file_line_min_percent": 95.0,
+      "file_branch_min_percent": 80.0,
+      "path_prefix": "lib/fmd/src/domain/dubstep/",
+      "note": "Extended-bank release floor: high aggregate decision coverage plus a per-file floor to prevent helpers from masking weak algorithm coverage."
     }
   },
   "measurement_rules": {

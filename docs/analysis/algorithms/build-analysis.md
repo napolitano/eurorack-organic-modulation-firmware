@@ -2,6 +2,9 @@
 
 ## 1. Purpose and scope
 
+> **Implementation status — Unreleased:** Implemented under `domain/dubstep/` with the 8/4/2/1-bar Texture mapping, cubic-smoothstep macro rise, quarter/eighth/sixteenth/thirty-second micro stages and deterministic phrase restart on external-clock acquisition. The one-bar endpoint remains explicitly subject to later listening evaluation.
+
+
 Build is the proposed fourth mode of the working Dubstep/Bass bank. It creates a repeating **multi-bar tension CV** whose macro level rises while a tempo-synchronised micro modulation accelerates toward the phrase boundary.
 
 The mode does not generate audio, a snare roll or a complete arrangement. It provides one CV gesture that can drive a filter, VCA, effect, wavetable or other destination through a recognisable build-to-reset trajectory.

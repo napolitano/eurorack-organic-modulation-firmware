@@ -57,6 +57,7 @@ Initial public release.
         previous_tag="v0.1.0",
         repository="napolitano/eurorack-organic-modulation-firmware",
         server_url="https://github.com",
+        banks=("classic", "organic", "generative", "ambient", "electronica", "percussion"),
     )
     require("v0.1.0...v0.2.0" in notes, "compare link missing")
     require("## Artifact integrity" in notes, "integrity section missing")

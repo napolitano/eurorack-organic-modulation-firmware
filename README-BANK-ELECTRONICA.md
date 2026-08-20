@@ -1,6 +1,6 @@
 # Free Modular Drift — Electronica Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Percussion bank](README-BANK-PERCUSSION.md) · [User manual](docs/manual/README.md) · [Electronica engineering design](docs/analysis/algorithm-banks/electronica-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Percussion bank](README-BANK-PERCUSSION.md) · [Dubstep / Bass bank](README-BANK-DUBSTEP.md) · [User manual](docs/manual/README.md) · [Electronica engineering design](docs/analysis/algorithm-banks/electronica-bank-design.md)
 
 The **Electronica bank** is Drift's rhythm-first modulation bank for house, acid, techno and adjacent electronic styles. It contains **Pump, Acid, Shuffle and Polymeter**: four deterministic algorithms built around a musical grid rather than around continuous noise or long stochastic motion.
 

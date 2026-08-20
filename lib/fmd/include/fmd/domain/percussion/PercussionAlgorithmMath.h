@@ -14,63 +14,22 @@
 
 #include <stdint.h>
 
+#include "fmd/domain/ClockSource.h"
+
 namespace fmd::percussionmath {
 
 constexpr uint8_t kPulseSamples = 25U;
 constexpr uint16_t kFullScaleDac12 = 4095U;
 
-/** ADC threshold corresponding to approximately 1.0 V on a 0..5 V input. */
-constexpr uint16_t kClockLowThresholdAdc = 205U;
-/** ADC threshold corresponding to approximately 2.0 V on a 0..5 V input. */
-constexpr uint16_t kClockHighThresholdAdc = 410U;
-/** Reject implausibly fast edge intervals below 12.8 ms at the 2.5 kHz scheduler rate. */
-constexpr uint32_t kClockMinimumPeriodSamples = 32UL;
-/** Accept external quarter-note periods up to 10 s (6 BPM). */
-constexpr uint32_t kClockMaximumPeriodSamples = 25000UL;
-
-/**
- * @brief Result of one Percussion clock-source update.
- *
- * Speed CV is bank-specifically interpreted as a 0..5 V clock input. Before
- * two valid rising edges are observed, and after an external-clock timeout,
- * quarterIncrement is the caller-provided Speed-knob increment.
- */
-struct ClockUpdate {
-  uint32_t quarterIncrement;  ///< Active quarter-note phase increment.
-  bool externalActive;        ///< True while a measured external clock owns timing.
-  bool quarterBoundary;       ///< True on an accepted external rising edge.
-  bool externalAcquired;      ///< True only on the edge that activates external sync.
-  bool externalLost;          ///< True only on the sample that times out to internal timing.
-};
-
-/** Convert a measured quarter-note interval to a 32-bit phase increment. */
-uint32_t quarterIncrementFromPeriodSamples(uint32_t periodSamples);
-/** Return the 2.5-period external-clock loss timeout in scheduler samples. */
-uint32_t clockTimeoutSamples(uint32_t periodSamples);
-
-/**
- * @brief Hysteretic Speed-CV clock detector with automatic Speed-knob fallback.
- *
- * Two accepted rising edges are required before external timing becomes active.
- * A valid edge is detected after the input has first fallen to or below
- * kClockLowThresholdAdc and then rises to or above kClockHighThresholdAdc.
- * Each external edge represents one quarter note.
- */
-class ClockSource {
- public:
-  ClockSource();
-  ClockUpdate update(uint16_t speedCvAdc, uint32_t internalQuarterIncrement);
-  bool externalActive() const { return externalActive_; }
-  uint32_t lastPeriodSamples() const { return lastPeriodSamples_; }
-
- private:
-  bool inputHigh_;
-  bool haveReferenceEdge_;
-  bool externalActive_;
-  uint32_t samplesSinceReferenceEdge_;
-  uint32_t lastPeriodSamples_;
-  uint32_t externalQuarterIncrement_;
-};
+/** Shared clock detector constants and types retained under the Percussion API. */
+constexpr uint16_t kClockLowThresholdAdc = clock::kClockLowThresholdAdc;
+constexpr uint16_t kClockHighThresholdAdc = clock::kClockHighThresholdAdc;
+constexpr uint32_t kClockMinimumPeriodSamples = clock::kClockMinimumPeriodSamples;
+constexpr uint32_t kClockMaximumPeriodSamples = clock::kClockMaximumPeriodSamples;
+using ClockUpdate = clock::ClockUpdate;
+using ClockSource = clock::ClockSource;
+using clock::quarterIncrementFromPeriodSamples;
+using clock::clockTimeoutSamples;
 
 uint8_t phraseLengthBars(uint16_t textureControl);
 uint8_t fillStrength(uint16_t textureControl);

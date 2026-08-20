@@ -178,7 +178,7 @@ jobs:
           - unit/test_repeat_algorithm
           - unit/test_probability_algorithm
           - unit/test_humanize_algorithm
-          - unit/test_percussion_clock
+          - unit/test_clock_source
           - integration/test_selection
           - integration/test_runtime
           - property/test_invariants
@@ -190,6 +190,30 @@ jobs:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
       - run: pio test -e native_percussion -f ${{ matrix.suite }}
+
+  native-dubstep-tests:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - unit/test_algorithms
+          - unit/test_wobble_algorithm
+          - unit/test_growl_algorithm
+          - unit/test_chop_algorithm
+          - unit/test_build_algorithm
+          - unit/test_clock_source
+          - integration/test_selection
+          - integration/test_runtime
+          - property/test_invariants
+          - system/test_signal_path
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: pio test -e native_dubstep -f ${{ matrix.suite }}
 
   native-coverage:
     runs-on: ubuntu-24.04
@@ -219,11 +243,11 @@ jobs:
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
             --exclude-throw-branches --exclude-unreachable-branches \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion)/.*' \
+            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion|dubstep)/.*' \
             --xml-pretty --output coverage/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
             --exclude-throw-branches --exclude-unreachable-branches \
-            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion)/.*' \
+            --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion|dubstep)/.*' \
             --txt
           python scripts/check_native_coverage.py coverage/coverage.xml --scope classic
 
@@ -373,7 +397,7 @@ jobs:
             -f unit/test_repeat_algorithm \
             -f unit/test_probability_algorithm \
             -f unit/test_humanize_algorithm \
-            -f unit/test_percussion_clock \
+            -f unit/test_clock_source \
             -f integration/test_selection \
             -f integration/test_runtime \
             -f property/test_invariants \
@@ -384,6 +408,37 @@ jobs:
             --exclude-throw-branches --exclude-unreachable-branches \
             --xml-pretty --output coverage-percussion/coverage.xml
           python scripts/check_native_coverage.py coverage-percussion/coverage.xml --scope percussion
+
+  native-dubstep-coverage:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: |
+          pio test -e native_dubstep_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_wobble_algorithm \
+            -f unit/test_growl_algorithm \
+            -f unit/test_chop_algorithm \
+            -f unit/test_build_algorithm \
+            -f unit/test_clock_source \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
+      - run: |
+          mkdir -p coverage-dubstep
+          gcovr --root . --filter 'lib/fmd/src/domain/dubstep/.*' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
+            --xml-pretty --output coverage-dubstep/coverage.xml
+          python scripts/check_native_coverage.py coverage-dubstep/coverage.xml --scope dubstep
 
   native-sanitizers:
     runs-on: ubuntu-24.04
@@ -506,7 +561,28 @@ jobs:
             -f unit/test_repeat_algorithm \
             -f unit/test_probability_algorithm \
             -f unit/test_humanize_algorithm \
-            -f unit/test_percussion_clock \
+            -f unit/test_clock_source \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
+
+  native-dubstep-sanitizers:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6.0.2
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11.15'
+      - run: python -m pip install -r scripts/requirements-ci.txt
+      - run: |
+          pio test -e native_dubstep_sanitized \
+            -f unit/test_algorithms \
+            -f unit/test_wobble_algorithm \
+            -f unit/test_growl_algorithm \
+            -f unit/test_chop_algorithm \
+            -f unit/test_build_algorithm \
+            -f unit/test_clock_source \
             -f integration/test_selection \
             -f integration/test_runtime \
             -f property/test_invariants \
@@ -530,6 +606,8 @@ jobs:
           - nanoatmega328_electronica
           - nanoatmega328new_percussion
           - nanoatmega328_percussion
+          - nanoatmega328new_dubstep
+          - nanoatmega328_dubstep
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0
@@ -544,7 +622,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing, nanoatmega328new_ambient_timing, nanoatmega328new_electronica_timing, nanoatmega328new_percussion_timing]
+        environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing, nanoatmega328new_ambient_timing, nanoatmega328new_electronica_timing, nanoatmega328new_percussion_timing, nanoatmega328new_dubstep_timing]
     steps:
       - uses: actions/checkout@v6.0.2
       - uses: actions/setup-python@v6.2.0

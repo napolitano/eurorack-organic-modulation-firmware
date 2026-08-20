@@ -2,6 +2,9 @@
 
 ## 1. Purpose and scope
 
+> **Implementation status — Unreleased:** Implemented under `domain/dubstep/` with the documented eight-cell phrase, four Texture vocabularies, rational rate codes and the shared 0–5 V quarter-note clock source. The 70–280 BPM mapping is now the prototype firmware contract rather than a pending recommendation.
+
+
 Wobble is the proposed first mode of the working Dubstep/Bass bank. It generates a continuous modulation CV whose **rate follows a deterministic tempo-synchronised phrase**.
 
 The distinction from Drift's Classic LFO is fundamental: Classic LFO is a general free-running waveform source. Wobble should use one deliberately simple carrier and derive its musical identity from switching between beat-relative rate values such as quarter, 3/16, eighth and triplet subdivisions.
