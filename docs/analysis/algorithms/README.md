@@ -1,6 +1,6 @@
 # Drift algorithm engineering analyses
 
-These documents analyze each supported or proposed Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The **Organic**, **Generative**, **Ambient**, **Electronica** and proposed **Percussion** documents use the same engineering structure for project-defined algorithms with no upstream implementation to preserve. Ambient extends the contract into long-form continuous modulation; Electronica specifies tempo/grid-oriented CV behavior for house, acid, techno and adjacent styles; Percussion specifies event-oriented rhythm generation with multi-bar phrase structure. The explicit musical assessment remains part of every new-bank analysis because musical differentiation from the existing banks is a design requirement.
+These documents analyze each supported or proposed Drift algorithm independently. The four **Classic** documents begin with the mathematical model and then work through Quinn Freedman's Rust implementation, numerical behavior, computational cost, improvement options, and verification strategy. The **Organic**, **Generative**, **Ambient**, **Electronica**, **Percussion** and proposed **Dubstep / bass-music** documents use the same engineering structure for project-defined algorithms with no upstream implementation to preserve. Ambient extends the contract into long-form continuous modulation; Electronica specifies tempo/grid-oriented CV behavior for house, acid, techno and adjacent styles; Percussion specifies event-oriented rhythm generation with multi-bar phrase structure; the proposed Dubstep / bass-music bank evaluates tempo-synchronised bass-motion phrases, syncopated articulation and build/drop-scale modulation. The explicit musical assessment remains part of every new-bank analysis because musical differentiation from the existing banks is a design requirement.
 
 > [!IMPORTANT]
 > The analyses are engineering notes, not criticism of the upstream project. A finding is classified according to the available evidence. Unusual behavior is not automatically a defect. Where analysis establishes a defect and a stronger mathematical contract can be stated, the unreleased firmware may correct it directly; the intentional difference is then documented and regression-tested.
@@ -51,6 +51,14 @@ These documents analyze each supported or proposed Drift algorithm independently
 - [Probability / metrically weighted stochastic rhythm](probability-analysis.md)
 - [Humanize / bounded microtiming and pulse-level variation](humanize-analysis.md)
 - [Percussion bank architecture, phrase engine, duplication audit and musical contract](../algorithm-banks/percussion-bank-design.md)
+
+### Proposed Dubstep / bass-music bank
+
+- [Wobble / tempo-synchronised rate phrase](wobble-analysis.md)
+- [Growl / compound timbral-motion contour](growl-analysis.md)
+- [Chop / deterministic syncopated articulation](chop-analysis.md)
+- [Build / multi-bar tension and rate escalation](build-analysis.md)
+- [Dubstep / bass-music bank architecture, naming audit and control contract](../algorithm-banks/dubstep-bank-design.md)
 
 ## Common analysis contract
 

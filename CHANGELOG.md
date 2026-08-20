@@ -6,6 +6,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
+- Engineering analysis for a proposed Dubstep / bass-music bank covering Wobble, Growl, Chop and Build, including genre/naming audit, mathematical contracts, duplication boundaries, current-hardware clock constraints, AVR feasibility and verification strategy; no firmware implementation is included yet.
 - Named PlatformIO developer targets for all 24 algorithms: a complete bank can still be built/flashed with normal rear-DIP selection, while `FMD_FORCE_ALGORITHM=<name>` or `scripts/flash_drift.py algorithm <name>` locks an on-device test image directly to a named algorithm and rejects bank/name mismatches at compile time.
 
 ## 0.2.0 — 2026-08-19
