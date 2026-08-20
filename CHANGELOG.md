@@ -37,7 +37,7 @@ Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baselin
 - Release dependency installation was hardened with canonical Ubuntu mirrors, bounded APT retries/timeouts, minimal LibreOffice packages, an explicit job timeout and per-tag workflow concurrency.
 - Dependabot version updates are consolidated into a monthly multi-ecosystem update to reduce automated pull-request noise.
 - Release notes, artifact manifests, provenance records and integrity checks now derive the actual bank set from the tagged source, preserving compatibility with historical Classic-only and intermediate tags.
-- The Generative, Ambient, Electronica and Percussion bank guides were expanded to the same developer-facing documentation standard as Classic and Organic, with visual DIP maps, complete control matrices, algorithm figures, mathematical summaries, musical guidance and implementation constraints.
+- All five extended-bank guides now follow the same developer-facing documentation standard as Classic: Organic was reworked with explicit bank character, visual DIP cards, fuller musical guidance, fixed-point/runtime rationale and the extended-bank coverage contract; Generative, Ambient, Electronica and Percussion retain the same visual and structural standard.
 
 ### Fixed
 
