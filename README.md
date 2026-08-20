@@ -5,151 +5,227 @@
 [![GPL-3.0-or-later](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](LICENSE)
 ![PlatformIO / C++17](https://img.shields.io/badge/PlatformIO-C%2B%2B17-orange?logo=platformio)
 ![ATmega328P](https://img.shields.io/badge/target-ATmega328P-00979D?logo=arduino)
-![Native coverage gate](https://img.shields.io/badge/native%20coverage-%E2%89%A595%25%20lines%20%7C%20%E2%89%A575%25%20branches-success)
 ![AVR resource guardrails](https://img.shields.io/badge/resource%20guardrails-flash%20%E2%89%A485%25%20%7C%20SRAM%20%E2%89%A465%25-success)
+
+**24 algorithms. Six banks. The original 4 HP Drift hardware.**
+
+This repository provides an independent C++17/PlatformIO firmware for the **Free Modular Drift** Eurorack modulation source. It keeps the original module recognisably Drift, preserves the four original algorithms in the **Classic** bank, and expands the same Arduino Nano / ATmega328P hardware into five additional musical banks covering organic motion, generative structures, long-form ambient modulation, tempo-shaped electronic modulation and percussion/rhythm generation.
+
+No PCB modification is required. Changing banks is a firmware update; the two rear DIP switches then select one of the four algorithms inside the installed bank.
+
+**Start here:** [Install or change a bank](docs/installation/README.md) · [User manual](docs/manual/README.md) · [Choose a bank](#choose-your-bank) · [Latest release](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases) · [Developer/testing guide](README_TESTING.md)
+
+> [!IMPORTANT]
+> **When flashing or changing banks, power Drift from USB only.** Switch the Eurorack case off and disconnect the module's Eurorack ribbon cable **before** connecting USB to the Arduino Nano. Do not power the module from USB and the Eurorack PSU at the same time during the update procedure.
 
 > [!NOTE]
 > ### With appreciation to Quinn Freedman
-> **Drift is Quinn Freedman's instrument.** The original Free Modular hardware, musical concept and Rust firmware are the foundation of this repository. This alternative firmware exists because that work was published openly and is interesting enough to study carefully, preserve and develop further. The goal here is not to erase the upstream implementation, but to keep its identity intact while making the firmware easier to build, test, document and maintain.
+> **Drift is Quinn Freedman's instrument.** The original Free Modular hardware, musical concept and Rust firmware are the foundation of this repository. This project is an independent continuation: it keeps the original identity visible, documents every deliberate deviation, and treats the upstream design as a reference rather than something to be quietly overwritten.
 >
 > - [Free Modular Drift](https://freemodular.org/modules/Drift/)
 > - [Quinn Freedman's upstream source](https://github.com/QuinnFreedman/modular/tree/main/modules/Drift)
+>
+> This repository is unofficial and is not affiliated with Free Modular.
 
-## What is Drift?
+## What Drift becomes with this firmware
 
-Drift is a **4 HP Eurorack modulation source** that produces evolving 0–10 V control voltages. Its defining idea is controlled movement: instead of choosing only between a conventional repeating LFO and completely uncorrelated random values, Drift offers several ways to generate motion with **continuity, memory, structure or controlled unpredictability**.
+Drift is still a compact **0–10 V unipolar modulation source**. The difference is the range of behaviours available from the same front panel. Depending on the installed bank, the module can move smoothly, wander statistically, remember patterns, develop motifs, breathe over minutes, generate tempo-shaped contours or produce phrase-aware rhythmic events.
 
-This firmware now supports six compile-time algorithm banks:
+The banks are deliberately different rather than collections of minor variations on the same noise source:
 
-| Bank | Algorithms | Status | Detailed guide |
+| Bank | Algorithms | Musical character | Guide |
 |---|---|---|---|
-| **Classic** | Perlin · Brownian · Bézier · LFO | Default; 0.1.0 compatibility baseline | **[README-BANK-CLASSIC.md](README-BANK-CLASSIC.md)** |
-| **Organic** | Fractal · Vector · Rain · Attractor | Included in 0.2.0 | **[README-BANK-ORGANIC.md](README-BANK-ORGANIC.md)** |
-| **Generative** | Turing · Markov · Motif · Urn | Included in 0.2.0 | **[README-BANK-GENERATIVE.md](README-BANK-GENERATIVE.md)** |
-| **Ambient** | Current · Anchor · Breath · Fog | Included in 0.2.0 | **[README-BANK-AMBIENT.md](README-BANK-AMBIENT.md)** |
-| **Electronica** | Pump · Acid · Shuffle · Polymeter | Included in 0.2.0 | **[README-BANK-ELECTRONICA.md](README-BANK-ELECTRONICA.md)** |
-| **Percussion** | Euclid · Repeat · Probability · Humanize | Included in 0.2.0 | **[README-BANK-PERCUSSION.md](README-BANK-PERCUSSION.md)** |
+| **Classic** | Perlin · Brownian · Bézier · LFO | The original Drift vocabulary: smooth noise, random walk, curved motion and periodic modulation | [Classic](README-BANK-CLASSIC.md) |
+| **Organic** | Fractal · Vector · Rain · Attractor | Naturalistic multiscale motion, coupled flow, sparse events and nonlinear structure | [Organic](README-BANK-ORGANIC.md) |
+| **Generative** | Turing · Markov · Motif · Urn | Repetition with memory: mutable loops, state transitions, evolving phrases and learned preferences | [Generative](README-BANK-GENERATIVE.md) |
+| **Ambient** | Current · Anchor · Breath · Fog | Slow form, mean-reverting drift, recurrent swells and soft modulation clouds | [Ambient](README-BANK-AMBIENT.md) |
+| **Electronica** | Pump · Acid · Shuffle · Polymeter | Tempo-shaped CV for house, acid, techno and related electronic styles | [Electronica](README-BANK-ELECTRONICA.md) |
+| **Percussion** | Euclid · Repeat · Probability · Humanize | Rhythmic event placement, ratchets, weighted variation, fills and humanised timing | [Percussion](README-BANK-PERCUSSION.md) |
 
 > [!TIP]
 > ### A small problem of abundance
-> With **24 algorithms across 6 banks**, this firmware leaves the user with the rather luxurious problem of deciding which four algorithms to have loaded today. Since one Drift can, by stubborn physical reality, run only one bank at a time, owning a second Drift is an entirely defensible engineering response. A third begins to look like sensible redundancy. Beyond that, the distinction between *need* and *system architecture* becomes increasingly academic. Strictly speaking, it is difficult to demonstrate that one can have too many Drifts.
+> With **24 algorithms across 6 banks**, the user is left with the rather luxurious problem of deciding which four algorithms to have installed today. One Drift can, by stubborn physical reality, run only one bank at a time. A second Drift is therefore an entirely defensible engineering response. A third begins to look like sensible redundancy. Beyond that, the distinction between *need* and *system architecture* becomes increasingly academic. Strictly speaking, convincing evidence that one can own too many Drifts has yet to emerge.
+
+## Choose your bank
+
+A firmware image contains **one bank**. The rear DIP switches do **not** choose the bank; they choose one of four slots inside the bank that has been flashed.
+
+The four physical selector states are shared by every bank:
+
+| Slot | Rear DIP 1 | Rear DIP 2 |
+|---:|---|---|
+| **1** | OFF | OFF |
+| **2** | ON | OFF |
+| **3** | OFF | ON |
+| **4** | ON | ON |
+
+After flashing, those four slots mean:
+
+| Bank | Slot 1 · OFF/OFF | Slot 2 · ON/OFF | Slot 3 · OFF/ON | Slot 4 · ON/ON |
+|---|---|---|---|---|
+| **Classic** | Perlin | Brownian | Bézier | LFO |
+| **Organic** | Fractal | Vector | Rain | Attractor |
+| **Generative** | Turing | Markov | Motif | Urn |
+| **Ambient** | Current | Anchor | Breath | Fog |
+| **Electronica** | Pump | Acid | Shuffle | Polymeter |
+| **Percussion** | Euclid | Repeat | Probability | Humanize |
+
+The switches are sampled at startup. **ON is the upper physical switch position.** Change the switches only while the module is unpowered, then power-cycle Drift for the new algorithm to take effect.
 
 > [!IMPORTANT]
-> **Flashing chooses the algorithm bank.** The two rear DIP switches then choose one of four algorithms inside the flashed bank. A DIP setting cannot switch between Classic, Organic, Generative, Ambient, Electronica and Percussion.
+> This four-algorithm limit is a property of the existing hardware selector. Firmware cannot turn two binary rear switches into six bank selectors. **Flashing chooses the bank; the DIP switches choose the algorithm inside it.**
 
-## Why this firmware?
-
-The upstream firmware already contains a thoughtful fixed-point implementation of the Drift concept. This project rebuilds it as a **C++17/PlatformIO best-practice firmware** for the original Arduino Nano / ATmega328P hardware, with a different emphasis: behavior should be understandable, mathematically defensible and demonstrably correct.
-
-The project therefore aims to:
-
-- preserve the recognisable Drift instrument and the four original algorithm concepts as the default Classic bank;
-- allow compile-time alternative banks to explore new modulation models without changing the original hardware or reserving runtime resources in Classic builds;
-- separate portable signal-processing code from Arduino/AVR hardware access;
-- verify each algorithm against its mathematical definition, not merely against historical output bytes;
-- retain upstream behavior where it represents intentional musical design;
-- correct verified numerical, continuity or state-handling problems transparently;
-- qualify resource use and real-time behavior on the ATmega328P;
-- provide reproducible builds, automated tests, release notes and a versioned PDF user manual.
-
-> [!IMPORTANT]
-> **Release 0.2.0 is the first six-bank release.** It packages all 24 algorithms for both supported Nano bootloaders while preserving `v0.1.0` as the Classic compatibility baseline. The release is published only from tag `v0.2.0` after the prepared changelog, package metadata and frozen manual snapshot have been committed.
-
-## Quick start
-
-### 1. Know the front panel
+## First patch in five minutes
 
 <p align="center">
-  <img src="docs/manual/assets/drift-front-panel.svg" alt="Drift front panel with numbered controls" width="360">
+  <img src="docs/manual/assets/drift-front-panel.svg" alt="Free Modular Drift front panel showing Speed, Texture, Attenuation, two CV inputs, output and status LED" width="360">
 </p>
 
-| Ref. | Panel element | What it does |
-|---:|---|---|
-| **1** | **Speed** | Primary time-scale or activity control. Its exact meaning depends on the selected algorithm. |
-| **2** | **Texture** | Secondary shape, structure or activity control. Its exact meaning depends on the selected algorithm. |
-| **3** | **Attenuation** | Analogue scaling of the final 0–10 V output; firmware cannot read this knob. |
-| **4** | **Speed CV** | 0–5 V Speed control input; **Percussion bank: optional 0–5 V quarter-note clock input instead**. |
-| **5** | **Texture CV** | 0–5 V control input contributing to the algorithm's secondary parameter. |
-| **6** | **Output** | Unipolar 0–10 V modulation output. |
-| **7** | **LED** | Indicates instantaneous output level. |
+| Panel element | What it does |
+|---|---|
+| **Speed** | Primary time-scale or activity control; exact behaviour depends on the active algorithm |
+| **Texture** | Secondary shape, structure, density or character control |
+| **Attenuation** | Analogue scaling of the final 0–10 V output; firmware cannot read this knob |
+| **Speed CV** | Normally a 0–5 V modulation input; in Percussion it becomes an optional 0–5 V quarter-note clock input |
+| **Texture CV** | 0–5 V modulation of the algorithm-specific Texture parameter |
+| **Output** | 0–10 V unipolar modulation/event output |
+| **LED** | Visual indication of the current output level |
 
-### 2. Choose the bank, then the DIP slot
-
-The bank is fixed when the firmware is compiled/flashed. The rear DIP truth table is then interpreted inside that bank:
-
-| Rear DIP 1 | Rear DIP 2 | Classic | Organic | Generative | Ambient | Electronica | Percussion |
-|---|---|---|---|---|---|---|
-| **OFF** | **OFF** | Perlin | Fractal | Turing | Current | Pump | Euclid |
-| **ON** | **OFF** | Brownian | Vector | Markov | Anchor | Acid | Repeat |
-| **OFF** | **ON** | Bézier | Rain | Motif | Breath | Shuffle | Probability |
-| **ON** | **ON** | LFO | Attractor | Urn | Fog | Polymeter | Humanize |
-
-The switches are sampled only during startup. Cycle power after changing them. **ON is the upper physical switch position.**
-
-For mode-specific control semantics, mathematics, figures and use cases, use the bank guides:
-
-- **[Classic bank — Perlin, Brownian, Bézier, LFO](README-BANK-CLASSIC.md)**
-- **[Organic bank — Fractal, Vector, Rain, Attractor](README-BANK-ORGANIC.md)**
-- **[Generative bank — Turing, Markov, Motif, Urn](README-BANK-GENERATIVE.md)**
-- **[Ambient bank — Current, Anchor, Breath, Fog](README-BANK-AMBIENT.md)**
-- **[Electronica bank — Pump, Acid, Shuffle, Polymeter](README-BANK-ELECTRONICA.md)**
-- **[Percussion bank — Euclid, Repeat, Probability, Humanize](README-BANK-PERCUSSION.md)**
-
-### 3. Make the first patch
-
-1. Flash the desired bank and set the rear DIP switches for the algorithm you want.
-2. Power the rack normally.
-3. Patch **OUT** to a modulation destination such as filter cutoff, wavetable position, waveshaping, effect depth, panning or another CV-controlled parameter.
-4. Turn **Attenuation** fully clockwise while learning the mode, then reduce it if the destination needs a smaller modulation range.
-5. Start with **Speed** and **Texture** near the middle and explore their behavior using the selected bank guide.
-6. Patch 0–5 V modulation into **Speed CV** or **Texture CV** when you want Drift's behavior to evolve under external control. **Exception: in Percussion, Speed CV is the optional 0–5 V quarter-note clock input; never patch a 10 V trigger into the original hardware.**
+1. [Install the bank you want](docs/installation/README.md).
+2. With the module unpowered, set the rear DIP switches for the algorithm you want.
+3. Reinstall Drift and power the rack normally.
+4. Patch **OUT** to filter cutoff, wavetable position, FM amount, effect depth, panning, a VCA, or another CV-controlled destination.
+5. Start with **Speed** and **Texture** near the middle. Turn **Attenuation** fully clockwise while learning the mode, then reduce it to suit the destination.
+6. Open the relevant [bank guide](#algorithm-bank-guides) for the exact control mapping and musical behaviour.
 
 > [!WARNING]
-> **Percussion bank only: Speed CV becomes a 0–5 V external clock input. Do not feed 10 V Eurorack triggers/clocks into the original Drift hardware.** The existing Speed CV input stage is specified here only for 0–5 V operation; the firmware cannot add the missing overvoltage protection. Without a valid clock, Percussion automatically uses the Speed knob as its internal 30–240 BPM clock.
+> **Percussion only: Speed CV is a 0–5 V clock input. Do not patch 10 V Eurorack clocks or triggers into Speed CV on the current hardware.** The existing analogue input was designed for 0–5 V operation; firmware cannot add overvoltage protection. Without a valid external clock, Percussion automatically returns to the Speed-knob internal clock.
 
-> [!TIP]
-> Drift outputs **0–10 V unipolar CV**. If the destination expects a smaller or bipolar range, use the Attenuation knob and, where necessary, an external attenuverter/offset stage.
+## Install, update or change the algorithm bank
+
+You do **not** need a development environment to install a prebuilt release. Every tagged release provides a `.hex` file for each bank and for both supported Arduino Nano bootloaders.
+
+The safe end-user workflow is:
+
+1. Decide which **bank** you want.
+2. Download the matching `.hex` for the Nano's **new** or **old** bootloader.
+3. Switch the Eurorack case **off** and disconnect the module's **Eurorack ribbon cable**.
+4. Connect USB to the installed Arduino Nano. USB powers the Nano for the update.
+5. Flash the `.hex` with AVRDUDESS on Windows, AVRDUDE, or the documented PlatformIO workflow.
+6. Disconnect USB after a successful upload.
+7. Set the rear DIP switches for the desired algorithm while the module is unpowered.
+8. Reconnect the Eurorack ribbon cable with the case still off, reinstall the module, then power the rack.
+
+> [!CAUTION]
+> **Never attach USB for this update procedure while Drift is still connected to the Eurorack power bus.** USB-only flashing is intentional; simultaneous USB and Eurorack PSU power is not part of the supported update procedure.
+
+The complete guide covers bank selection, bootloader choice, Windows 11 / AVRDUDESS, macOS/Linux, troubleshooting and bootloader recovery:
+
+**[→ Firmware installation and bank-switching guide](docs/installation/README.md)**
+
+For Windows 11 there is also a control-by-control AVRDUDESS walkthrough with a numbered screenshot:
+
+**[→ AVRDUDESS step-by-step guide](docs/installation/avrdudess/README.md)**
+
+## Why this alternative firmware exists
+
+The original Drift is attractive precisely because it is small, understandable and musically specific. This project is not trying to turn it into a menu-driven workstation. Instead, it asks how far the original hardware can be taken while keeping the interaction simple and the implementation defensible.
+
+The main goals are:
+
+- preserve the original four algorithms in a clearly identified **Classic** bank;
+- add new banks that occupy genuinely different musical territory rather than renaming similar random processes;
+- make every algorithm's mathematics and control semantics explicit;
+- keep inactive-bank state out of the AVR image through compile-time selection;
+- separate portable DSP/domain code from Arduino hardware access;
+- verify behaviour with mathematical, unit, integration, property, regression and system tests;
+- document hardware limits rather than pretending software can remove them;
+- provide prebuilt binaries, reproducible releases and an end-user manual so using the firmware does not require becoming an embedded developer.
+
+Release **0.2.0** is the first six-bank release and expands the original four-algorithm baseline to **24 algorithms** while retaining compatibility with the original Arduino Nano / ATmega328P hardware.
+
+## Community and project stance
+
+This project is intended to be approachable both to people who simply want more musical options from Drift and to developers who want to understand or extend the implementation.
+
+A few principles matter here:
+
+- **Upstream credit stays visible.** Quinn Freedman's hardware and original firmware remain the starting point.
+- **Compatibility and changes are distinguished.** The Classic bank preserves the instrument's original vocabulary; verified defects and project-defined extensions are documented rather than silently folded into history.
+- **Claims should be testable.** Mathematical behaviour, resource use and release contents have automated contracts where practical.
+- **Hardware limitations are stated plainly.** The current Percussion clock warning and the four-selector-state bank limit are examples.
+- **User-facing documentation matters.** The README, bank guides, installation guide and maintained manual are treated as part of the product, not as an afterthought.
+
+Bug reports, reproducible hardware observations and focused contributions are welcome through GitHub. Development conventions are documented in [CONTRIBUTING.md](CONTRIBUTING.md), [README_TESTING.md](README_TESTING.md) and the [development documentation](docs/development/).
 
 ## Contents
 
-- [What is Drift?](#what-is-drift)
-- [Why this firmware?](#why-this-firmware)
-- [Quick start](#quick-start)
+- [What Drift becomes with this firmware](#what-drift-becomes-with-this-firmware)
+- [Choose your bank](#choose-your-bank)
+- [First patch in five minutes](#first-patch-in-five-minutes)
+- [Install, update or change the algorithm bank](#install-update-or-change-the-algorithm-bank)
+- [Why this alternative firmware exists](#why-this-alternative-firmware-exists)
+- [Community and project stance](#community-and-project-stance)
 - [Algorithm-bank guides](#algorithm-bank-guides)
-- [Release history](#release-history)
-- [Engineering architecture](#engineering-architecture)
-- [Code documentation](#code-documentation)
-- [Verification and tests](#verification-and-tests)
-- [Algorithm engineering analyses](#algorithm-engineering-analyses)
-- [Build](#build)
-- [Release artifacts](#release-artifacts)
 - [User manual](#user-manual)
+- [Verification and tests](#verification-and-tests)
+- [Engineering architecture](#engineering-architecture)
+- [Build from source](#build-from-source)
+- [Release artifacts](#release-artifacts)
+- [Release history](#release-history)
 - [Release process](#release-process)
 - [Upstream and licence](#upstream-and-licence)
 
 ## Algorithm-bank guides
 
-The detailed user-facing algorithm documentation now lives at repository root so each bank can evolve without turning this main README into a manual of unrelated control models.
+Each bank has a dedicated guide with visual DIP maps, control semantics, mathematical background, musical use cases, implementation constraints and build/test commands.
 
-| Guide | Includes |
+| Guide | Focus |
 |---|---|
-| **[README-BANK-CLASSIC.md](README-BANK-CLASSIC.md)** | DIP mapping, controls, Perlin/Brownian/Bézier/LFO mathematics and figures, upstream findings, Classic build commands |
-| **[README-BANK-ORGANIC.md](README-BANK-ORGANIC.md)** | DIP mapping, controls, Fractal/Vector/Rain/Attractor mathematics and figures, hardware constraints, Organic build commands |
-| **[README-BANK-GENERATIVE.md](README-BANK-GENERATIVE.md)** | DIP mapping, controls, Turing/Markov/Motif/Urn mathematics, musical roles and Generative build commands |
-| **[README-BANK-AMBIENT.md](README-BANK-AMBIENT.md)** | DIP mapping, controls, Current/Anchor/Breath/Fog mathematics, musical roles and Ambient build commands |
-| **[README-BANK-ELECTRONICA.md](README-BANK-ELECTRONICA.md)** | DIP mapping, controls, Pump/Acid/Shuffle/Polymeter mathematics, musical roles and Electronica build commands |
-| **[README-BANK-PERCUSSION.md](README-BANK-PERCUSSION.md)** | DIP mapping, phrase engine, Euclid/Repeat/Probability/Humanize contracts, musical roles and Percussion build commands |
+| **[Classic](README-BANK-CLASSIC.md)** | Perlin, Brownian, Bézier and LFO; original Drift behaviour and upstream findings |
+| **[Organic](README-BANK-ORGANIC.md)** | Fractal, Vector, Rain and Attractor; multiscale, coupled, event-driven and nonlinear motion |
+| **[Generative](README-BANK-GENERATIVE.md)** | Turing, Markov, Motif and Urn; memory, recurrence and evolving structures |
+| **[Ambient](README-BANK-AMBIENT.md)** | Current, Anchor, Breath and Fog; slow-form movement and texture |
+| **[Electronica](README-BANK-ELECTRONICA.md)** | Pump, Acid, Shuffle and Polymeter; tempo-oriented electronic modulation |
+| **[Percussion](README-BANK-PERCUSSION.md)** | Euclid, Repeat, Probability and Humanize; phrase structure, fills, repeats and clocked rhythm |
 
-The maintained [PDF user manual source](docs/manual/README.md) remains the complete end-user reference. The engineering derivations stay under [docs/analysis](docs/analysis/algorithms/README.md).
+The algorithm derivations and engineering assessments live under [docs/analysis](docs/analysis/algorithms/README.md).
 
-## Release history
+## User manual
 
-| Version | Summary |
-|---|---|
-| **0.2.0** | Six-bank release with 24 algorithms across Classic, Organic, Generative, Ambient, Electronica and Percussion; bank-organized domain code; expanded mathematical/system verification; 0–5 V Percussion clock sync with Speed-knob fallback; complete multi-bank user manual; and hardened bank-aware release packaging for both Nano bootloaders. |
-| **0.1.0** | Initial C++17/PlatformIO firmware release for Free Modular Drift: four mathematically tested modulation algorithms, documented corrections to verified upstream issues, comprehensive Doxygen/source documentation, native/AVR CI, resource guardrails, engineering analyses, hardened release/manual tooling and a tagged-release PDF user manual. |
+The maintained end-user manual is the complete reference for the module, all six banks and all twenty-four algorithms.
 
-The authoritative detailed history is the [changelog](CHANGELOG.md). Version `0.2.0` is published from tag `v0.2.0`; version `0.1.0` remains available as the Classic-only compatibility baseline. Ordinary commits and pull requests never create a GitHub Release; only a pushed version tag does.
+- [Manual workspace and publication notes](docs/manual/README.md)
+- [Editable ODT source](docs/manual/drift-user-manual.odt)
+- [Frozen release sources](docs/manual/releases/README.md)
+- [Reusable vector diagrams](docs/manual/assets/README.md)
+
+Tagged releases publish a versioned ODT and PDF generated from the frozen source for that tag. Ordinary pushes and pull requests do not create release-manual artifacts.
+
+## Verification and tests
+
+The repository tests the production implementation rather than maintaining a separate algorithm model only for tests.
+
+Release 0.2.0 contains **210 native test cases across 35 suites** and **59 acceptance criteria**, covering:
+
+- mathematical reference behaviour for all 24 algorithms;
+- fixed-point, frequency, RNG and reference-table primitives;
+- state-machine and boundary behaviour;
+- regression tests for verified upstream findings;
+- bank-aware selection, runtime and signal-path integration;
+- property/invariant tests across control ranges;
+- sanitizer qualification;
+- AVR flash/SRAM and timing guardrails;
+- bank-owned coverage gates.
+
+The five extended banks each enforce **97% aggregate line / 90% branch coverage**, plus **95% line / 80% branch per production file**. Classic retains its established compatibility/core coverage contract. Coverage is a regression floor, not a substitute for mathematical or requirement-level verification.
+
+AVR release guardrails are deliberately stricter than the ATmega328P hard limits:
+
+- application flash: **≤ 85%** (`26,112 / 30,720` bytes);
+- static SRAM: **≤ 65%** (`1,331 / 2,048` bytes).
+
+See [README_TESTING.md](README_TESTING.md) and [requirements traceability](docs/testing/requirements-traceability.md).
 
 ## Engineering architecture
 
@@ -165,7 +241,7 @@ FirmwareController              src/platform/nano_atmega328p/
  compile-time bank
  /   |    |    |    |    \
 classic organic generative ambient electronica percussion
- \   |    |    |    |    /
+ \\   |    |    |    |    /
  bank-local algorithms          lib/fmd/domain/<bank>/
         |
 minimal ports                   lib/fmd/ports/
@@ -173,170 +249,56 @@ minimal ports                   lib/fmd/ports/
 AVR ADC / DAC / LED / tables    src/platform/nano_atmega328p/
 ```
 
-The portable core never calls `analogRead()`, `digitalWrite()`, `SPI.transfer()`, AVR registers or Arduino timing functions. Hardware dependencies terminate at small ports implemented by the Nano/ATmega328P platform layer.
+The portable core never calls Arduino GPIO/SPI/timing APIs directly. Hardware dependencies terminate at small ports implemented by the Nano/ATmega328P platform layer. Algorithm code is grouped by bank under `domain/classic`, `domain/organic`, `domain/generative`, `domain/ambient`, `domain/electronica` and `domain/percussion`; genuinely shared fixed-point, frequency, RNG and engine support remains at the domain root.
 
-Algorithm implementations are grouped by compile-time bank in matching public-header and source subdirectories: `domain/classic/`, `domain/organic/`, `domain/generative/`, `domain/ambient/`, `domain/electronica/` and `domain/percussion/`. Shared engine, type, fixed-point, frequency and RNG support remains directly under `domain/` because it is used across bank boundaries.
+Production C++ uses complete provenance/licence headers and Doxygen contracts. See [code documentation conventions](docs/development/code-documentation.md).
 
-### Engineering goals
+## Build from source
 
-- keep `src/main.cpp` as a minimal composition entry point;
-- keep portable production code independent of Arduino/AVR APIs;
-- execute the real production core in host-side tests rather than duplicating the algorithms in a test model;
-- keep mathematical helper functions production-facing so they can be verified directly;
-- maintain strict compiler warnings, sanitizer runs, coverage and requirement-traceability gates;
-- measure AVR timing and resource costs before accepting performance-sensitive optimisations.
+End users do not need to build the firmware; use the prebuilt release HEX files and the [installation guide](docs/installation/README.md). Developers can build any bank with PlatformIO.
 
-## Code documentation
+| Bank | New Nano bootloader | Old Nano bootloader |
+|---|---|---|
+| Classic | `pio run -e nanoatmega328new` | `pio run -e nanoatmega328` |
+| Organic | `pio run -e nanoatmega328new_organic` | `pio run -e nanoatmega328_organic` |
+| Generative | `pio run -e nanoatmega328new_generative` | `pio run -e nanoatmega328_generative` |
+| Ambient | `pio run -e nanoatmega328new_ambient` | `pio run -e nanoatmega328_ambient` |
+| Electronica | `pio run -e nanoatmega328new_electronica` | `pio run -e nanoatmega328_electronica` |
+| Percussion | `pio run -e nanoatmega328new_percussion` | `pio run -e nanoatmega328_percussion` |
 
-Production C++ follows the same documentation discipline used by the Quantizer project: every source file carries a complete provenance/licence header, public and non-obvious APIs use Doxygen contracts, fixed-point units and ranges are stated explicitly, and complex numerical or AVR-specific implementation choices are explained inline. Names favour domain intent over terse implementation shorthand.
-
-The conventions and local Doxygen workflow are documented in [docs/development/code-documentation.md](docs/development/code-documentation.md). CI also runs `scripts/check_code_documentation.py` so file headers, generated-table provenance and readability constraints cannot silently regress.
-
-## Verification and tests
-
-The test strategy distinguishes **mathematical correctness**, **state-machine behavior**, **regression protection**, **system behavior** and **hardware qualification**.
-
-Current native coverage includes:
-
-- dedicated mathematical suites for all twenty-four current algorithms across Classic, Organic, Generative, Ambient, Electronica and Percussion;
-- shared fixed-point, frequency, RNG and reference-table tests;
-- edge-case and long-run state-transition tests;
-- property/invariant tests across the control domain;
-- regression tests for corrected upstream findings;
-- integration and end-to-end runtime tests using the real production core;
-- machine-checked acceptance-criteria traceability;
-- sanitizer and coverage environments.
-
-The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. Release **0.2.0** expands the repository to **210 native test cases across 35 suites** and **59 acceptance criteria** by adding Organic, Generative, Ambient, Electronica and Percussion bank verification. Classic, Organic, Generative, Ambient, Electronica and Percussion coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
-
-AVR builds also carry explicit engineering headroom: **Flash must stay at or below 85% (26,112 / 30,720 bytes)** and **static SRAM at or below 65% (1,331 / 2,048 bytes)**. These are repository guardrails, deliberately stricter than the ATmega328P hard limits.
-
-See [README_TESTING.md](README_TESTING.md) and [requirements traceability](docs/testing/requirements-traceability.md).
-
-## Algorithm engineering analyses
-
-Each algorithm has a dedicated developer analysis that starts from the mathematics. Classic analyses then examine the upstream Rust implementation and compatibility findings; project-defined Organic, Generative, Ambient, Electronica and Percussion analyses document the mathematical contract, computational cost, implementation risks, musical value and verification evidence:
-
-- [Perlin noise](docs/analysis/algorithms/perlin-noise-analysis.md)
-- [Brownian / bounded random walk](docs/analysis/algorithms/brownian-motion-analysis.md)
-- [Bézier random segments](docs/analysis/algorithms/bezier-random-walk-analysis.md)
-- [LFO](docs/analysis/algorithms/lfo-analysis.md)
-- [Fractal](docs/analysis/algorithms/fractal-analysis.md)
-- [Vector](docs/analysis/algorithms/vector-analysis.md)
-- [Rain](docs/analysis/algorithms/rain-analysis.md)
-- [Attractor / Hénon map](docs/analysis/algorithms/attractor-analysis.md)
-- [Organic bank architecture and control contract](docs/analysis/algorithm-banks/organic-bank-design.md)
-- [Generative bank architecture and control contract](docs/analysis/algorithm-banks/generative-bank-design.md)
-- [Ambient bank architecture and control contract](docs/analysis/algorithm-banks/ambient-bank-design.md)
-- [Pump](docs/analysis/algorithms/pump-analysis.md)
-- [Acid](docs/analysis/algorithms/acid-analysis.md)
-- [Shuffle](docs/analysis/algorithms/shuffle-analysis.md)
-- [Polymeter](docs/analysis/algorithms/polymeter-analysis.md)
-- [Electronica bank architecture and control contract](docs/analysis/algorithm-banks/electronica-bank-design.md)
-- [Percussion bank architecture and control contract](docs/analysis/algorithm-banks/percussion-bank-design.md)
-- [Current](docs/analysis/algorithms/current-analysis.md)
-- [Anchor](docs/analysis/algorithms/anchor-analysis.md)
-- [Breath](docs/analysis/algorithms/breath-analysis.md)
-- [Fog](docs/analysis/algorithms/fog-analysis.md)
-
-The common classification policy is documented in [docs/analysis/algorithms/README.md](docs/analysis/algorithms/README.md).
-
-## Build
-
-Classic firmware builds:
-
-```bash
-pio run -e nanoatmega328new
-pio run -e nanoatmega328
-```
-
-Organic firmware builds:
-
-```bash
-pio run -e nanoatmega328new_organic
-pio run -e nanoatmega328_organic
-```
-
-Generative firmware builds:
-
-```bash
-pio run -e nanoatmega328new_generative
-pio run -e nanoatmega328_generative
-```
-
-Ambient firmware builds:
-
-```bash
-pio run -e nanoatmega328new_ambient
-pio run -e nanoatmega328_ambient
-```
-
-Host verification:
-
-```bash
-pio test -e native
-pio test -e native_sanitized
-pio test -e native_coverage
-
-pio test -e native_organic
-pio test -e native_organic_sanitized
-pio test -e native_organic_coverage
-pio test -e native_generative
-pio test -e native_generative_sanitized
-pio test -e native_generative_coverage
-pio test -e native_ambient
-pio test -e native_ambient_sanitized
-pio test -e native_ambient_coverage
-pio test -e native_electronica
-pio test -e native_electronica_sanitized
-pio test -e native_electronica_coverage
-
-python scripts/check_requirement_traceability.py
-python scripts/check_code_documentation.py
-python scripts/check_markdown_footer.py
-python scripts/check_markdown_math.py
-```
-
-Timing qualification uses `nanoatmega328new_timing` for Classic, `nanoatmega328new_organic_timing` for Organic, `nanoatmega328new_generative_timing` for Generative, `nanoatmega328new_ambient_timing` for Ambient , `nanoatmega328new_electronica_timing` for Electronica and `nanoatmega328new_percussion_timing` for Percussion.
+For native tests, sanitizers, coverage and timing targets, see [README_TESTING.md](README_TESTING.md).
 
 ## Release artifacts
 
-Tagged releases publish **every compile-time bank present in the tagged source** for both supported Arduino Nano bootloaders once that bank also satisfies the release-documentation guards. The current CI and tagged-release workflow build Classic, Organic, Generative, Ambient, Electronica and Percussion. Firmware filenames carry the bank, bootloader and release version so a downloaded HEX cannot be mistaken for another variant:
+Tagged releases publish every bank present in the tagged source for both supported Arduino Nano bootloaders. End users normally need the `.hex` file only.
 
-| Bank | New bootloader | Old bootloader |
+For version `X.Y.Z`:
+
+| Bank | New bootloader HEX | Old bootloader HEX |
 |---|---|---|
-| **Classic** | `fm-drift-classic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-classic-nano-old-bootloader.X.Y.Z.hex` |
-| **Organic** | `fm-drift-organic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-organic-nano-old-bootloader.X.Y.Z.hex` |
-| **Generative** | `fm-drift-generative-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-generative-nano-old-bootloader.X.Y.Z.hex` |
-| **Ambient** | `fm-drift-ambient-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-ambient-nano-old-bootloader.X.Y.Z.hex` |
-| **Electronica** | `fm-drift-electronica-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-electronica-nano-old-bootloader.X.Y.Z.hex` |
-| **Percussion** | `fm-drift-percussion-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-percussion-nano-old-bootloader.X.Y.Z.hex` |
+| Classic | `fm-drift-classic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-classic-nano-old-bootloader.X.Y.Z.hex` |
+| Organic | `fm-drift-organic-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-organic-nano-old-bootloader.X.Y.Z.hex` |
+| Generative | `fm-drift-generative-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-generative-nano-old-bootloader.X.Y.Z.hex` |
+| Ambient | `fm-drift-ambient-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-ambient-nano-old-bootloader.X.Y.Z.hex` |
+| Electronica | `fm-drift-electronica-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-electronica-nano-old-bootloader.X.Y.Z.hex` |
+| Percussion | `fm-drift-percussion-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-percussion-nano-old-bootloader.X.Y.Z.hex` |
 
-Matching `.elf` files are included for debugging/provenance. A six-bank release therefore contains **24 firmware binaries** (six banks × two bootloaders × HEX/ELF), `FIRMWARE-ARTIFACTS.X.Y.Z.md`, **twelve build-information files** matching the bank/bootloader variants, the frozen versioned user-manual ODT, its generated PDF and checksum manifests. The release artifact contract fails before checksum generation or upload if any expected binary/provenance file is missing or an unexpected bank binary is present.
+Matching `.elf` files are included for debugging/provenance. A six-bank release therefore contains **24 firmware binaries** (six banks × two bootloaders × HEX/ELF), twelve `BUILD-INFO` files, `FIRMWARE-ARTIFACTS.X.Y.Z.md`, the frozen versioned manual ODT/PDF pair and checksum manifests.
 
-> [!IMPORTANT]
-> Flashing chooses **Classic, Organic, Generative, Ambient, Electronica or Percussion**. The rear DIP switches then choose one of the four algorithms in that flashed bank. A DIP change cannot move between banks.
+## Release history
 
-## User manual
+| Version | Summary |
+|---|---|
+| **0.2.0** | Six banks / 24 algorithms; Organic, Generative, Ambient, Electronica and Percussion; Percussion 0–5 V clock mode; bank-organised domain code; expanded testing/coverage; full multi-bank manual; bank-aware release packaging |
+| **0.1.0** | Initial C++17/PlatformIO release with the four Classic algorithms, documented upstream corrections, native/AVR CI, engineering analyses and tagged PDF manual |
 
-The maintained end-user editing source is [docs/manual/drift-user-manual.odt](docs/manual/drift-user-manual.odt). It documents Classic, Organic, Generative, Ambient, Electronica and Percussion, including the Percussion 0–5 V clock-input warning and automatic fallback to the Speed-knob clock. The current manual includes bank-specific control mappings, DIP diagrams, mathematical foundations, musical interpretation and dedicated vector figures. During release preparation the final ODT is frozen under `docs/manual/releases/X.Y.Z/` and committed with the release state; the tag workflow publishes that versioned ODT and generates the matching PDF from it.
-
-The manual repository area contains:
-
-- [publication and typography notes](docs/manual/README.md);
-- [CC BY-NC 4.0 manual licence](docs/manual/LICENSE);
-- [frozen release-source archive](docs/manual/releases/README.md);
-- [reusable vector diagrams](docs/manual/assets/README.md).
-
-Only a prepared/tagged release `vX.Y.Z` publishes `drift-user-manual.X.Y.Z.odt` and `drift-user-manual.X.Y.Z.pdf`; ordinary pushes and pull requests do not create release snapshots or publication PDFs. The release workflow verifies that the frozen ODT matches the prepared source, then checks document structure and embedded Ubuntu/Ubuntu Light fonts before publishing the PDF.
+The authoritative history is [CHANGELOG.md](CHANGELOG.md).
 
 ## Release process
 
-Ordinary development after a release remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). Release `0.2.0` is prepared from the six-bank source and is published from tag `v0.2.0`; `v0.1.0` remains the Classic compatibility baseline. Each release is created only after its matching changelog section, package metadata and frozen manual snapshot have been committed.
+Ordinary development remains under `## Unreleased` in [CHANGELOG.md](CHANGELOG.md). A release is prepared by freezing its manual source, finalising the versioned changelog section and package metadata, then pushing a version tag. The release workflow builds all bank/bootloader images present in that tag, validates the manual and generates deterministic release notes, provenance files and checksums.
 
-Normal publication is triggered by pushed version tags. `.github/workflows/release.yml` also exposes a maintainer-only `workflow_dispatch` path for refreshing or recreating an **existing** tag without moving it. The workflow builds the firmware variants present in that tag, publishes the tag-pinned frozen/manual source as a versioned ODT, generates the matching PDF, adds bank-specific provenance files and checksum manifests, and derives release notes deterministically from the tagged changelog section rather than generic commit-message aggregation.
-
-See [docs/development/release-process.md](docs/development/release-process.md).
+Maintainers can also refresh/recreate an existing tag's GitHub Release without moving the tag. See [release process](docs/development/release-process.md).
 
 ## Upstream and licence
 
@@ -345,7 +307,7 @@ This repository is an independent alternative firmware for the original Free Mod
 - Original project and hardware documentation: <https://freemodular.org/modules/Drift/>
 - Quinn Freedman's upstream source: <https://github.com/QuinnFreedman/modular/tree/main/modules/Drift>
 
-Firmware code in this repository is distributed under **GPL-3.0-or-later**. See [LICENSE](LICENSE). The maintained end-user manual has its own **CC BY-NC 4.0** licence; see [docs/manual/LICENSE](docs/manual/LICENSE).
+Firmware code is distributed under **GPL-3.0-or-later**. See [LICENSE](LICENSE). The maintained end-user manual has its own **CC BY-NC 4.0** licence; see [docs/manual/LICENSE](docs/manual/LICENSE).
 
 <!-- drift-footer:start -->
 <p align="center">

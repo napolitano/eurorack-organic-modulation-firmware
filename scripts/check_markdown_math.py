@@ -8,6 +8,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+FORBIDDEN_MACROS = {
+    r"\\operatorname": "GitHub does not allow \\operatorname; use \\mathrm{...} or plain math text",
+}
+
 LEGACY_PATTERNS = {
     "\\\\(": "legacy inline math opener \\\\(",
     "\\\\)": "legacy inline math closer \\\\)",
@@ -58,6 +62,10 @@ def main() -> int:
                 errors.append(
                     f"{rel}: contains {description}; use GitHub $...$ or $$...$$ math"
                 )
+
+        for needle, description in FORBIDDEN_MACROS.items():
+            if needle in visible:
+                errors.append(f"{rel}: contains {description}")
 
         display_count = visible.count("$$")
         if display_count % 2 != 0:

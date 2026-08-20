@@ -53,7 +53,7 @@ $$
 With independent signed amplitude deviation $\epsilon_n\in[-V,V]$,
 
 $$
-A_n=\operatorname{clamp}(A_0+\epsilon_n,0,4095).
+A_n=\mathrm{clamp}(A_0+\epsilon_n,0,4095).
 $$
 
 At maximum Texture this produces codes 3585..4095, approximately 8.75..10 V on the nominal 0..10 V DAC scale before analogue attenuation.

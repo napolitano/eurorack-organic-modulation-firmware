@@ -180,21 +180,21 @@ Polymeter overlays a fixed four-step primary meter with a Texture-selected secon
 The exact composite recurrence lengths are the least common multiples
 
 $$
-\operatorname{lcm}(4,3)=12,
+\mathrm{lcm}(4,3)=12,
 $$
 
 $$
-\operatorname{lcm}(4,5)=20,
+\mathrm{lcm}(4,5)=20,
 $$
 
 $$
-\operatorname{lcm}(4,7)=28,
+\mathrm{lcm}(4,7)=28,
 $$
 
 and
 
 $$
-\operatorname{lcm}(4,9)=36
+\mathrm{lcm}(4,9)=36
 $$
 
 sixteenth-note steps.

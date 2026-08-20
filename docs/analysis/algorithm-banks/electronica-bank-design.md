@@ -90,7 +90,7 @@ Drift has no sidechain input, so **Pump is not a compressor and does not detect 
 For normalized beat phase $p\in[0,1)$ and recovery endpoint $e\in[1/4,15/16]$,
 
 $$
-R(p;e)=S\left(\operatorname{clamp}\left(\frac{p}{e},0,1\right)\right),
+R(p;e)=S\left(\mathrm{clamp}\left(\frac{p}{e},0,1\right)\right),
 $$
 
 with
@@ -184,7 +184,7 @@ $$
 Every sixteenth launches a short envelope with a base amplitude. $A_n$ and $B_n$ add accent weight; coincident cycle starts produce the strongest accent. The composite pattern repeats after
 
 $$
-P=\operatorname{lcm}(4,m),
+P=\mathrm{lcm}(4,m),
 $$
 
 which gives 12, 20, 28 or 36 sixteenth steps for the four Texture regions.

@@ -14,7 +14,7 @@ $$
 0\le p\le\frac{1}{2}.
 $$
 
-A Bernoulli random variable $M_n\sim\operatorname{Bernoulli}(p)$ decides whether that feedback bit is inverted:
+A Bernoulli random variable $M_n\sim\mathrm{Bernoulli}(p)$ decides whether that feedback bit is inverted:
 
 $$
 b_n'=b_n\oplus M_n.

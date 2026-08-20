@@ -17,7 +17,7 @@ $$
 The normalized output is
 
 $$
-y(p;e)=S\left(\operatorname{clamp}\left(\frac{p}{e},0,1\right)\right).
+y(p;e)=S\left(\mathrm{clamp}\left(\frac{p}{e},0,1\right)\right).
 $$
 
 The required range is

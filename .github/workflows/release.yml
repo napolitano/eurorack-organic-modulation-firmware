@@ -160,6 +160,9 @@ jobs:
           fi
           python scripts/check_markdown_footer.py
           python scripts/check_markdown_math.py
+          if [[ -f scripts/check_user_documentation.py ]]; then
+            python scripts/check_user_documentation.py
+          fi
           python scripts/test_generate_release_notes.py
           python scripts/test_avr_resource_budget.py
           python scripts/check_user_manual_source.py

@@ -275,7 +275,7 @@ $$
 an independent signed deviation $\epsilon_n\in[-V,V]$ gives
 
 $$
-A_n=\operatorname{clamp}(3840+\epsilon_n,0,4095).
+A_n=\mathrm{clamp}(3840+\epsilon_n,0,4095).
 $$
 
 At maximum Texture the pulse therefore remains approximately 8.75..10 V before analogue attenuation, keeping it useful as a trigger while still exposing a velocity-like CV difference to compatible destinations.

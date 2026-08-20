@@ -69,7 +69,7 @@ The initial implementation should use eight fixed 12-bit output levels. An evenl
 One simple mapping is
 
 $$
-v_i=\operatorname{round}\left(\frac{4095i}{7}\right),
+v_i=\mathrm{round}\left(\frac{4095i}{7}\right),
 \qquad i=0\ldots7.
 $$
 

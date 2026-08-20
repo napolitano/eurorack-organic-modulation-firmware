@@ -55,7 +55,7 @@ Therefore the strongest coincidence reaches 4095 exactly.
 The combined accent sequence repeats after
 
 $$
-P=\operatorname{lcm}(4,b).
+P=\mathrm{lcm}(4,b).
 $$
 
 For the four choices:

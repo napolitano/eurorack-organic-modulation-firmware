@@ -12,6 +12,8 @@ Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baselin
 
 ### Added
 
+- End-user firmware installation and bank-switching documentation modelled on the proven Quantizer update flow, including explicit bank/bootloader asset selection, USB-only flashing safety, rear-DIP algorithm selection, AVRDUDE/AVRDUDESS procedures, troubleshooting and bootloader recovery.
+- Numbered AVRDUDESS 2.20 / AVRDUDE 8.1 reference screenshot reused from the companion Quantizer documentation for the Windows 11 flashing guide.
 - **Organic bank:** Fractal, Vector, Rain and Attractor, with fixed-point implementations, bank-specific mathematical tests, engineering analyses, documentation and dedicated native/AVR qualification environments.
 - **Generative bank:** Turing, Markov, Motif and Urn, providing mutating-loop, finite-state, phrase-transformation and leaky-reinforcement behaviors with deterministic/statistical verification.
 - **Ambient bank:** Current, Anchor, Breath and Fog, covering quasiperiodic long-form motion, mean reversion, recurrent macro-gestures and smooth stochastic cloudlets on an intentionally slower musical time scale.
@@ -30,6 +32,7 @@ Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baselin
 
 ### Changed
 
+- Reworked the root README around end-user discovery and accessibility: musical bank positioning, clearer first-patch guidance, prominent installation/bank-switching entry points, explicit project/community stance and a cleaner separation between user-facing and developer-facing material.
 - Refactored the portable domain tree into bank-owned subdirectories under `domain/classic`, `domain/organic`, `domain/generative`, `domain/ambient`, `domain/electronica` and `domain/percussion`; shared engine, fixed-point, frequency and RNG support remains at the domain root.
 - `DriftEngine` now owns and dispatches only the compile-time-selected bank, so inactive-bank algorithm state does not consume SRAM in a firmware image.
 - Generic selection, integration, property and system tests are bank-aware and exercise the four DIP slots of the active compile-time bank.
@@ -41,6 +44,8 @@ Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baselin
 
 ### Fixed
 
+- Replaced the oversized eight-column bank/DIP truth table in the main README with a shared four-slot mapping plus a compact bank/slot table, avoiding the broken raw-table rendering seen on GitHub and improving narrow-screen readability.
+- Replaced a GitHub-disallowed MathJax operator-name macro in Electronica and engineering-analysis equations with supported roman-text notation, and added a repository guard against reintroducing it.
 - Corrected the shared Electronica/Percussion tempo mapping so the documented endpoints are actually **30–240 BPM** rather than the previous factor-of-four-under-scaled 7.5–60 BPM runtime behavior.
 - Corrected Humanize positive-jitter scheduling so delayed events are offset from their nominal grid boundary rather than from event preparation, preserving the intended no-drift timing contract.
 - Corrected coverage/release metadata and workflow guards after the domain-by-bank refactor so nested bank sources remain included in the intended qualification paths.
