@@ -1,0 +1,76 @@
+name: Publish wiki
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'README*.md'
+      - 'CONTRIBUTING.md'
+      - 'docs/**'
+      - 'scripts/drift_targets.py'
+      - 'scripts/generate_wiki.py'
+      - 'scripts/test_wiki_generation.py'
+      - '.github/workflows/wiki.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wiki-${{ github.repository }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    if: github.repository == 'napolitano/eurorack-organic-modulation-firmware'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out canonical repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Verify deterministic wiki generation
+        run: python scripts/test_wiki_generation.py
+
+      - name: Generate managed wiki pages
+        run: python scripts/generate_wiki.py --output .wiki-build
+
+      - name: Publish managed pages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          WIKI_PUSH_TOKEN: ${{ secrets.WIKI_PUSH_TOKEN }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          TOKEN="${WIKI_PUSH_TOKEN:-${GITHUB_TOKEN}}"
+          WIKI_URL="https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git"
+
+          if ! git clone --quiet "${WIKI_URL}" .wiki-repo; then
+            echo '::error::The GitHub Wiki repository is not cloneable. Enable Wiki and create its first page once in the GitHub UI; if it already exists, configure WIKI_PUSH_TOKEN with repository write access.'
+            exit 2
+          fi
+
+          if [[ -f .wiki-repo/.fmd-managed-pages ]]; then
+            while IFS= read -r page; do
+              [[ -n "${page}" ]] && rm -f -- ".wiki-repo/${page}"
+            done < .wiki-repo/.fmd-managed-pages
+          fi
+
+          cp .wiki-build/*.md .wiki-repo/
+          cp .wiki-build/.fmd-managed-pages .wiki-repo/
+
+          cd .wiki-repo
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo 'Wiki is already current.'
+            exit 0
+          fi
+
+          git commit -m "docs: sync wiki from ${GITHUB_SHA:0:12}"
+          git push origin HEAD
