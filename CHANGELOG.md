@@ -4,6 +4,12 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ## Unreleased
 
+### Fixed
+
+- Removed repeated full 194-case test-suite execution from CI/release qualification: the complete native regression suite now runs once, while bank wiring, sanitizer and coverage stages use explicit PlatformIO suite filters.
+- Hardened tagged/manual release publication on Ubuntu 24.04 by using the classic static Ubuntu font package, validating exact Ubuntu Regular/Light resolution before LibreOffice export, and emitting font/PDF diagnostics on failure.
+- Updated the PlatformIO cache action from `actions/cache@v4.2.0` to the Node.js 24-compatible `actions/cache@v6.1.0`.
+
 ## 0.2.0 — 2026-08-19
 
 ### Release summary
@@ -37,6 +43,7 @@ Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baselin
 - Release dependency installation was hardened with canonical Ubuntu mirrors, bounded APT retries/timeouts, minimal LibreOffice packages, an explicit job timeout and per-tag workflow concurrency.
 - Dependabot version updates are consolidated into a monthly multi-ecosystem update to reduce automated pull-request noise.
 - Release notes, artifact manifests, provenance records and integrity checks now derive the actual bank set from the tagged source, preserving compatibility with historical Classic-only and intermediate tags.
+- The Generative, Ambient, Electronica and Percussion bank guides were expanded to the same developer-facing documentation standard as Classic and Organic, with visual DIP maps, complete control matrices, algorithm figures, mathematical summaries, musical guidance and implementation constraints.
 
 ### Fixed
 

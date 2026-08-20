@@ -183,7 +183,22 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_coverage
+      - run: |
+          pio test -e native_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_perlin_algorithm \
+            -f unit/test_brownian_algorithm \
+            -f unit/test_bezier_algorithm \
+            -f unit/test_lfo_algorithm \
+            -f unit/test_reference_tables \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f regression/test_upstream_behaviour \
+            -f system/test_signal_path
       - run: |
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
@@ -203,7 +218,21 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_organic_coverage
+      - run: |
+          pio test -e native_organic_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_fractal_algorithm \
+            -f unit/test_vector_algorithm \
+            -f unit/test_rain_algorithm \
+            -f unit/test_attractor_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
       - run: |
           mkdir -p coverage-organic
           gcovr --root . --filter lib/fmd/src --exclude test \
@@ -222,7 +251,21 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_generative_coverage
+      - run: |
+          pio test -e native_generative_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_turing_algorithm \
+            -f unit/test_markov_algorithm \
+            -f unit/test_motif_algorithm \
+            -f unit/test_urn_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
       - run: |
           mkdir -p coverage-generative
           gcovr --root . --filter lib/fmd/src --exclude test \
@@ -241,7 +284,21 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_ambient_coverage
+      - run: |
+          pio test -e native_ambient_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_current_algorithm \
+            -f unit/test_anchor_algorithm \
+            -f unit/test_breath_algorithm \
+            -f unit/test_fog_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
       - run: |
           mkdir -p coverage-ambient
           gcovr --root . --filter lib/fmd/src --exclude test \
@@ -257,7 +314,21 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_electronica_coverage
+      - run: |
+          pio test -e native_electronica_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_pump_algorithm \
+            -f unit/test_acid_algorithm \
+            -f unit/test_shuffle_algorithm \
+            -f unit/test_polymeter_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
       - run: |
           mkdir -p coverage-electronica
           gcovr --root . --filter lib/fmd/src --exclude test \
@@ -273,7 +344,22 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_percussion_coverage
+      - run: |
+          pio test -e native_percussion_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_euclid_algorithm \
+            -f unit/test_repeat_algorithm \
+            -f unit/test_probability_algorithm \
+            -f unit/test_humanize_algorithm \
+            -f unit/test_percussion_clock \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
       - run: |
           mkdir -p coverage-percussion
           gcovr --root . --filter lib/fmd/src --exclude test \
@@ -289,7 +375,22 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_sanitized
+      - run: |
+          pio test -e native_sanitized \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_perlin_algorithm \
+            -f unit/test_brownian_algorithm \
+            -f unit/test_bezier_algorithm \
+            -f unit/test_lfo_algorithm \
+            -f unit/test_reference_tables \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f regression/test_upstream_behaviour \
+            -f system/test_signal_path
 
 
   native-organic-sanitizers:
@@ -300,7 +401,17 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_organic_sanitized
+      - run: |
+          pio test -e native_organic_sanitized \
+            -f unit/test_algorithms \
+            -f unit/test_fractal_algorithm \
+            -f unit/test_vector_algorithm \
+            -f unit/test_rain_algorithm \
+            -f unit/test_attractor_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
 
   native-generative-sanitizers:
     runs-on: ubuntu-24.04
@@ -310,7 +421,17 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_generative_sanitized
+      - run: |
+          pio test -e native_generative_sanitized \
+            -f unit/test_algorithms \
+            -f unit/test_turing_algorithm \
+            -f unit/test_markov_algorithm \
+            -f unit/test_motif_algorithm \
+            -f unit/test_urn_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
 
   native-ambient-sanitizers:
     runs-on: ubuntu-24.04
@@ -320,7 +441,17 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_ambient_sanitized
+      - run: |
+          pio test -e native_ambient_sanitized \
+            -f unit/test_algorithms \
+            -f unit/test_current_algorithm \
+            -f unit/test_anchor_algorithm \
+            -f unit/test_breath_algorithm \
+            -f unit/test_fog_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
 
   native-electronica-sanitizers:
     runs-on: ubuntu-24.04
@@ -330,7 +461,17 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_electronica_sanitized
+      - run: |
+          pio test -e native_electronica_sanitized \
+            -f unit/test_algorithms \
+            -f unit/test_pump_algorithm \
+            -f unit/test_acid_algorithm \
+            -f unit/test_shuffle_algorithm \
+            -f unit/test_polymeter_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
 
   native-percussion-sanitizers:
     runs-on: ubuntu-24.04
@@ -340,7 +481,18 @@ jobs:
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
-      - run: pio test -e native_percussion_sanitized
+      - run: |
+          pio test -e native_percussion_sanitized \
+            -f unit/test_algorithms \
+            -f unit/test_euclid_algorithm \
+            -f unit/test_repeat_algorithm \
+            -f unit/test_probability_algorithm \
+            -f unit/test_humanize_algorithm \
+            -f unit/test_percussion_clock \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
 
   avr-build:
     runs-on: ubuntu-24.04

@@ -22,6 +22,10 @@ The system rig does not contain a second firmware implementation. It supplies de
 Each Drift mode has a dedicated suite. Classic remains the default compile-time bank; Organic, Generative, Ambient, Electronica and Percussion are exercised by their respective `native_organic*`, `native_generative*`, `native_ambient*`, `native_electronica*` and `native_percussion*` environments.
 The metadata job also runs `scripts/test_ci_bank_contract.py`, which structurally guards the six-bank native/coverage/sanitizer/AVR/timing matrix so an implemented bank cannot silently disappear from CI qualification.
 
+### CI/release execution strategy
+
+The repository contains 194 native cases, but CI and release qualification do **not** rerun all 194 cases for every compile-time bank. The unfiltered `native` environment is the single complete regression pass. Additional non-Classic native runs are filtered to the bank-dependent engine/selection/runtime/property/system suites. Sanitizer runs are split into shared/Classic coverage plus each bank's own algorithm and wiring suites, while coverage runs execute only the shared/core suites needed for the report plus the active bank's algorithms. This keeps compile-time-bank verification intact without multiplying the complete suite six times per qualification mode.
+
 | Bank | Suite | Primary proof obligations |
 |---|---|---|
 | Classic | `unit/test_perlin_algorithm` | canonical quintic fade, gradient mapping, monotonicity, symmetry, lattice boundaries, handoff continuity and phase-wrap state transitions |

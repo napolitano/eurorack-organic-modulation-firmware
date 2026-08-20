@@ -127,7 +127,7 @@ jobs:
           python-version: '3.11.15'
 
       - name: Cache PlatformIO
-        uses: actions/cache@v4.2.0
+        uses: actions/cache@v6.1.0
         with:
           path: |
             ~/.cache/pip
@@ -181,58 +181,168 @@ jobs:
             python scripts/test_freeze_user_manual.py
           fi
 
-      - name: Run Classic-bank native tests
+      - name: Run complete native regression suite once
+        # The unfiltered native environment is intentionally the only place in
+        # the release job that executes all 194 test cases.  Additional bank
+        # runs below exercise only compile-time bank wiring that differs from
+        # the Classic build.
         run: pio test -e native
 
-      - name: Run Organic-bank native tests
+      - name: Qualify Organic bank wiring
         if: contains(steps.release-context.outputs.banks, 'organic')
-        run: pio test -e native_organic
+        run: >-
+          pio test -e native_organic
+          -f unit/test_algorithms
+          -f integration/test_selection
+          -f integration/test_runtime
+          -f property/test_invariants
+          -f system/test_signal_path
 
-      - name: Run Generative-bank native tests
+      - name: Qualify Generative bank wiring
         if: contains(steps.release-context.outputs.banks, 'generative')
-        run: pio test -e native_generative
+        run: >-
+          pio test -e native_generative
+          -f unit/test_algorithms
+          -f integration/test_selection
+          -f integration/test_runtime
+          -f property/test_invariants
+          -f system/test_signal_path
 
-      - name: Run Ambient-bank native tests
+      - name: Qualify Ambient bank wiring
         if: contains(steps.release-context.outputs.banks, 'ambient')
-        run: pio test -e native_ambient
+        run: >-
+          pio test -e native_ambient
+          -f unit/test_algorithms
+          -f integration/test_selection
+          -f integration/test_runtime
+          -f property/test_invariants
+          -f system/test_signal_path
 
-      - name: Run Electronica-bank native tests
+      - name: Qualify Electronica bank wiring
         if: contains(steps.release-context.outputs.banks, 'electronica')
-        run: pio test -e native_electronica
+        run: >-
+          pio test -e native_electronica
+          -f unit/test_algorithms
+          -f integration/test_selection
+          -f integration/test_runtime
+          -f property/test_invariants
+          -f system/test_signal_path
 
-      - name: Run Percussion-bank native tests
+      - name: Qualify Percussion bank wiring
         if: contains(steps.release-context.outputs.banks, 'percussion')
-        run: pio test -e native_percussion
+        run: >-
+          pio test -e native_percussion
+          -f unit/test_algorithms
+          -f integration/test_selection
+          -f integration/test_runtime
+          -f property/test_invariants
+          -f system/test_signal_path
 
-      - name: Run native sanitizers
+      - name: Run targeted native sanitizers
         shell: bash
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1:strict_string_checks=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
         run: |
           set -euo pipefail
-          pio test -e native_sanitized
+          # Shared/core + Classic code is sanitized once.  Other bank runs add
+          # only their own algorithms and the bank-dependent integration path.
+          pio test -e native_sanitized \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_perlin_algorithm \
+            -f unit/test_brownian_algorithm \
+            -f unit/test_bezier_algorithm \
+            -f unit/test_lfo_algorithm \
+            -f unit/test_reference_tables \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f regression/test_upstream_behaviour \
+            -f system/test_signal_path
           if [[ "${RELEASE_BANKS}" == *organic* ]]; then
-            pio test -e native_organic_sanitized
+            pio test -e native_organic_sanitized \
+              -f unit/test_algorithms \
+              -f unit/test_fractal_algorithm \
+              -f unit/test_vector_algorithm \
+              -f unit/test_rain_algorithm \
+              -f unit/test_attractor_algorithm \
+              -f integration/test_selection \
+              -f integration/test_runtime \
+              -f property/test_invariants \
+              -f system/test_signal_path
           fi
           if [[ "${RELEASE_BANKS}" == *generative* ]]; then
-            pio test -e native_generative_sanitized
+            pio test -e native_generative_sanitized \
+              -f unit/test_algorithms \
+              -f unit/test_turing_algorithm \
+              -f unit/test_markov_algorithm \
+              -f unit/test_motif_algorithm \
+              -f unit/test_urn_algorithm \
+              -f integration/test_selection \
+              -f integration/test_runtime \
+              -f property/test_invariants \
+              -f system/test_signal_path
           fi
           if [[ "${RELEASE_BANKS}" == *ambient* ]]; then
-            pio test -e native_ambient_sanitized
+            pio test -e native_ambient_sanitized \
+              -f unit/test_algorithms \
+              -f unit/test_current_algorithm \
+              -f unit/test_anchor_algorithm \
+              -f unit/test_breath_algorithm \
+              -f unit/test_fog_algorithm \
+              -f integration/test_selection \
+              -f integration/test_runtime \
+              -f property/test_invariants \
+              -f system/test_signal_path
           fi
           if [[ "${RELEASE_BANKS}" == *electronica* ]]; then
-            pio test -e native_electronica_sanitized
+            pio test -e native_electronica_sanitized \
+              -f unit/test_algorithms \
+              -f unit/test_pump_algorithm \
+              -f unit/test_acid_algorithm \
+              -f unit/test_shuffle_algorithm \
+              -f unit/test_polymeter_algorithm \
+              -f integration/test_selection \
+              -f integration/test_runtime \
+              -f property/test_invariants \
+              -f system/test_signal_path
           fi
           if [[ "${RELEASE_BANKS}" == *percussion* ]]; then
-            pio test -e native_percussion_sanitized
+            pio test -e native_percussion_sanitized \
+              -f unit/test_algorithms \
+              -f unit/test_euclid_algorithm \
+              -f unit/test_repeat_algorithm \
+              -f unit/test_probability_algorithm \
+              -f unit/test_humanize_algorithm \
+              -f unit/test_percussion_clock \
+              -f integration/test_selection \
+              -f integration/test_runtime \
+              -f property/test_invariants \
+              -f system/test_signal_path
           fi
 
       - name: Enforce Classic-bank native coverage policy
         shell: bash
         run: |
           set -euo pipefail
-          pio test -e native_coverage
+          pio test -e native_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_perlin_algorithm \
+            -f unit/test_brownian_algorithm \
+            -f unit/test_bezier_algorithm \
+            -f unit/test_lfo_algorithm \
+            -f unit/test_reference_tables \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f regression/test_upstream_behaviour \
+            -f system/test_signal_path
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
             --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion)/.*' \
@@ -242,7 +352,20 @@ jobs:
       - name: Enforce Organic-bank native coverage policy
         if: contains(steps.release-context.outputs.banks, 'organic')
         run: |
-          pio test -e native_organic_coverage
+          pio test -e native_organic_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_fractal_algorithm \
+            -f unit/test_vector_algorithm \
+            -f unit/test_rain_algorithm \
+            -f unit/test_attractor_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
           mkdir -p coverage-organic
           gcovr --root . --filter lib/fmd/src --exclude test \
             --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica|percussion)/.*' \
@@ -252,7 +375,20 @@ jobs:
       - name: Enforce Generative-bank native coverage policy
         if: contains(steps.release-context.outputs.banks, 'generative')
         run: |
-          pio test -e native_generative_coverage
+          pio test -e native_generative_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_turing_algorithm \
+            -f unit/test_markov_algorithm \
+            -f unit/test_motif_algorithm \
+            -f unit/test_urn_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
           mkdir -p coverage-generative
           gcovr --root . --filter lib/fmd/src --exclude test \
             --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica|percussion)/.*' \
@@ -262,7 +398,20 @@ jobs:
       - name: Enforce Ambient-bank native coverage policy
         if: contains(steps.release-context.outputs.banks, 'ambient')
         run: |
-          pio test -e native_ambient_coverage
+          pio test -e native_ambient_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_current_algorithm \
+            -f unit/test_anchor_algorithm \
+            -f unit/test_breath_algorithm \
+            -f unit/test_fog_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
           mkdir -p coverage-ambient
           gcovr --root . --filter lib/fmd/src --exclude test \
             --exclude 'lib/fmd/src/domain/(classic|organic|generative|electronica|percussion)/.*' \
@@ -272,7 +421,20 @@ jobs:
       - name: Enforce Electronica-bank native coverage policy
         if: contains(steps.release-context.outputs.banks, 'electronica')
         run: |
-          pio test -e native_electronica_coverage
+          pio test -e native_electronica_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_pump_algorithm \
+            -f unit/test_acid_algorithm \
+            -f unit/test_shuffle_algorithm \
+            -f unit/test_polymeter_algorithm \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
           mkdir -p coverage-electronica
           gcovr --root . --filter lib/fmd/src --exclude test \
             --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient|percussion)/.*' \
@@ -282,7 +444,21 @@ jobs:
       - name: Enforce Percussion-bank native coverage policy
         if: contains(steps.release-context.outputs.banks, 'percussion')
         run: |
-          pio test -e native_percussion_coverage
+          pio test -e native_percussion_coverage \
+            -f unit/test_rng \
+            -f unit/test_frequency \
+            -f unit/test_algorithms \
+            -f unit/test_fixed_math \
+            -f unit/test_reference_tables \
+            -f unit/test_euclid_algorithm \
+            -f unit/test_repeat_algorithm \
+            -f unit/test_probability_algorithm \
+            -f unit/test_humanize_algorithm \
+            -f unit/test_percussion_clock \
+            -f integration/test_selection \
+            -f integration/test_runtime \
+            -f property/test_invariants \
+            -f system/test_signal_path
           mkdir -p coverage-percussion
           gcovr --root . --filter lib/fmd/src --exclude test \
             --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient|electronica)/.*' \
@@ -401,13 +577,26 @@ jobs:
           sudo apt-get "${apt_options[@]}" update
           sudo env DEBIAN_FRONTEND=noninteractive apt-get "${apt_options[@]}" install \
             -y --no-install-recommends \
-            libreoffice-writer fonts-ubuntu poppler-utils
+            libreoffice-writer fonts-ubuntu-classic poppler-utils
 
           fc-cache -f
           libreoffice --version || soffice --version
+
+          REGULAR_FONT="$(fc-match -f '%{file}\n' 'Ubuntu:style=Regular' | head -n 1)"
+          LIGHT_FONT="$(fc-match -f '%{file}\n' 'Ubuntu Light:style=Regular' | head -n 1)"
+
           echo "Resolved manual fonts:"
           fc-match -f "Ubuntu Regular -> %{family} | %{style} | %{file}\n" "Ubuntu:style=Regular"
           fc-match -f "Ubuntu Light   -> %{family} | %{style} | %{file}\n" "Ubuntu Light:style=Regular"
+
+          if [[ "$(basename "${REGULAR_FONT}")" != "Ubuntu-R.ttf" ]]; then
+            echo "Release manual requires classic Ubuntu Regular (Ubuntu-R.ttf); resolved ${REGULAR_FONT}" >&2
+            exit 2
+          fi
+          if [[ "$(basename "${LIGHT_FONT}")" != "Ubuntu-L.ttf" ]]; then
+            echo "Release manual requires classic Ubuntu Light (Ubuntu-L.ttf); resolved ${LIGHT_FONT}" >&2
+            exit 2
+          fi
 
       - name: Check out current release tooling for manual rebuild
         if: github.event_name == 'workflow_dispatch'
@@ -542,10 +731,32 @@ jobs:
       - name: Build and verify user manual
         shell: bash
         run: |
-          set -euo pipefail
+          set -Eeuo pipefail
           mkdir -p dist
           MANUAL_SOURCE='${{ steps.manual-source.outputs.source }}'
           VERSIONED_ODT="dist/drift-user-manual.${RELEASE_VERSION}.odt"
+          VERSIONED_PDF="dist/drift-user-manual.${RELEASE_VERSION}.pdf"
+
+          manual_diagnostics() {
+            echo "::group::Manual publication diagnostics"
+            echo "LibreOffice:"
+            libreoffice --version 2>&1 || soffice --version 2>&1 || true
+            echo "Resolved fonts:"
+            fc-match -f "Ubuntu Regular -> %{family} | %{style} | %{file}\n" "Ubuntu:style=Regular" || true
+            fc-match -f "Ubuntu Light   -> %{family} | %{style} | %{file}\n" "Ubuntu Light:style=Regular" || true
+            echo "Installed Ubuntu font faces:"
+            fc-list | grep -i '/ubuntu/' || true
+            echo "dist/:"
+            ls -lah dist || true
+            if [[ -f "${VERSIONED_PDF}" ]]; then
+              echo "PDF metadata:"
+              pdfinfo "${VERSIONED_PDF}" || true
+              echo "Embedded PDF fonts:"
+              pdffonts "${VERSIONED_PDF}" || true
+            fi
+            echo "::endgroup::"
+          }
+          trap manual_diagnostics ERR
 
           python scripts/build_user_manual.py \
             --version "${RELEASE_VERSION}" \
@@ -554,16 +765,17 @@ jobs:
           cp "${MANUAL_SOURCE}" "${VERSIONED_ODT}"
 
           echo "Embedded PDF fonts:"
-          pdffonts "dist/drift-user-manual.${RELEASE_VERSION}.pdf"
+          pdffonts "${VERSIONED_PDF}"
           MANUAL_CHECKER="scripts/check_user_manual.py"
           if [[ -f .release-tooling/scripts/check_user_manual.py ]]; then
             MANUAL_CHECKER=".release-tooling/scripts/check_user_manual.py"
           fi
           python "${MANUAL_CHECKER}" \
-            "dist/drift-user-manual.${RELEASE_VERSION}.pdf" \
+            "${VERSIONED_PDF}" \
             --source "${MANUAL_SOURCE}"
           echo "Published manual source SHA-256:"
           sha256sum "${VERSIONED_ODT}"
+          trap - ERR
 
       - name: Prepare release artifacts
         shell: bash

@@ -22,8 +22,7 @@ BANK_FRAGMENTS = {
             'RELEASE_BANKS="${RELEASE_BANKS},organic"',
         ),
         "native qualification": (
-            "pio test -e native_organic",
-            "pio test -e native_organic_sanitized",
+                    "pio test -e native_organic_sanitized",
             "pio test -e native_organic_coverage",
         ),
         "AVR builds": (
@@ -50,8 +49,7 @@ BANK_FRAGMENTS = {
             'RELEASE_BANKS="${RELEASE_BANKS},generative"',
         ),
         "native qualification": (
-            "pio test -e native_generative",
-            "pio test -e native_generative_sanitized",
+                    "pio test -e native_generative_sanitized",
             "pio test -e native_generative_coverage",
         ),
         "AVR builds": (
@@ -82,8 +80,7 @@ BANK_FRAGMENTS = {
             'RELEASE_BANKS="${RELEASE_BANKS},ambient"',
         ),
         "native qualification": (
-            "pio test -e native_ambient",
-            "pio test -e native_ambient_sanitized",
+                    "pio test -e native_ambient_sanitized",
             "pio test -e native_ambient_coverage",
         ),
         "AVR builds": (
@@ -114,8 +111,7 @@ BANK_FRAGMENTS = {
             'RELEASE_BANKS="${RELEASE_BANKS},electronica"',
         ),
         "native qualification": (
-            "pio test -e native_electronica",
-            "pio test -e native_electronica_sanitized",
+                    "pio test -e native_electronica_sanitized",
             "pio test -e native_electronica_coverage",
         ),
         "AVR builds": (
@@ -146,8 +142,7 @@ BANK_FRAGMENTS = {
             'RELEASE_BANKS="${RELEASE_BANKS},percussion"',
         ),
         "native qualification": (
-            "pio test -e native_percussion",
-            "pio test -e native_percussion_sanitized",
+                    "pio test -e native_percussion_sanitized",
             "pio test -e native_percussion_coverage",
         ),
         "AVR builds": (
@@ -172,9 +167,45 @@ BANK_FRAGMENTS = {
     },
 }
 
+
+
+BANK_WIRING_FILTERS = (
+    "-f unit/test_algorithms",
+    "-f integration/test_selection",
+    "-f integration/test_runtime",
+    "-f property/test_invariants",
+    "-f system/test_signal_path",
+)
+
+UNFILTERED_RELEASE_COMMANDS = (
+    "pio test -e native_sanitized",
+    "pio test -e native_organic_sanitized",
+    "pio test -e native_generative_sanitized",
+    "pio test -e native_ambient_sanitized",
+    "pio test -e native_electronica_sanitized",
+    "pio test -e native_percussion_sanitized",
+    "pio test -e native_coverage",
+    "pio test -e native_organic_coverage",
+    "pio test -e native_generative_coverage",
+    "pio test -e native_ambient_coverage",
+    "pio test -e native_electronica_coverage",
+    "pio test -e native_percussion_coverage",
+)
+
 COMMON_FRAGMENTS = (
     '--banks "${RELEASE_BANKS}"',
     "check_release_artifact_set.py",
+    "actions/cache@v6.1.0",
+    "libreoffice-writer fonts-ubuntu-classic poppler-utils",
+    '"Ubuntu-R.ttf"',
+    '"Ubuntu-L.ttf"',
+    "manual_diagnostics()",
+    "trap manual_diagnostics ERR",
+)
+
+FORBIDDEN_FRAGMENTS = (
+    "actions/cache@v4.2.0",
+    "libreoffice-writer fonts-ubuntu poppler-utils",
 )
 
 
@@ -188,7 +219,43 @@ def main() -> int:
                 missing.append(f"{bank}/{stage}: {', '.join(absent)}")
     absent_common = [fragment for fragment in COMMON_FRAGMENTS if fragment not in text]
     if absent_common:
-        missing.append("bank-aware packaging: " + ", ".join(absent_common))
+        missing.append("release/publication contract: " + ", ".join(absent_common))
+
+    forbidden = [fragment for fragment in FORBIDDEN_FRAGMENTS if fragment in text]
+    if forbidden:
+        missing.append("obsolete release/publication dependency: " + ", ".join(forbidden))
+
+
+    stripped_lines = {line.strip() for line in text.splitlines()}
+    for command in UNFILTERED_RELEASE_COMMANDS:
+        if command in stripped_lines:
+            missing.append(f"unfiltered release test command: {command}")
+
+    if sum(1 for line in stripped_lines if line == "run: pio test -e native" or line == "pio test -e native") != 1:
+        missing.append("release/native full-suite run must occur exactly once")
+
+    for fragment in BANK_WIRING_FILTERS:
+        if fragment not in text:
+            missing.append(f"release/bank wiring filter: {fragment}")
+
+
+    for environment in (
+        "native_organic",
+        "native_generative",
+        "native_ambient",
+        "native_electronica",
+        "native_percussion",
+    ):
+        filtered_block = (
+            f"pio test -e {environment}\n"
+            "          -f unit/test_algorithms\n"
+            "          -f integration/test_selection\n"
+            "          -f integration/test_runtime\n"
+            "          -f property/test_invariants\n"
+            "          -f system/test_signal_path"
+        )
+        if filtered_block not in text:
+            missing.append(f"release/filtered bank wiring block: {environment}")
 
     if missing:
         for item in missing:

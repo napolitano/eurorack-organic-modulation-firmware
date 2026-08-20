@@ -59,6 +59,31 @@ BANKS = {
     },
 }
 
+
+
+UNFILTERED_HEAVY_COMMANDS = (
+    "pio test -e native_coverage",
+    "pio test -e native_organic_coverage",
+    "pio test -e native_generative_coverage",
+    "pio test -e native_ambient_coverage",
+    "pio test -e native_electronica_coverage",
+    "pio test -e native_percussion_coverage",
+    "pio test -e native_sanitized",
+    "pio test -e native_organic_sanitized",
+    "pio test -e native_generative_sanitized",
+    "pio test -e native_ambient_sanitized",
+    "pio test -e native_electronica_sanitized",
+    "pio test -e native_percussion_sanitized",
+)
+
+REQUIRED_FILTERED_SUITES = (
+    "-f unit/test_algorithms",
+    "-f integration/test_selection",
+    "-f integration/test_runtime",
+    "-f property/test_invariants",
+    "-f system/test_signal_path",
+)
+
 PERCUSSION_SUITES = (
     "unit/test_euclid_algorithm",
     "unit/test_repeat_algorithm",
@@ -107,6 +132,18 @@ def main() -> int:
     for suite in PERCUSSION_SUITES:
         if suite not in text:
             missing.append(f"percussion/test suite: {suite}")
+
+    # Coverage and sanitizer jobs must never execute an entire 194-case
+    # environment.  PlatformIO filters keep those expensive qualification
+    # modes scoped to shared/core + active-bank suites.
+    stripped_lines = {line.strip() for line in text.splitlines()}
+    for command in UNFILTERED_HEAVY_COMMANDS:
+        if command in stripped_lines or f"- run: {command}" in stripped_lines:
+            missing.append(f"unfiltered heavy test command: {command}")
+
+    for fragment in REQUIRED_FILTERED_SUITES:
+        if fragment not in text:
+            missing.append(f"filtered bank qualification fragment: {fragment}")
 
     if "native-percussion-tests:" not in text:
         missing.append("percussion/native job: native-percussion-tests")

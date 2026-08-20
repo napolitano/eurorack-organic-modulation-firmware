@@ -25,7 +25,7 @@ When a release is explicitly approved:
 7. leave a fresh `## Unreleased` section above the release history;
 8. validate the maintained user-manual source and publication tooling;
 9. freeze the final manual source with `python scripts/freeze_user_manual.py --version X.Y.Z`, then verify it with `--check`;
-10. run Classic, Organic, Generative, Ambient, Electronica and Percussion native tests/coverage/sanitizers where present in the tagged source, both bootloader builds for each selected bank, resource-budget checks and the corresponding timing-probe builds;
+10. run the complete native regression suite once, then bank-filtered wiring tests plus targeted coverage/sanitizer qualification for every bank present in the tagged source, followed by both bootloader builds, resource-budget checks and the corresponding timing-probe builds;
 11. commit the prepared release state, including `docs/manual/releases/X.Y.Z/drift-user-manual.X.Y.Z.odt`;
 12. create and push the version tag `vX.Y.Z`.
 
@@ -57,9 +57,9 @@ The workflow intentionally does not use generic GitHub auto-generated notes beca
 
 ## 4. Release workflow
 
-`.github/workflows/release.yml` validates traceability and release-note generation, runs the native tests/sanitizers/coverage available in the tagged source, builds both Nano bootloader targets for every bank present in that tag, checks each AVR image against the flash/SRAM engineering budgets, compiles the corresponding timing-probe images, installs the publication toolchain and Ubuntu fonts, verifies the release-specific frozen ODT, builds and validates the versioned user-manual PDF from that snapshot, publishes both ODT and PDF, packages the bank/bootloader variants with unambiguous versioned filenames, generates `FIRMWARE-ARTIFACTS.X.Y.Z.md` plus per-image build provenance, validates the exact expected bank/bootloader HEX/ELF set before publication, writes SHA-256 and MD5 manifests, generates the changelog-based notes and publishes or refreshes the GitHub Release for the selected tag.
+`.github/workflows/release.yml` validates traceability and release-note generation, runs the complete native regression suite once plus filtered bank-specific native/sanitizer/coverage qualification, builds both Nano bootloader targets for every bank present in that tag, checks each AVR image against the flash/SRAM engineering budgets, compiles the corresponding timing-probe images, installs the publication toolchain and the classic static Ubuntu font package, validates that `Ubuntu-R.ttf` and `Ubuntu-L.ttf` resolve before export, verifies the release-specific frozen ODT, builds and validates the versioned user-manual PDF from that snapshot, publishes both ODT and PDF, packages the bank/bootloader variants with unambiguous versioned filenames, generates `FIRMWARE-ARTIFACTS.X.Y.Z.md` plus per-image build provenance, validates the exact expected bank/bootloader HEX/ELF set before publication, writes SHA-256 and MD5 manifests, generates the changelog-based notes and publishes or refreshes the GitHub Release for the selected tag.
 
-The manual check is strict for release builds: the PDF must have the expected page geometry and contain embedded Ubuntu and Ubuntu Light fonts. Font substitution is not accepted for a tagged release.
+The manual check is strict for release builds: the PDF must have the expected page geometry and contain embedded Ubuntu and Ubuntu Light fonts. Font substitution is not accepted for a tagged release. On Ubuntu 24.04 the workflow deliberately installs `fonts-ubuntu-classic` rather than the mixed legacy/variable `fonts-ubuntu` package, and fails before LibreOffice export unless fontconfig resolves `Ubuntu-R.ttf` and `Ubuntu-L.ttf`. If publication still fails, the workflow prints LibreOffice, fontconfig, `pdfinfo` and `pdffonts` diagnostics in the failing step.
 
 ### Manual rebuild of an existing release
 
