@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-> **Implementation status — Unreleased:** The bank is now implemented in the post-0.2.0 source tree as compile-time bank `FMD_BANK_DUBSTEP` with slots Wobble / Growl / Chop / Build. The first implementation freezes the 70–280 BPM mapping, reuses the shared Percussion-derived `ClockSource`, and uses the 8/4/2/1-bar Build mapping described below. The public bank name remains open to later community/listening review; the code identifier remains `dubstep` for this development cycle.
+> **Implementation status — released in 0.3.0:** The bank is implemented as compile-time bank `FMD_BANK_DUBSTEP` with slots Wobble / Growl / Chop / Build. Release 0.3.0 freezes the 70–280 BPM mapping, reuses the shared Percussion-derived `ClockSource`, uses the 8/4/2/1-bar Build mapping described below, and publishes the user-facing bank name **Dubstep / Bass**; the code identifier remains `dubstep`.
 
 
 This document evaluates a proposed seventh Drift algorithm bank with the working name **Dubstep**. The bank is intended to cover a part of electronic modulation that the existing six banks do not address directly: **tempo-synchronised bass-motion phrases, syncopated gating and build/drop-scale modulation**.
@@ -50,7 +50,7 @@ These references support a bank centred on tempo-locked modulation and phrase-sc
 | 2 | OFF | ON | Chop |
 | 3 | ON | ON | Build |
 
-As with the existing banks, the normal firmware image would contain all four modes and the rear DIP switches would select one at startup. The post-0.2.0 named-algorithm developer target mechanism can later provide direct on-device builds for `wobble`, `growl`, `chop` and `build` without changing the user-facing bank contract.
+As with the existing banks, the normal firmware image would contain all four modes and the rear DIP switches would select one at startup. The named-algorithm developer target mechanism introduced in 0.3.0 provides direct on-device builds for `wobble`, `growl`, `chop` and `build` without changing the user-facing bank contract.
 
 ## 4. Proposed shared tempo contract
 

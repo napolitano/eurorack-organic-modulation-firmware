@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-> **Implementation status — Unreleased:** Implemented under `domain/dubstep/` as a deterministic CV gesture. The Q0.12 component weights are normalized when Texture changes, sum exactly to unity and avoid per-sample division. The public name remains provisional; the implemented mathematical contour is the contract.
+> **Implementation status — released in 0.3.0:** Implemented under `domain/dubstep/` as a deterministic CV gesture. The Q0.12 component weights are normalized when Texture changes, sum exactly to unity and avoid per-sample division. Release 0.3.0 retains the public name **Growl**; the implemented mathematical contour is the behavioral contract.
 
 
 Growl is the proposed second mode of the working Dubstep/Bass bank. Its purpose is to generate a short, beat-synchronised **multi-lobed timbral-motion CV** suitable for destinations such as wavetable position, formant/filter position, FM amount, wavefolding or distortion control.

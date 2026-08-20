@@ -14,7 +14,7 @@ This repository provides an independent C++17/PlatformIO firmware for the **Free
 No PCB modification is required. Changing banks is a firmware update; the two rear DIP switches then select one of the four algorithms inside the installed bank.
 
 > [!NOTE]
-> **Development status:** release `0.2.0` remains the stable **6-bank / 24-algorithm** release. The current `main` source additionally contains an **Unreleased Dubstep / Bass bank** with Wobble, Growl, Chop and Build for development and hardware qualification. The maintained development manual now documents all seven banks; no tagged release includes Dubstep/Bass yet.
+> **Release status:** release `0.3.0` is the current stable **7-bank / 28-algorithm** release. It adds the Dubstep / Bass bank with Wobble, Growl, Chop and Build while retaining the original 4 HP Arduino Nano / ATmega328P hardware target.
 
 **Start here:** [Install or change a bank](docs/installation/README.md) · [User manual](docs/manual/README.md) · [Choose a bank](#choose-your-bank) · [Latest release](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases) · [Developer/testing guide](README_TESTING.md)
 
@@ -44,7 +44,7 @@ The banks are deliberately different rather than collections of minor variations
 | **Ambient** | Current · Anchor · Breath · Fog | Slow form, mean-reverting drift, recurrent swells and soft modulation clouds | [Ambient](README-BANK-AMBIENT.md) |
 | **Electronica** | Pump · Acid · Shuffle · Polymeter | Tempo-shaped CV for house, acid, techno and related electronic styles | [Electronica](README-BANK-ELECTRONICA.md) |
 | **Percussion** | Euclid · Repeat · Probability · Humanize | Rhythmic event placement, ratchets, weighted variation, fills and humanised timing | [Percussion](README-BANK-PERCUSSION.md) |
-| **Dubstep / Bass — Unreleased** | Wobble · Growl · Chop · Build | Tempo-locked bass motion, syncopated articulation and phrase-scale escalation | [Dubstep / Bass](README-BANK-DUBSTEP.md) |
+| **Dubstep / Bass** | Wobble · Growl · Chop · Build | Tempo-locked bass motion, syncopated articulation and phrase-scale escalation | [Dubstep / Bass](README-BANK-DUBSTEP.md) |
 
 > [!TIP]
 > ### A small problem of abundance
@@ -73,7 +73,7 @@ After flashing, those four slots mean:
 | **Ambient** | Current | Anchor | Breath | Fog |
 | **Electronica** | Pump | Acid | Shuffle | Polymeter |
 | **Percussion** | Euclid | Repeat | Probability | Humanize |
-| **Dubstep / Bass — Unreleased** | Wobble | Growl | Chop | Build |
+| **Dubstep / Bass** | Wobble | Growl | Chop | Build |
 
 The switches are sampled at startup. **ON is the upper physical switch position.** Change the switches only while the module is unpowered, then power-cycle Drift for the new algorithm to take effect.
 
@@ -91,7 +91,7 @@ The switches are sampled at startup. **ON is the upper physical switch position.
 | **Speed** | Primary time-scale or activity control; exact behaviour depends on the active algorithm |
 | **Texture** | Secondary shape, structure, density or character control |
 | **Attenuation** | Analogue scaling of the final 0–10 V output; firmware cannot read this knob |
-| **Speed CV** | Normally a 0–5 V modulation input; in Percussion and the Unreleased Dubstep / Bass bank it becomes an optional 0–5 V quarter-note clock input |
+| **Speed CV** | Normally a 0–5 V modulation input; in Percussion and Dubstep / Bass it becomes an optional 0–5 V quarter-note clock input |
 | **Texture CV** | 0–5 V modulation of the algorithm-specific Texture parameter |
 | **Output** | 0–10 V unipolar modulation/event output |
 | **LED** | Visual indication of the current output level |
@@ -147,7 +147,7 @@ The main goals are:
 - document hardware limits rather than pretending software can remove them;
 - provide prebuilt binaries, reproducible releases and an end-user manual so using the firmware does not require becoming an embedded developer.
 
-Release **0.2.0** is the first six-bank release and expands the original four-algorithm baseline to **24 algorithms** while retaining compatibility with the original Arduino Nano / ATmega328P hardware.
+Release **0.3.0** extends the six-bank `0.2.0` platform to **seven banks and 28 algorithms** while retaining compatibility with the original Arduino Nano / ATmega328P hardware.
 
 ## Community and project stance
 
@@ -193,13 +193,13 @@ Each bank has a dedicated guide with visual DIP maps, control semantics, mathema
 | **[Ambient](README-BANK-AMBIENT.md)** | Current, Anchor, Breath and Fog; slow-form movement and texture |
 | **[Electronica](README-BANK-ELECTRONICA.md)** | Pump, Acid, Shuffle and Polymeter; tempo-oriented electronic modulation |
 | **[Percussion](README-BANK-PERCUSSION.md)** | Euclid, Repeat, Probability and Humanize; phrase structure, fills, repeats and clocked rhythm |
-| **[Dubstep / Bass](README-BANK-DUBSTEP.md) — Unreleased** | Wobble, Growl, Chop and Build; tempo-relative bass motion and phrase-scale modulation |
+| **[Dubstep / Bass](README-BANK-DUBSTEP.md)** | Wobble, Growl, Chop and Build; tempo-relative bass motion and phrase-scale modulation |
 
 The algorithm derivations and engineering assessments live under [docs/analysis](docs/analysis/algorithms/README.md).
 
 ## User manual
 
-The maintained development manual is the complete reference for the current source: all seven banks and all twenty-eight algorithms. The frozen `0.2.0` manual remains the six-bank / 24-algorithm release record.
+The maintained manual is the complete reference for release `0.3.0`: all seven banks and all twenty-eight algorithms. The frozen `0.2.0` manual remains the historical six-bank / 24-algorithm release record.
 
 - [Manual workspace and publication notes](docs/manual/README.md)
 - [Editable ODT source](docs/manual/drift-user-manual.odt)
@@ -212,9 +212,9 @@ Tagged releases publish a versioned ODT and PDF generated from the frozen source
 
 The repository tests the production implementation rather than maintaining a separate algorithm model only for tests.
 
-Release 0.2.0 contains **210 native test cases across 35 suites** and **59 acceptance criteria**. The current Unreleased source expands that verification set for the seventh bank; see [README_TESTING.md](README_TESTING.md) for the live counts and qualification matrix. The released baseline covers:
+Release 0.3.0 contains **236 native test cases across 39 suites** and **64 acceptance criteria**; see [README_TESTING.md](README_TESTING.md) for the qualification matrix and coverage policy. The released platform covers:
 
-- mathematical reference behaviour for all 24 algorithms;
+- mathematical reference behaviour for all 28 algorithms;
 - fixed-point, frequency, RNG and reference-table primitives;
 - state-machine and boundary behaviour;
 - regression tests for verified upstream findings;
@@ -273,7 +273,7 @@ End users do not need to build the firmware; use the prebuilt release HEX files 
 | Ambient | `pio run -e nanoatmega328new_ambient` | `pio run -e nanoatmega328_ambient` |
 | Electronica | `pio run -e nanoatmega328new_electronica` | `pio run -e nanoatmega328_electronica` |
 | Percussion | `pio run -e nanoatmega328new_percussion` | `pio run -e nanoatmega328_percussion` |
-| Dubstep / Bass — Unreleased | `pio run -e nanoatmega328new_dubstep` | `pio run -e nanoatmega328_dubstep` |
+| Dubstep / Bass | `pio run -e nanoatmega328new_dubstep` | `pio run -e nanoatmega328_dubstep` |
 
 Append `-t upload` to flash the selected bank. The resulting firmware behaves like a normal release image: both rear DIP switches remain active and select one of the bank's four algorithms at startup.
 
@@ -332,14 +332,15 @@ For version `X.Y.Z`:
 | Ambient | `fm-drift-ambient-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-ambient-nano-old-bootloader.X.Y.Z.hex` |
 | Electronica | `fm-drift-electronica-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-electronica-nano-old-bootloader.X.Y.Z.hex` |
 | Percussion | `fm-drift-percussion-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-percussion-nano-old-bootloader.X.Y.Z.hex` |
-| Dubstep / Bass (when released) | `fm-drift-dubstep-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-dubstep-nano-old-bootloader.X.Y.Z.hex` |
+| Dubstep / Bass | `fm-drift-dubstep-nano-new-bootloader.X.Y.Z.hex` | `fm-drift-dubstep-nano-old-bootloader.X.Y.Z.hex` |
 
-Matching `.elf` files are included for debugging/provenance. Release `0.2.0` contains **24 firmware files** and twelve `BUILD-INFO` files for its six banks. A future tag that includes the current seventh bank will contain **28 firmware files** (seven banks × two bootloaders × HEX/ELF) and fourteen `BUILD-INFO` files, plus `FIRMWARE-ARTIFACTS.X.Y.Z.md`, the frozen versioned manual ODT/PDF pair and checksum manifests.
+Matching `.elf` files are included for debugging/provenance. Release `0.3.0` contains **28 firmware files** (seven banks × two bootloaders × HEX/ELF) and fourteen `BUILD-INFO` files, plus `FIRMWARE-ARTIFACTS.X.Y.Z.md`, the frozen versioned manual ODT/PDF pair and checksum manifests. Release `0.2.0` remains the historical six-bank / 24-firmware-file baseline.
 
 ## Release history
 
 | Version | Summary |
 |---|---|
+| **0.3.0** | Seven banks / 28 algorithms; Dubstep / Bass with Wobble, Growl, Chop and Build; named single-algorithm developer targets; shared rhythm-bank clock source; seven-bank manual and release packaging |
 | **0.2.0** | Six banks / 24 algorithms; Organic, Generative, Ambient, Electronica and Percussion; Percussion 0–5 V clock mode; bank-organised domain code; expanded testing/coverage; full multi-bank manual; bank-aware release packaging |
 | **0.1.0** | Initial C++17/PlatformIO release with the four Classic algorithms, documented upstream corrections, native/AVR CI, engineering analyses and tagged PDF manual |
 

@@ -4,13 +4,19 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ## Unreleased
 
+## 0.3.0 — 2026-08-20
+
+### Release summary
+
+Version 0.3.0 expands Free Modular Drift to seven banks and twenty-eight algorithms by adding the Dubstep / Bass bank with Wobble, Growl, Chop and Build. The release also introduces named single-algorithm developer targets for direct on-device qualification, extracts the proven Percussion clock detector into a shared clock source used by both rhythm-oriented banks, and extends CI, coverage, release packaging and the user manual to the complete seven-bank platform.
+
 ### Added
 
-- **Unreleased Dubstep / Bass bank:** Wobble, Growl, Chop and Build, implementing tempo-quantised bass-motion phrases, compound timbral CV, deterministic syncopated articulation and phrase-scale escalation from the previously documented engineering contracts.
+- **Dubstep / Bass bank:** Wobble, Growl, Chop and Build, implementing tempo-quantised bass-motion phrases, compound timbral CV, deterministic syncopated articulation and phrase-scale escalation from the previously documented engineering contracts.
 - Named PlatformIO developer targets for all 28 algorithms: a complete bank can still be built/flashed with normal rear-DIP selection, while `FMD_FORCE_ALGORITHM=<name>` or `scripts/flash_drift.py algorithm <name>` locks an on-device test image directly to a named algorithm and rejects bank/name mismatches at compile time.
 - Dedicated Dubstep/Bass Native, sanitizer, bank-owned coverage, AVR and timing environments, plus named developer targets `wobble`, `growl`, `chop` and `build`.
-- Dubstep/Bass implementation verification adds 26 native cases across four dedicated algorithm suites and raises the current Unreleased traceability set to 64 acceptance criteria / 236 native cases / 39 suites.
-- Expanded the maintained development user manual and dedicated Dubstep/Bass bank guide to all 28 current algorithms, including four DIP SVGs, four algorithm-explanation SVGs, seven-bank cover artwork and the verified bank-owned coverage result.
+- Dubstep/Bass implementation verification adds 26 native cases across four dedicated algorithm suites and raises the 0.3.0 traceability set to 64 acceptance criteria / 236 native cases / 39 suites.
+- Expanded the maintained user manual and dedicated Dubstep/Bass bank guide to all 28 current algorithms, including four DIP SVGs, four algorithm-explanation SVGs, seven-bank cover artwork and the verified bank-owned coverage result.
 
 ### Changed
 

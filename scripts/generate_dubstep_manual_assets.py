@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate deterministic SVG figures for Drift's Unreleased Dubstep/Bass bank.
+"""Generate deterministic SVG figures for Drift's Dubstep/Bass bank.
 
 The switch diagrams reuse the established Drift manual geometry. Algorithm
 figures visualize implemented contracts rather than oscilloscope captures.

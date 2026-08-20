@@ -2,7 +2,7 @@
 
 ## 1. Purpose and scope
 
-> **Implementation status — Unreleased:** Implemented under `domain/dubstep/` with the documented eight-cell phrase, four Texture vocabularies, rational rate codes and the shared 0–5 V quarter-note clock source. The 70–280 BPM mapping is now the prototype firmware contract rather than a pending recommendation.
+> **Implementation status — released in 0.3.0:** Implemented under `domain/dubstep/` with the documented eight-cell phrase, four Texture vocabularies, rational rate codes and the shared 0–5 V quarter-note clock source. The 70–280 BPM mapping is now the prototype firmware contract rather than a pending recommendation.
 
 
 Wobble is the proposed first mode of the working Dubstep/Bass bank. It generates a continuous modulation CV whose **rate follows a deterministic tempo-synchronised phrase**.

@@ -26,7 +26,7 @@
 #define FMD_BANK_ELECTRONICA 4
 /** Alternative Percussion bank containing Euclid, Repeat, Probability and Humanize. */
 #define FMD_BANK_PERCUSSION 5
-/** Unreleased Dubstep/Bass bank containing Wobble, Growl, Chop and Build. */
+/** Dubstep/Bass bank containing Wobble, Growl, Chop and Build. */
 #define FMD_BANK_DUBSTEP 6
 
 #ifndef FMD_ALGORITHM_BANK

@@ -63,7 +63,7 @@ Choose the bank for the kind of modulation you want. One firmware image contains
 | **Ambient** | Current · Anchor · Breath · Fog | Slow movement, swells, texture and long-form modulation |
 | **Electronica** | Pump · Acid · Shuffle · Polymeter | Tempo-shaped CV for house, acid, techno and related styles |
 | **Percussion** | Euclid · Repeat · Probability · Humanize | Rhythmic pulses, repeats, fills, probability and humanised timing |
-| **Dubstep / Bass — Unreleased** | Wobble · Growl · Chop · Build | Tempo-relative bass motion, articulation and phrase-scale escalation |
+| **Dubstep / Bass** | Wobble · Growl · Chop · Build | Tempo-relative bass motion, articulation and phrase-scale escalation |
 
 For version `X.Y.Z`, the release HEX filename begins with the bank name:
 
@@ -74,14 +74,14 @@ fm-drift-generative-...
 fm-drift-ambient-...
 fm-drift-electronica-...
 fm-drift-percussion-...
-fm-drift-dubstep-...    # first appears in a future tag that includes the Unreleased bank
+fm-drift-dubstep-...    # included from release 0.3.0 onward
 ```
 
 > [!IMPORTANT]
 > **Flashing selects the bank.** The rear DIP switches cannot move between banks. They select one of the four algorithms in the firmware image that is currently installed.
 
 > [!NOTE]
-> Release `0.2.0` contains the first six rows only. Dubstep/Bass is present in the current source and developer flashing workflow but has not yet appeared in a tagged release asset set.
+> Release `0.3.0` contains all seven rows. Release `0.2.0` remains the historical six-bank asset set without Dubstep/Bass.
 
 ## Step 2 — choose the Nano bootloader variant
 
@@ -92,11 +92,11 @@ Every bank contained in a tagged release is published in two Arduino Nano upload
 | **New bootloader / Optiboot** | `nano-new-bootloader.X.Y.Z.hex` | `115200` |
 | **Old Nano bootloader** | `nano-old-bootloader.X.Y.Z.hex` | `57600` |
 
-For example, the Organic bank in release `0.2.0` is available as:
+For example, the Organic bank in release `0.3.0` is available as:
 
 ```text
-fm-drift-organic-nano-new-bootloader.0.2.0.hex
-fm-drift-organic-nano-old-bootloader.0.2.0.hex
+fm-drift-organic-nano-new-bootloader.0.3.0.hex
+fm-drift-organic-nano-old-bootloader.0.3.0.hex
 ```
 
 Both target the same ATmega328P / 16 MHz hardware; the difference is the Nano bootloader/upload timing. Arduino documents the processor/bootloader distinction for the classic Nano. If you do not know which bootloader is installed, start with the new-bootloader image at `115200`. If the uploader cannot establish communication, retry using the old-bootloader image at `57600`.
@@ -174,7 +174,7 @@ The meaning of those slots depends on the flashed bank:
 | Ambient | Current | Anchor | Breath | Fog |
 | Electronica | Pump | Acid | Shuffle | Polymeter |
 | Percussion | Euclid | Repeat | Probability | Humanize |
-| Dubstep / Bass — Unreleased | Wobble | Growl | Chop | Build |
+| Dubstep / Bass | Wobble | Growl | Chop | Build |
 
 **ON is the upper physical switch position.** The switches are sampled at startup, so changing them while Drift is already running has no effect until the next power cycle.
 

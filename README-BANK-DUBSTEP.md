@@ -2,12 +2,12 @@
 
 [← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [Percussion bank](README-BANK-PERCUSSION.md) · [User manual](docs/manual/README.md) · [Engineering design](docs/analysis/algorithm-banks/dubstep-bank-design.md)
 
-The **Dubstep / Bass bank** is an **Unreleased** seventh Drift bank for tempo-relative bass modulation. It contains **Wobble, Growl, Chop and Build**: four deterministic modes operating at different musical time scales, from movement inside a beat to phrase-scale escalation across several bars.
+The **Dubstep / Bass bank** is the seventh Drift bank for tempo-relative bass modulation. It contains **Wobble, Growl, Chop and Build**: four deterministic modes operating at different musical time scales, from movement inside a beat to phrase-scale escalation across several bars.
 
-The working bank name is intentionally descriptive rather than historical doctrine. Wobble/growl/build vocabulary is associated especially strongly with later dubstep, brostep and wider bass-music production; the algorithms are equally usable for drum & bass, breaks, UK bass, electro and harder techno. The implementation therefore treats the name as a practical navigation label, not a claim that these four processes define the whole genre.
+The bank name is intentionally descriptive rather than historical doctrine. Wobble/growl/build vocabulary is associated especially strongly with later dubstep, brostep and wider bass-music production; the algorithms are equally usable for drum & bass, breaks, UK bass, electro and harder techno. The implementation therefore treats the name as a practical navigation label, not a claim that these four processes define the whole genre.
 
 > [!IMPORTANT]
-> This bank is **post-0.2.0 and currently Unreleased**. Release `0.2.0` remains the stable six-bank / 24-algorithm release. The current source tree contains this seventh bank for development and on-device qualification.
+> **Introduced in release `0.3.0`.** The bank adds Wobble, Growl, Chop and Build to the six-bank / 24-algorithm `0.2.0` baseline.
 
 > [!WARNING]
 > In this bank **Speed CV becomes an optional 0–5 V quarter-note clock input**, using the same qualified clock source as Percussion. **Do not patch raw 10 V Eurorack clocks or triggers into Speed CV on the current hardware.** Without valid external clock lock, the Speed knob supplies the internal tempo automatically.
@@ -309,7 +309,7 @@ The same extended-bank coverage gate used by Organic, Generative, Ambient, Elect
 
 An independent strict-host/gcov verification of the implemented bank currently measures **99.04% line / 95.30% non-throw branch coverage**. The weakest bank-owned source still measures **98.15% lines / 93.55% branches**, so the result is not being carried by one heavily tested helper. CI's PlatformIO/gcovr result remains the authoritative release gate.
 
-The release workflow already detects the bank and knows how to build both Nano bootloaders. The maintained manual now documents **Dubstep/Bass, Wobble, Growl, Chop and Build**; when a future release is prepared, the workflow still requires those terms in that tag's frozen manual snapshot before publication. Release `0.2.0` remains the immutable six-bank baseline.
+The release workflow builds both Nano bootloaders for this bank. Release `0.3.0` freezes a manual containing **Dubstep/Bass, Wobble, Growl, Chop and Build**, and the workflow requires those terms in the tag's frozen manual snapshot before publication. Release `0.2.0` remains the immutable six-bank baseline.
 
 The bank-level design, duplication audit, naming caveats and musical rationale are documented in [Dubstep / Bass bank design](docs/analysis/algorithm-banks/dubstep-bank-design.md).
 

@@ -63,8 +63,8 @@ Then choose the bootloader variant:
 For example:
 
 ```text
-fm-drift-generative-nano-new-bootloader.0.2.0.hex
-fm-drift-generative-nano-old-bootloader.0.2.0.hex
+fm-drift-generative-nano-new-bootloader.0.3.0.hex
+fm-drift-generative-nano-old-bootloader.0.3.0.hex
 ```
 
 If you do not know which bootloader is installed, start with the new-bootloader file at `115200`. If AVRDUDESS cannot establish communication, retry with the matching old-bootloader file at `57600`.
