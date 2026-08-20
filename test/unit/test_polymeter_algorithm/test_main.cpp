@@ -64,6 +64,11 @@ void test_polymeter_algorithm_is_deterministic_and_bounded() {
   }
 }
 
+
+void test_polymeter_recurrence_zero_length_guard_is_defined() {
+  TEST_ASSERT_EQUAL_UINT8(0U, fmd::polymetermath::recurrenceSteps(0U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_polymeter_texture_regions_select_exact_meter_lengths);
@@ -71,5 +76,6 @@ int main(int, char**) {
   RUN_TEST(test_polymeter_recurrence_lengths_are_exact_lcms);
   RUN_TEST(test_polymeter_decay_preserves_peak_and_reaches_zero);
   RUN_TEST(test_polymeter_algorithm_is_deterministic_and_bounded);
+  RUN_TEST(test_polymeter_recurrence_zero_length_guard_is_defined);
   return UNITY_END();
 }

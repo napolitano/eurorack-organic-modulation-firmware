@@ -126,6 +126,26 @@ void test_too_fast_glitch_does_not_replace_reference_edge() {
   TEST_ASSERT_EQUAL_UINT32(101UL, source.lastPeriodSamples());
 }
 
+
+void test_clock_period_helpers_clamp_below_and_above_supported_range() {
+  TEST_ASSERT_EQUAL_UINT32(
+      fmd::percussionmath::quarterIncrementFromPeriodSamples(
+          fmd::percussionmath::kClockMinimumPeriodSamples),
+      fmd::percussionmath::quarterIncrementFromPeriodSamples(0U));
+  TEST_ASSERT_EQUAL_UINT32(
+      fmd::percussionmath::quarterIncrementFromPeriodSamples(
+          fmd::percussionmath::kClockMaximumPeriodSamples),
+      fmd::percussionmath::quarterIncrementFromPeriodSamples(UINT32_MAX));
+  TEST_ASSERT_EQUAL_UINT32(
+      fmd::percussionmath::clockTimeoutSamples(
+          fmd::percussionmath::kClockMinimumPeriodSamples),
+      fmd::percussionmath::clockTimeoutSamples(0U));
+  TEST_ASSERT_EQUAL_UINT32(
+      fmd::percussionmath::clockTimeoutSamples(
+          fmd::percussionmath::kClockMaximumPeriodSamples),
+      fmd::percussionmath::clockTimeoutSamples(UINT32_MAX));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_clock_uses_speed_knob_increment_until_two_valid_edges);
@@ -134,5 +154,6 @@ int main(int, char**) {
   RUN_TEST(test_external_clock_times_out_after_two_and_a_half_periods);
   RUN_TEST(test_external_period_conversion_matches_scheduler_phase_contract);
   RUN_TEST(test_too_fast_glitch_does_not_replace_reference_edge);
+  RUN_TEST(test_clock_period_helpers_clamp_below_and_above_supported_range);
   return UNITY_END();
 }

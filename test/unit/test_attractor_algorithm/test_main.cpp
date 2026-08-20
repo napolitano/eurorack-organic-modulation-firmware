@@ -12,6 +12,7 @@
 #include <unity.h>
 
 #include <cstdint>
+#include <climits>
 #include <cstdlib>
 
 #include "fmd/domain/organic/AttractorAlgorithm.h"
@@ -97,6 +98,21 @@ void test_attractor_algorithm_is_deterministic_and_stays_in_12bit_domain() {
   }
 }
 
+
+void test_attractor_math_saturates_extreme_states_and_clamps_phase() {
+  const auto positive = fmd::attractormath::iterateHenon(
+      {0, INT16_MAX}, fmd::attractormath::kMaxParameterAQ2F14);
+  TEST_ASSERT_EQUAL_INT16(INT16_MAX, positive.xQ2F14);
+
+  const auto negative = fmd::attractormath::iterateHenon(
+      {INT16_MAX, INT16_MIN}, fmd::attractormath::kMaxParameterAQ2F14);
+  TEST_ASSERT_EQUAL_INT16(INT16_MIN, negative.xQ2F14);
+
+  TEST_ASSERT_EQUAL_INT16(
+      fmd::attractormath::interpolateQ2F14(-1000, 1000, 4095U),
+      fmd::attractormath::interpolateQ2F14(-1000, 1000, 65535U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_attractor_texture_maps_monotonically_to_documented_henon_parameter_range);
@@ -104,5 +120,6 @@ int main(int, char**) {
   RUN_TEST(test_attractor_fixed_point_orbits_stay_inside_q2f14_domain_for_complete_texture_range);
   RUN_TEST(test_attractor_interpolation_and_coordinate_mapping_are_bounded_and_monotonic);
   RUN_TEST(test_attractor_algorithm_is_deterministic_and_stays_in_12bit_domain);
+  RUN_TEST(test_attractor_math_saturates_extreme_states_and_clamps_phase);
   return UNITY_END();
 }

@@ -207,7 +207,7 @@ Current native coverage includes:
 - machine-checked acceptance-criteria traceability;
 - sanitizer and coverage environments.
 
-The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. Release **0.2.0** expands the repository to **194 native test cases across 35 suites** and **59 acceptance criteria** by adding Organic, Generative, Ambient, Electronica and Percussion bank verification. Classic, Organic, Generative, Ambient, Electronica and Percussion coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
+The released 0.1.0 Classic baseline contains **88 native test cases**, **32 acceptance criteria**, approximately **99.45% line coverage** and **82.82% branch coverage** for the portable production code. Release **0.2.0** expands the repository to **210 native test cases across 35 suites** and **59 acceptance criteria** by adding Organic, Generative, Ambient, Electronica and Percussion bank verification. Classic, Organic, Generative, Ambient, Electronica and Percussion coverage are qualified independently. Coverage is treated as a regression floor, not as a substitute for requirement or mathematical verification.
 
 AVR builds also carry explicit engineering headroom: **Flash must stay at or below 85% (26,112 / 30,720 bytes)** and **static SRAM at or below 65% (1,331 / 2,048 bytes)**. These are repository guardrails, deliberately stricter than the ATmega328P hard limits.
 

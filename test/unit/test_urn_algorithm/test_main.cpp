@@ -77,6 +77,16 @@ void test_urn_algorithm_is_seed_deterministic_bounded_and_uses_only_vocabulary_l
   }
 }
 
+
+void test_urn_weight_helpers_handle_degenerate_and_overrange_inputs() {
+  TEST_ASSERT_EQUAL_UINT16(
+      fmd::urnmath::relaxWeight(fmd::urnmath::kMaximumWeight),
+      fmd::urnmath::relaxWeight(static_cast<uint16_t>(fmd::urnmath::kMaximumWeight + 100U)));
+  TEST_ASSERT_EQUAL_UINT16(0U, fmd::urnmath::weightedTarget(0xFFFFU, 0U));
+  const uint16_t emptyWeights[fmd::urnmath::kStateCount] = {0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U};
+  TEST_ASSERT_EQUAL_UINT8(0U, fmd::urnmath::selectWeightedState(emptyWeights, 0xBEEFU));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_urn_relaxation_moves_weights_monotonically_toward_baseline);
@@ -84,5 +94,6 @@ int main(int, char**) {
   RUN_TEST(test_urn_equal_weights_partition_the_complete_random_domain_equally);
   RUN_TEST(test_urn_output_vocabulary_is_exact_even_spacing_across_full_dac_range);
   RUN_TEST(test_urn_algorithm_is_seed_deterministic_bounded_and_uses_only_vocabulary_levels);
+  RUN_TEST(test_urn_weight_helpers_handle_degenerate_and_overrange_inputs);
   return UNITY_END();
 }

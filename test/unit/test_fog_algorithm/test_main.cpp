@@ -76,6 +76,16 @@ void test_fog_algorithm_is_seed_deterministic_and_bounded() {
   }
 }
 
+
+void test_fog_math_clamps_occupancy_and_output_projection() {
+  const uint32_t increment = 0x01000000UL;
+  TEST_ASSERT_EQUAL_UINT32(
+      fmd::fogmath::eventCutoffQ0F32(increment, fmd::fogmath::kMaximumOccupancyEighths),
+      fmd::fogmath::eventCutoffQ0F32(increment, 255U));
+  TEST_ASSERT_EQUAL_UINT16(0U, fmd::fogmath::projectToDac12(-100000L));
+  TEST_ASSERT_EQUAL_UINT16(4095U, fmd::fogmath::projectToDac12(100000L));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_fog_kernel_has_exact_endpoints_peak_and_symmetry);
@@ -84,5 +94,6 @@ int main(int, char**) {
   RUN_TEST(test_fog_amplitude_mapping_is_signed_and_bounded);
   RUN_TEST(test_fog_voice_finishes_and_becomes_free);
   RUN_TEST(test_fog_algorithm_is_seed_deterministic_and_bounded);
+  RUN_TEST(test_fog_math_clamps_occupancy_and_output_projection);
   return UNITY_END();
 }

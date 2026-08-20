@@ -87,6 +87,14 @@ void test_humanize_positive_jitter_starts_after_nominal_boundary() {
   TEST_ASSERT_EQUAL_UINT32(expectedSecondOnsetIndex, observedSecondOnsetIndex);
 }
 
+
+void test_humanize_output_projection_remains_clamped_at_extreme_random_values() {
+  TEST_ASSERT_GREATER_OR_EQUAL_UINT16(
+      0U, fmd::humanizemath::pulseAmplitudeDac12(0U, 65535U));
+  TEST_ASSERT_LESS_OR_EQUAL_UINT16(
+      4095U, fmd::humanizemath::pulseAmplitudeDac12(0xFFFFU, 65535U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_humanize_jitter_radius_maps_zero_to_thirty_samples);
@@ -95,5 +103,6 @@ int main(int, char**) {
   RUN_TEST(test_humanize_texture_zero_is_neutral);
   RUN_TEST(test_humanize_algorithm_is_reproducible_and_bounded);
   RUN_TEST(test_humanize_positive_jitter_starts_after_nominal_boundary);
+  RUN_TEST(test_humanize_output_projection_remains_clamped_at_extreme_random_values);
   return UNITY_END();
 }

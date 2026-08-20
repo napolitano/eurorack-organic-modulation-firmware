@@ -70,11 +70,22 @@ void test_current_algorithm_is_deterministic_and_bounded() {
   }
 }
 
+
+void test_current_math_clamps_defensive_out_of_range_inputs() {
+  TEST_ASSERT_EQUAL_UINT16(4096U, fmd::ambientmath::smoothstepQ0F12(65535U));
+  const fmd::currentmath::Weights primaryOnly{1024U, 0U, 0U};
+  TEST_ASSERT_EQUAL_UINT16(
+      0U, fmd::currentmath::mixToDac12(-4096, 0, 0, primaryOnly));
+  TEST_ASSERT_EQUAL_UINT16(
+      4095U, fmd::currentmath::mixToDac12(4096, 0, 0, primaryOnly));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_current_weights_have_exact_endpoints_and_constant_sum);
   RUN_TEST(test_current_ratio_approximations_are_close_to_ideal);
   RUN_TEST(test_current_soft_triangle_has_expected_extrema);
   RUN_TEST(test_current_algorithm_is_deterministic_and_bounded);
+  RUN_TEST(test_current_math_clamps_defensive_out_of_range_inputs);
   return UNITY_END();
 }

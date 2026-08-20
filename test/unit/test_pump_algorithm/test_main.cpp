@@ -71,6 +71,19 @@ void test_pump_algorithm_is_deterministic_and_bounded() {
   }
 }
 
+
+void test_pump_math_clamps_peak_endpoint_and_completed_recovery() {
+  TEST_ASSERT_EQUAL_UINT16(4095U, fmd::electronicamath::scaleDac12(65535U, 4096U));
+  TEST_ASSERT_EQUAL_UINT16(
+      fmd::pumpmath::recoveryReciprocalQ28(fmd::pumpmath::kRecoveryMinimumQ0F16),
+      fmd::pumpmath::recoveryReciprocalQ28(0U));
+  const uint16_t endpoint = fmd::pumpmath::kRecoveryMinimumQ0F16;
+  TEST_ASSERT_EQUAL_UINT16(
+      4096U,
+      fmd::pumpmath::recoveryProgressQ0F12(endpoint, endpoint,
+          fmd::pumpmath::recoveryReciprocalQ28(endpoint)));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_electronica_tempo_mapping_has_exact_endpoints);
@@ -78,5 +91,6 @@ int main(int, char**) {
   RUN_TEST(test_pump_output_starts_at_zero_and_reaches_full_scale);
   RUN_TEST(test_pump_recovery_is_monotone_for_dense_phase_domain);
   RUN_TEST(test_pump_algorithm_is_deterministic_and_bounded);
+  RUN_TEST(test_pump_math_clamps_peak_endpoint_and_completed_recovery);
   return UNITY_END();
 }

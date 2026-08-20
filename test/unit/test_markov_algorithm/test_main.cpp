@@ -71,11 +71,17 @@ void test_markov_algorithm_is_seed_deterministic_bounded_and_uses_fixed_vocabula
   TEST_ASSERT_LESS_OR_EQUAL_UINT8(8U, seenCount);
 }
 
+
+void test_markov_range_scaler_handles_empty_range_guard() {
+  TEST_ASSERT_EQUAL_UINT8(0U, fmd::markovmath::scaleRandomToRange(0xFFFFU, 0U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_markov_structured_kernel_has_exact_documented_partition);
   RUN_TEST(test_markov_exploration_has_exact_control_endpoints);
   RUN_TEST(test_markov_stratified_vocabulary_covers_exactly_one_value_per_source_band);
   RUN_TEST(test_markov_algorithm_is_seed_deterministic_bounded_and_uses_fixed_vocabulary);
+  RUN_TEST(test_markov_range_scaler_handles_empty_range_guard);
   return UNITY_END();
 }

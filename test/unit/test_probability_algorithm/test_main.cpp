@@ -61,6 +61,16 @@ void test_probability_algorithm_is_reproducible_and_bounded() {
   }
 }
 
+
+void test_probability_common_cutoff_and_fill_helpers_clamp_endpoints() {
+  TEST_ASSERT_EQUAL_UINT16(0U, fmd::percussionmath::randomCutoffLinear(0U));
+  TEST_ASSERT_EQUAL_UINT16(65535U, fmd::percussionmath::randomCutoffLinear(1023U));
+  TEST_ASSERT_EQUAL_UINT16(65535U, fmd::percussionmath::randomCutoffLinear(65535U));
+  TEST_ASSERT_EQUAL_UINT32(
+      fmd::probabilitymath::fillBoostCutoff(4U),
+      fmd::probabilitymath::fillBoostCutoff(255U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_metric_classes_match_documented_masks);
@@ -68,5 +78,6 @@ int main(int, char**) {
   RUN_TEST(test_fill_boost_is_exact_eighth_probability_per_level);
   RUN_TEST(test_fill_cutoffs_saturate_and_tail_never_decreases);
   RUN_TEST(test_probability_algorithm_is_reproducible_and_bounded);
+  RUN_TEST(test_probability_common_cutoff_and_fill_helpers_clamp_endpoints);
   return UNITY_END();
 }

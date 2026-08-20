@@ -99,6 +99,16 @@ void test_percussion_speed_cv_dc_does_not_modulate_internal_tempo() {
   }
 }
 
+
+void test_euclid_helpers_clamp_invalid_hit_and_fill_inputs() {
+  TEST_ASSERT_EQUAL_HEX16(
+      fmd::euclidmath::canonicalMask(2U), fmd::euclidmath::canonicalMask(0U));
+  TEST_ASSERT_EQUAL_HEX16(
+      fmd::euclidmath::canonicalMask(13U), fmd::euclidmath::canonicalMask(255U));
+  TEST_ASSERT_EQUAL_HEX16(
+      fmd::euclidmath::fillTailMask(4U), fmd::euclidmath::fillTailMask(255U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_phrase_length_and_fill_strength_have_exact_regions);
@@ -108,5 +118,6 @@ int main(int, char**) {
   RUN_TEST(test_euclid_algorithm_is_deterministic_and_bounded);
   RUN_TEST(test_euclid_acquires_external_clock_on_second_valid_edge);
   RUN_TEST(test_percussion_speed_cv_dc_does_not_modulate_internal_tempo);
+  RUN_TEST(test_euclid_helpers_clamp_invalid_hit_and_fill_inputs);
   return UNITY_END();
 }

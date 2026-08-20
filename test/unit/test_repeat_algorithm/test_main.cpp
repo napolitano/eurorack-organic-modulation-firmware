@@ -57,6 +57,14 @@ void test_repeat_algorithm_is_reproducible_and_bounded() {
   }
 }
 
+
+void test_repeat_helpers_define_invalid_sub_event_inputs() {
+  TEST_ASSERT_EQUAL_UINT32(0U, fmd::repeatmath::subEventThreshold(1U, 1U));
+  TEST_ASSERT_EQUAL_UINT32(0U, fmd::repeatmath::subEventThreshold(0U, 4U));
+  TEST_ASSERT_EQUAL_UINT32(0U, fmd::repeatmath::subEventThreshold(4U, 4U));
+  TEST_ASSERT_EQUAL_UINT8(1U, fmd::repeatmath::forcedMinimumCount(0U, 3U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_repeat_probability_and_count_endpoints);
@@ -64,5 +72,6 @@ int main(int, char**) {
   RUN_TEST(test_fill_forcing_matches_phrase_contract);
   RUN_TEST(test_repeat_random_cutoff_is_monotone);
   RUN_TEST(test_repeat_algorithm_is_reproducible_and_bounded);
+  RUN_TEST(test_repeat_helpers_define_invalid_sub_event_inputs);
   return UNITY_END();
 }

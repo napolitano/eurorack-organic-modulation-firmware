@@ -96,6 +96,9 @@ PERCUSSION_SUITES = (
     "system/test_signal_path",
 )
 
+EXTENDED_BANKS = ("organic", "generative", "ambient", "electronica", "percussion")
+
+
 ELECTRONICA_SUITES = (
     "unit/test_pump_algorithm",
     "unit/test_acid_algorithm",
@@ -133,8 +136,8 @@ def main() -> int:
         if suite not in text:
             missing.append(f"percussion/test suite: {suite}")
 
-    # Coverage and sanitizer jobs must never execute an entire 194-case
-    # environment.  PlatformIO filters keep those expensive qualification
+    # Coverage and sanitizer jobs must never execute the entire native
+    # regression suite.  PlatformIO filters keep those expensive qualification
     # modes scoped to shared/core + active-bank suites.
     stripped_lines = {line.strip() for line in text.splitlines()}
     for command in UNFILTERED_HEAVY_COMMANDS:
@@ -144,6 +147,19 @@ def main() -> int:
     for fragment in REQUIRED_FILTERED_SUITES:
         if fragment not in text:
             missing.append(f"filtered bank qualification fragment: {fragment}")
+
+    if "python scripts/test_native_coverage_policy.py" not in text:
+        missing.append("coverage policy regression test: scripts/test_native_coverage_policy.py")
+    for fragment in ("--exclude-throw-branches", "--exclude-unreachable-branches"):
+        if fragment not in text:
+            missing.append(f"meaningful branch coverage option: {fragment}")
+    for bank in EXTENDED_BANKS:
+        coverage_filter = f"--filter 'lib/fmd/src/domain/{bank}/.*'"
+        checker = f"python scripts/check_native_coverage.py coverage-{bank}/coverage.xml --scope {bank}"
+        if coverage_filter not in text:
+            missing.append(f"{bank}/bank-owned coverage filter: {coverage_filter}")
+        if checker not in text:
+            missing.append(f"{bank}/scoped coverage policy: {checker}")
 
     if "native-percussion-tests:" not in text:
         missing.append("percussion/native job: native-percussion-tests")

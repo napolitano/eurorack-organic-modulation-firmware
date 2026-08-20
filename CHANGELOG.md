@@ -21,7 +21,7 @@ Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baselin
 - Explicit current-hardware safety warnings in the main README, Percussion guide and user manual: **10 V Eurorack clocks/triggers are unsupported on Speed CV** until the input hardware is revised.
 - Dedicated bank-level design documents and per-algorithm engineering analyses for all twenty newly added algorithms, including mathematical contracts, duplication audits, ATmega328P feasibility, verification strategy and musical assessment.
 - Dedicated root-level bank guides for Organic, Generative, Ambient, Electronica and Percussion, alongside the Classic guide.
-- Expanded native verification to **194 test cases across 35 suites and 59 acceptance criteria**, with bank-specific mathematical, integration, property, system, sanitizer, coverage, AVR resource-budget and timing paths.
+- Expanded native verification to **210 test cases across 35 suites and 59 acceptance criteria**, with bank-specific mathematical, integration, property, system, sanitizer, coverage, AVR resource-budget and timing paths.
 - Expanded the maintained user manual to all **six banks and twenty-four algorithms**, including bank-specific DIP diagrams, mathematical foundations, origin/musical-value overviews, Percussion clock guidance and **59 maintained SVG assets**.
 - Release-preparation manual freezing under `docs/manual/releases/X.Y.Z/`, with immutable byte-for-byte ODT snapshots and historical tag-based backfill support for releases predating the mechanism.
 - Bank-aware release packaging for every bank present in a tag. A current six-bank release publishes both Nano bootloader variants as HEX and ELF, yielding **24 firmware files**, plus **12 per-image BUILD-INFO provenance files**, the frozen ODT/PDF manual pair, firmware manifest and checksum manifests.
@@ -44,8 +44,9 @@ Version 0.2.0 expands Free Modular Drift from the four-algorithm Classic baselin
 - Corrected the shared Electronica/Percussion tempo mapping so the documented endpoints are actually **30–240 BPM** rather than the previous factor-of-four-under-scaled 7.5–60 BPM runtime behavior.
 - Corrected Humanize positive-jitter scheduling so delayed events are offset from their nominal grid boundary rather than from event preparation, preserving the intended no-drift timing contract.
 - Corrected coverage/release metadata and workflow guards after the domain-by-bank refactor so nested bank sources remain included in the intended qualification paths.
-- Removed repeated full 194-case test-suite execution from CI/release qualification: the complete native regression suite now runs once, while bank wiring, sanitizer and coverage stages use explicit PlatformIO suite filters.
+- Removed repeated full-suite test execution from CI/release qualification: the complete native regression suite now runs once, while bank wiring, sanitizer and coverage stages use explicit PlatformIO suite filters.
 - Hardened tagged/manual release publication on Ubuntu 24.04 by using the classic static Ubuntu font package, validating exact Ubuntu Regular/Light resolution before LibreOffice export, and emitting font/PDF diagnostics on failure.
+- Hardened coverage for Organic, Generative, Ambient, Electronica and Percussion: bank reports now measure only bank-owned production code, enforce 97% line / 90% branch aggregate floors plus 95% / 80% per-file floors, exclude compiler-generated throw/unreachable branches, and add targeted edge/guard tests for previously weak paths.
 - Corrected release-manual validation for LibreOffice/Noble's `Ubuntu Light` → `Ubuntu-Medium` PDF naming quirk: the alias is accepted only when the ODT source explicitly requests Ubuntu Light; real font substitution still fails.
 - Updated the PlatformIO cache action from `actions/cache@v4.2.0` to the Node.js 24-compatible `actions/cache@v6.1.0`.
 

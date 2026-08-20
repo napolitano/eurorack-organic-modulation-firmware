@@ -76,6 +76,15 @@ void test_acid_algorithm_is_deterministic_and_bounded() {
   }
 }
 
+
+void test_acid_math_clamps_external_values_and_saturates_accent_sum() {
+  const uint16_t clamped = fmd::acidmath::slideContourDac12(65535U, 65535U, 2048U, 65535U);
+  TEST_ASSERT_LESS_OR_EQUAL_UINT16(4095U, clamped);
+  TEST_ASSERT_LESS_OR_EQUAL_UINT16(
+      768U, fmd::acidmath::accentContributionDac12(0U, 65535U));
+  TEST_ASSERT_EQUAL_UINT16(4095U, fmd::acidmath::addAccentSaturating(4000U, 1000U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_acid_permutation_visits_all_sixteen_codes_exactly_once);
@@ -83,5 +92,6 @@ int main(int, char**) {
   RUN_TEST(test_acid_slide_has_exact_texture_and_phase_endpoints);
   RUN_TEST(test_acid_accent_has_exact_zero_full_and_monotone_decay);
   RUN_TEST(test_acid_algorithm_is_deterministic_and_bounded);
+  RUN_TEST(test_acid_math_clamps_external_values_and_saturates_accent_sum);
   return UNITY_END();
 }

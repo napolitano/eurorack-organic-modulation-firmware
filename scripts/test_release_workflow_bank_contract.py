@@ -169,6 +169,9 @@ BANK_FRAGMENTS = {
 
 
 
+EXTENDED_BANKS = ("organic", "generative", "ambient", "electronica", "percussion")
+
+
 BANK_WIRING_FILTERS = (
     "-f unit/test_algorithms",
     "-f integration/test_selection",
@@ -237,6 +240,19 @@ def main() -> int:
     for fragment in BANK_WIRING_FILTERS:
         if fragment not in text:
             missing.append(f"release/bank wiring filter: {fragment}")
+
+    if "python scripts/test_native_coverage_policy.py" not in text:
+        missing.append("release/coverage policy regression test: scripts/test_native_coverage_policy.py")
+    for fragment in ("--exclude-throw-branches", "--exclude-unreachable-branches"):
+        if fragment not in text:
+            missing.append(f"release/meaningful branch coverage option: {fragment}")
+    for bank in EXTENDED_BANKS:
+        coverage_filter = f"--filter 'lib/fmd/src/domain/{bank}/.*'"
+        checker = f"python scripts/check_native_coverage.py coverage-{bank}/coverage.xml --scope {bank}"
+        if coverage_filter not in text:
+            missing.append(f"release/{bank} bank-owned coverage filter: {coverage_filter}")
+        if checker not in text:
+            missing.append(f"release/{bank} scoped coverage policy: {checker}")
 
 
     for environment in (

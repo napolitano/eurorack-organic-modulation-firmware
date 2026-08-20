@@ -28,6 +28,7 @@ jobs:
       - run: PYTHONPATH=scripts python scripts/test_check_release_artifact_set.py
       - run: python scripts/test_release_workflow_bank_contract.py
       - run: python scripts/test_ci_bank_contract.py
+      - run: python scripts/test_native_coverage_policy.py
       - run: python scripts/test_freeze_user_manual.py
 
   native-tests:
@@ -202,12 +203,14 @@ jobs:
       - run: |
           mkdir -p coverage
           gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
             --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion)/.*' \
             --xml-pretty --output coverage/coverage.xml
           gcovr --root . --filter lib/fmd/src --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
             --exclude 'lib/fmd/src/domain/(organic|generative|ambient|electronica|percussion)/.*' \
             --txt
-          python scripts/check_native_coverage.py coverage/coverage.xml
+          python scripts/check_native_coverage.py coverage/coverage.xml --scope classic
 
 
   native-organic-coverage:
@@ -235,13 +238,13 @@ jobs:
             -f system/test_signal_path
       - run: |
           mkdir -p coverage-organic
-          gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica|percussion)/.*' \
+          gcovr --root . --filter 'lib/fmd/src/domain/organic/.*' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
             --xml-pretty --output coverage-organic/coverage.xml
-          gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|generative|ambient|electronica|percussion)/.*' \
+          gcovr --root . --filter 'lib/fmd/src/domain/organic/.*' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
             --txt
-          python scripts/check_native_coverage.py coverage-organic/coverage.xml
+          python scripts/check_native_coverage.py coverage-organic/coverage.xml --scope organic
 
   native-generative-coverage:
     runs-on: ubuntu-24.04
@@ -268,13 +271,13 @@ jobs:
             -f system/test_signal_path
       - run: |
           mkdir -p coverage-generative
-          gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica|percussion)/.*' \
+          gcovr --root . --filter 'lib/fmd/src/domain/generative/.*' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
             --xml-pretty --output coverage-generative/coverage.xml
-          gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|ambient|electronica|percussion)/.*' \
+          gcovr --root . --filter 'lib/fmd/src/domain/generative/.*' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
             --txt
-          python scripts/check_native_coverage.py coverage-generative/coverage.xml
+          python scripts/check_native_coverage.py coverage-generative/coverage.xml --scope generative
 
   native-ambient-coverage:
     runs-on: ubuntu-24.04
@@ -301,10 +304,10 @@ jobs:
             -f system/test_signal_path
       - run: |
           mkdir -p coverage-ambient
-          gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|generative|electronica|percussion)/.*' \
+          gcovr --root . --filter 'lib/fmd/src/domain/ambient/.*' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
             --xml-pretty --output coverage-ambient/coverage.xml
-          python scripts/check_native_coverage.py coverage-ambient/coverage.xml
+          python scripts/check_native_coverage.py coverage-ambient/coverage.xml --scope ambient
 
   native-electronica-coverage:
     runs-on: ubuntu-24.04
@@ -331,10 +334,10 @@ jobs:
             -f system/test_signal_path
       - run: |
           mkdir -p coverage-electronica
-          gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient|percussion)/.*' \
+          gcovr --root . --filter 'lib/fmd/src/domain/electronica/.*' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
             --xml-pretty --output coverage-electronica/coverage.xml
-          python scripts/check_native_coverage.py coverage-electronica/coverage.xml
+          python scripts/check_native_coverage.py coverage-electronica/coverage.xml --scope electronica
 
   native-percussion-coverage:
     runs-on: ubuntu-24.04
@@ -362,10 +365,10 @@ jobs:
             -f system/test_signal_path
       - run: |
           mkdir -p coverage-percussion
-          gcovr --root . --filter lib/fmd/src --exclude test \
-            --exclude 'lib/fmd/src/domain/(classic|organic|generative|ambient|electronica)/.*' \
+          gcovr --root . --filter 'lib/fmd/src/domain/percussion/.*' --exclude test \
+            --exclude-throw-branches --exclude-unreachable-branches \
             --xml-pretty --output coverage-percussion/coverage.xml
-          python scripts/check_native_coverage.py coverage-percussion/coverage.xml
+          python scripts/check_native_coverage.py coverage-percussion/coverage.xml --scope percussion
 
   native-sanitizers:
     runs-on: ubuntu-24.04

@@ -75,6 +75,25 @@ void test_breath_algorithm_is_seed_deterministic_and_bounded() {
   }
 }
 
+
+void test_breath_math_clamps_out_of_contract_inputs() {
+  TEST_ASSERT_EQUAL_UINT16(
+      fmd::breathmath::rateScaleQ10(fmd::breathmath::kDurationMinimumQ10),
+      fmd::breathmath::rateScaleQ10(0U));
+  TEST_ASSERT_EQUAL_UINT16(
+      fmd::breathmath::rateScaleQ10(fmd::breathmath::kDurationMaximumQ10),
+      fmd::breathmath::rateScaleQ10(65535U));
+  TEST_ASSERT_EQUAL_UINT16(0U, fmd::breathmath::scaledPhaseIncrement(12345U, 0U));
+  TEST_ASSERT_EQUAL_UINT16(0U, fmd::breathmath::segmentReciprocalQ12(0U));
+
+  TEST_ASSERT_LESS_OR_EQUAL_UINT16(
+      4096U, fmd::breathmath::envelopeQ0F12(65535U, 0U, 65535U, 65535U));
+  TEST_ASSERT_LESS_OR_EQUAL_UINT16(
+      4096U, fmd::breathmath::envelopeQ0F12(4095U, 65535U, 65535U, 65535U));
+  TEST_ASSERT_EQUAL_UINT16(
+      4095U, fmd::breathmath::applyAmplitude(65535U, 65535U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_breath_zero_texture_parameter_mapping_is_nominal);
@@ -82,5 +101,6 @@ int main(int, char**) {
   RUN_TEST(test_breath_envelope_has_baseline_peak_baseline_topology);
   RUN_TEST(test_breath_rate_scale_matches_documented_duration_range);
   RUN_TEST(test_breath_algorithm_is_seed_deterministic_and_bounded);
+  RUN_TEST(test_breath_math_clamps_out_of_contract_inputs);
   return UNITY_END();
 }

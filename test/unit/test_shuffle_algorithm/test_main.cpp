@@ -63,6 +63,16 @@ void test_shuffle_algorithm_is_deterministic_and_bounded() {
   }
 }
 
+
+void test_shuffle_threshold_clamps_ratio_outside_documented_range() {
+  TEST_ASSERT_EQUAL_UINT32(
+      fmd::shufflemath::secondOnsetThreshold(fmd::shufflemath::kStraightRatioQ0F16),
+      fmd::shufflemath::secondOnsetThreshold(0U));
+  TEST_ASSERT_EQUAL_UINT32(
+      fmd::shufflemath::secondOnsetThreshold(fmd::shufflemath::kMaximumRatioQ0F16),
+      fmd::shufflemath::secondOnsetThreshold(65535U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_shuffle_ratio_has_exact_straight_and_three_to_one_endpoints);
@@ -70,5 +80,6 @@ int main(int, char**) {
   RUN_TEST(test_shuffle_intervals_always_sum_to_complete_pair);
   RUN_TEST(test_shuffle_short_decay_has_exact_endpoints);
   RUN_TEST(test_shuffle_algorithm_is_deterministic_and_bounded);
+  RUN_TEST(test_shuffle_threshold_clamps_ratio_outside_documented_range);
   return UNITY_END();
 }

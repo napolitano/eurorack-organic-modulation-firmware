@@ -1,13 +1,59 @@
 {
-  "schema_version": 1,
-  "line_min_percent": 95.0,
-  "branch_min_percent": 75.0,
-  "reference_measurement": {
-    "date": "2026-08-18",
-    "tool": "GCC 14.2.0 + gcov strict-host harness",
-    "line_percent": 98.88,
-    "branch_percent": 82.17,
-    "note": "Local production-source baseline. Confirm with PlatformIO/gcovr CI before treating the exact percentages as cross-toolchain canonical."
+  "schema_version": 2,
+  "scopes": {
+    "classic": {
+      "line_min_percent": 95.0,
+      "branch_min_percent": 75.0,
+      "file_line_min_percent": 90.0,
+      "file_branch_min_percent": 65.0,
+      "path_prefix": null,
+      "note": "Classic plus shared production code retains the established release floor."
+    },
+    "organic": {
+      "line_min_percent": 97.0,
+      "branch_min_percent": 90.0,
+      "file_line_min_percent": 95.0,
+      "file_branch_min_percent": 80.0,
+      "path_prefix": "lib/fmd/src/domain/organic/",
+      "note": "Extended-bank release floor: high aggregate decision coverage plus a per-file floor to prevent helpers from masking weak algorithm coverage."
+    },
+    "generative": {
+      "line_min_percent": 97.0,
+      "branch_min_percent": 90.0,
+      "file_line_min_percent": 95.0,
+      "file_branch_min_percent": 80.0,
+      "path_prefix": "lib/fmd/src/domain/generative/",
+      "note": "Extended-bank release floor: high aggregate decision coverage plus a per-file floor to prevent helpers from masking weak algorithm coverage."
+    },
+    "ambient": {
+      "line_min_percent": 97.0,
+      "branch_min_percent": 90.0,
+      "file_line_min_percent": 95.0,
+      "file_branch_min_percent": 80.0,
+      "path_prefix": "lib/fmd/src/domain/ambient/",
+      "note": "Extended-bank release floor: high aggregate decision coverage plus a per-file floor to prevent helpers from masking weak algorithm coverage."
+    },
+    "electronica": {
+      "line_min_percent": 97.0,
+      "branch_min_percent": 90.0,
+      "file_line_min_percent": 95.0,
+      "file_branch_min_percent": 80.0,
+      "path_prefix": "lib/fmd/src/domain/electronica/",
+      "note": "Extended-bank release floor: high aggregate decision coverage plus a per-file floor to prevent helpers from masking weak algorithm coverage."
+    },
+    "percussion": {
+      "line_min_percent": 97.0,
+      "branch_min_percent": 90.0,
+      "file_line_min_percent": 95.0,
+      "file_branch_min_percent": 80.0,
+      "path_prefix": "lib/fmd/src/domain/percussion/",
+      "note": "Extended-bank release floor: high aggregate decision coverage plus a per-file floor to prevent helpers from masking weak algorithm coverage."
+    }
   },
-  "note": "Engineering floors below the measured baseline. Do not lower them merely to accommodate regressions."
+  "measurement_rules": {
+    "exclude_throw_branches": true,
+    "exclude_unreachable_branches": true,
+    "note": "Bank scopes measure only bank-owned production sources. Compiler-generated exception and unreachable branches are excluded so branch coverage tracks executable project decisions rather than toolchain artefacts."
+  },
+  "note": "Do not lower release coverage floors to accommodate regressions. Add tests or document and exclude genuinely unreachable/generated branches instead."
 }

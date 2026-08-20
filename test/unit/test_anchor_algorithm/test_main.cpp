@@ -78,6 +78,24 @@ void test_anchor_is_seed_deterministic_and_bounded() {
   }
 }
 
+
+void test_anchor_math_handles_zero_rate_and_saturating_innovation_guards() {
+  TEST_ASSERT_EQUAL_UINT32(1U, fmd::anchormath::reversionAlphaQ0F24(0U));
+
+  uint32_t residual = 0U;
+  int8_t direction = 0;
+  TEST_ASSERT_EQUAL_INT16(
+      INT16_MIN,
+      fmd::anchormath::revertTowardZero(INT16_MIN, 1U, residual, direction));
+
+  TEST_ASSERT_EQUAL_INT16(
+      INT16_MAX,
+      fmd::anchormath::scaledInnovationQ1F15(INT16_MAX, 40000U, 30000U));
+  TEST_ASSERT_EQUAL_INT16(
+      INT16_MIN,
+      fmd::anchormath::scaledInnovationQ1F15(INT16_MIN, 40000U, 30000U));
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_anchor_spread_has_exact_zero_and_full_endpoints);
@@ -85,5 +103,6 @@ int main(int, char**) {
   RUN_TEST(test_anchor_fractional_reversion_eventually_moves_one_code);
   RUN_TEST(test_anchor_zero_texture_stays_exactly_at_midpoint);
   RUN_TEST(test_anchor_is_seed_deterministic_and_bounded);
+  RUN_TEST(test_anchor_math_handles_zero_rate_and_saturating_innovation_guards);
   return UNITY_END();
 }
