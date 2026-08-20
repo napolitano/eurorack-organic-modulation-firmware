@@ -1,6 +1,6 @@
 # Free Modular Drift — Dubstep / Bass Algorithm Bank
 
-[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [Percussion bank](README-BANK-PERCUSSION.md) · [Engineering design](docs/analysis/algorithm-banks/dubstep-bank-design.md)
+[← Main README](README.md) · [Classic bank](README-BANK-CLASSIC.md) · [Organic bank](README-BANK-ORGANIC.md) · [Generative bank](README-BANK-GENERATIVE.md) · [Ambient bank](README-BANK-AMBIENT.md) · [Electronica bank](README-BANK-ELECTRONICA.md) · [Percussion bank](README-BANK-PERCUSSION.md) · [User manual](docs/manual/README.md) · [Engineering design](docs/analysis/algorithm-banks/dubstep-bank-design.md)
 
 The **Dubstep / Bass bank** is an **Unreleased** seventh Drift bank for tempo-relative bass modulation. It contains **Wobble, Growl, Chop and Build**: four deterministic modes operating at different musical time scales, from movement inside a beat to phrase-scale escalation across several bars.
 
@@ -60,6 +60,15 @@ The existing two-switch hardware truth table is unchanged:
 
 The rear switches are sampled at startup. **ON is the upper position.** Power-cycle Drift after changing either switch.
 
+<table>
+<tr>
+<td align="center" width="25%"><img src="docs/manual/assets/config-wobble.svg" alt="DIP 1 off, DIP 2 off: Wobble" width="190"><br><strong>Wobble</strong><br>DIP 1: OFF<br>DIP 2: OFF</td>
+<td align="center" width="25%"><img src="docs/manual/assets/config-growl.svg" alt="DIP 1 on, DIP 2 off: Growl" width="190"><br><strong>Growl</strong><br>DIP 1: ON<br>DIP 2: OFF</td>
+<td align="center" width="25%"><img src="docs/manual/assets/config-chop.svg" alt="DIP 1 off, DIP 2 on: Chop" width="190"><br><strong>Chop</strong><br>DIP 1: OFF<br>DIP 2: ON</td>
+<td align="center" width="25%"><img src="docs/manual/assets/config-build.svg" alt="DIP 1 on, DIP 2 on: Build" width="190"><br><strong>Build</strong><br>DIP 1: ON<br>DIP 2: ON</td>
+</tr>
+</table>
+
 ## Clock and tempo contract
 
 Dubstep/Bass reuses the same shared `ClockSource` implementation as Percussion rather than maintaining a second clock detector.
@@ -107,6 +116,10 @@ Attenuation remains analogue after the DAC and is not visible to firmware.
 
 Wobble deliberately avoids becoming a second waveform-selectable LFO. Its carrier is always one continuous unipolar triangle; the musical identity comes from **changing its rate at deterministic eighth-note phrase cells**.
 
+<p align="center">
+  <img src="docs/manual/assets/wobble-rate-phrase.svg" alt="Wobble eight-cell rate phrase across four Texture vocabularies" width="820">
+</p>
+
 The carrier is
 
 $$
@@ -139,6 +152,10 @@ Developer detail: [Wobble engineering analysis](docs/analysis/algorithms/wobble-
 ## Growl — compound timbral-motion CV
 
 Growl does **not** synthesize a growl bass. Drift outputs CV, so the algorithm instead generates a deterministic multi-component motion suitable for driving a timbral destination that can produce that kind of sound.
+
+<p align="center">
+  <img src="docs/manual/assets/growl-contour.svg" alt="Growl contour gaining additional lobes as Texture increases" width="820">
+</p>
 
 Let
 
@@ -175,6 +192,10 @@ Developer detail: [Growl engineering analysis](docs/analysis/algorithms/growl-an
 
 Chop works on a 16-step bar and is deliberately deterministic. It does not duplicate Percussion Probability, Euclid or Generative Markov/Motif.
 
+<p align="center">
+  <img src="docs/manual/assets/chop-phrase.svg" alt="Chop deterministic 16-step articulation from anchors to the full syncopated vocabulary" width="820">
+</p>
+
 Two structural anchors are always present:
 
 $$
@@ -206,6 +227,10 @@ Developer detail: [Chop engineering analysis](docs/analysis/algorithms/chop-anal
 ## Build — phrase-scale escalation
 
 Build operates at the largest time scale of the bank. Texture selects a phrase of **8, 4, 2 or 1 bars**. That selection is latched at phrase reset so changing Texture cannot suddenly reinterpret the duration of a phrase that is already underway.
+
+<p align="center">
+  <img src="docs/manual/assets/build-escalation.svg" alt="Build macro rise with progressively faster micro-modulation across the phrase" width="820">
+</p>
 
 The macro rise is cubic smoothstep:
 
@@ -282,7 +307,9 @@ Dedicated mathematical suites cover:
 
 The same extended-bank coverage gate used by Organic, Generative, Ambient, Electronica and Percussion applies to Dubstep/Bass: **97% line / 90% branch aggregate**, with **95% line / 80% branch per-file floors** for branch-bearing bank-owned production files.
 
-The release workflow already detects the bank and knows how to build both Nano bootloaders, but publication is intentionally blocked until the frozen user manual also documents **Dubstep/Bass, Wobble, Growl, Chop and Build**. This prevents an Unreleased firmware bank from silently appearing in a release whose manual still describes only the six 0.2.0 banks.
+An independent strict-host/gcov verification of the implemented bank currently measures **99.04% line / 95.30% non-throw branch coverage**. The weakest bank-owned source still measures **98.15% lines / 93.55% branches**, so the result is not being carried by one heavily tested helper. CI's PlatformIO/gcovr result remains the authoritative release gate.
+
+The release workflow already detects the bank and knows how to build both Nano bootloaders. The maintained manual now documents **Dubstep/Bass, Wobble, Growl, Chop and Build**; when a future release is prepared, the workflow still requires those terms in that tag's frozen manual snapshot before publication. Release `0.2.0` remains the immutable six-bank baseline.
 
 The bank-level design, duplication audit, naming caveats and musical rationale are documented in [Dubstep / Bass bank design](docs/analysis/algorithm-banks/dubstep-bank-design.md).
 

@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1056 455" role="img" aria-label="Wobble deterministic rate phrase">
+<title>Wobble deterministic rate phrase</title>
+<style>
+.title{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:29px;font-weight:700;fill:#1a1a1a}
+.subtitle{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:300;fill:#6e6e6e}
+.label{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:18px;font-weight:500;fill:#1a1a1a}
+.small{font-family:Ubuntu,"Ubuntu Sans",Arial,sans-serif;font-size:15px;font-weight:300;fill:#6e6e6e}
+</style><rect width="1056" height="455" fill="white"/>
+<text x="34" y="52" class="title">Wobble — one bar, four rate vocabularies</text>
+<text x="34" y="87" class="subtitle">The eight eighth-note phrase cells stay deterministic; Texture selects how aggressively their carrier rates differ</text>
+<text x="300.5" y="119" text-anchor="middle" class="small">1</text>
+<text x="300.5" y="139" text-anchor="middle" class="small">s0</text>
+<text x="391.5" y="119" text-anchor="middle" class="small">2</text>
+<text x="391.5" y="139" text-anchor="middle" class="small">s1</text>
+<text x="482.5" y="119" text-anchor="middle" class="small">3</text>
+<text x="482.5" y="139" text-anchor="middle" class="small">s0</text>
+<text x="573.5" y="119" text-anchor="middle" class="small">4</text>
+<text x="573.5" y="139" text-anchor="middle" class="small">s2</text>
+<text x="664.5" y="119" text-anchor="middle" class="small">5</text>
+<text x="664.5" y="139" text-anchor="middle" class="small">s1</text>
+<text x="755.5" y="119" text-anchor="middle" class="small">6</text>
+<text x="755.5" y="139" text-anchor="middle" class="small">s3</text>
+<text x="846.5" y="119" text-anchor="middle" class="small">7</text>
+<text x="846.5" y="139" text-anchor="middle" class="small">s0</text>
+<text x="937.5" y="119" text-anchor="middle" class="small">8</text>
+<text x="937.5" y="139" text-anchor="middle" class="small">s2</text>
+<text x="34" y="162" class="label">Texture 0</text>
+<rect x="260" y="131" width="81" height="42" rx="7" fill="white" stroke="#8d8d8d" stroke-width="2"/>
+<text x="300.5" y="159" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="#1a1a1a">1×</text>
+<rect x="351" y="131" width="81" height="42" rx="7" fill="white" stroke="#8d8d8d" stroke-width="2"/>
+<text x="391.5" y="159" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="#1a1a1a">1×</text>
+<rect x="442" y="131" width="81" height="42" rx="7" fill="white" stroke="#8d8d8d" stroke-width="2"/>
+<text x="482.5" y="159" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="#1a1a1a">1×</text>
+<rect x="533" y="131" width="81" height="42" rx="7" fill="white" stroke="#8d8d8d" stroke-width="2"/>
+<text x="573.5" y="159" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="#1a1a1a">1×</text>
+<rect x="624" y="131" width="81" height="42" rx="7" fill="white" stroke="#8d8d8d" stroke-width="2"/>
+<text x="664.5" y="159" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="#1a1a1a">1×</text>
+<rect x="715" y="131" width="81" height="42" rx="7" fill="white" stroke="#8d8d8d" stroke-width="2"/>
+<text x="755.5" y="159" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="#1a1a1a">1×</text>
+<rect x="806" y="131" width="81" height="42" rx="7" fill="white" stroke="#8d8d8d" stroke-width="2"/>
+<text x="846.5" y="159" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="#1a1a1a">1×</text>
+<rect x="897" y="131" width="81" height="42" rx="7" fill="white" stroke="#8d8d8d" stroke-width="2"/>
+<text x="937.5" y="159" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="#1a1a1a">1×</text>
+<text x="34" y="227" class="label">Texture 1</text>
+<rect x="260" y="196" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="300.5" y="224" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="351" y="196" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="391.5" y="224" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">2×</text>
+<rect x="442" y="196" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="482.5" y="224" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="533" y="196" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="573.5" y="224" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="624" y="196" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="664.5" y="224" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">2×</text>
+<rect x="715" y="196" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="755.5" y="224" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">2×</text>
+<rect x="806" y="196" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="846.5" y="224" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="897" y="196" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="937.5" y="224" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<text x="34" y="292" class="label">Texture 2</text>
+<rect x="260" y="261" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="300.5" y="289" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="351" y="261" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="391.5" y="289" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">4/3×</text>
+<rect x="442" y="261" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="482.5" y="289" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="533" y="261" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="573.5" y="289" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">2×</text>
+<rect x="624" y="261" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="664.5" y="289" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">4/3×</text>
+<rect x="715" y="261" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="755.5" y="289" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">3/2×</text>
+<rect x="806" y="261" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="846.5" y="289" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="897" y="261" width="81" height="42" rx="7" fill="#f27962" stroke="#e64a2b" stroke-width="2"/>
+<text x="937.5" y="289" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">2×</text>
+<text x="34" y="357" class="label">Texture 3</text>
+<rect x="260" y="326" width="81" height="42" rx="7" fill="#e64a2b" stroke="#e64a2b" stroke-width="2"/>
+<text x="300.5" y="354" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="351" y="326" width="81" height="42" rx="7" fill="#e64a2b" stroke="#e64a2b" stroke-width="2"/>
+<text x="391.5" y="354" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">2×</text>
+<rect x="442" y="326" width="81" height="42" rx="7" fill="#e64a2b" stroke="#e64a2b" stroke-width="2"/>
+<text x="482.5" y="354" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="533" y="326" width="81" height="42" rx="7" fill="#e64a2b" stroke="#e64a2b" stroke-width="2"/>
+<text x="573.5" y="354" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">3×</text>
+<rect x="624" y="326" width="81" height="42" rx="7" fill="#e64a2b" stroke="#e64a2b" stroke-width="2"/>
+<text x="664.5" y="354" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">2×</text>
+<rect x="715" y="326" width="81" height="42" rx="7" fill="#e64a2b" stroke="#e64a2b" stroke-width="2"/>
+<text x="755.5" y="354" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">4×</text>
+<rect x="806" y="326" width="81" height="42" rx="7" fill="#e64a2b" stroke="#e64a2b" stroke-width="2"/>
+<text x="846.5" y="354" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">1×</text>
+<rect x="897" y="326" width="81" height="42" rx="7" fill="#e64a2b" stroke="#e64a2b" stroke-width="2"/>
+<text x="937.5" y="354" text-anchor="middle" font-family="Ubuntu,Arial,sans-serif" font-size="17" font-weight="600" fill="white">3×</text>
+<text x="255" y="417" class="small">Carrier phase remains continuous when the rate changes; Texture is latched at the bar boundary.</text>
+</svg>

@@ -63,6 +63,7 @@ Choose the bank for the kind of modulation you want. One firmware image contains
 | **Ambient** | Current · Anchor · Breath · Fog | Slow movement, swells, texture and long-form modulation |
 | **Electronica** | Pump · Acid · Shuffle · Polymeter | Tempo-shaped CV for house, acid, techno and related styles |
 | **Percussion** | Euclid · Repeat · Probability · Humanize | Rhythmic pulses, repeats, fills, probability and humanised timing |
+| **Dubstep / Bass — Unreleased** | Wobble · Growl · Chop · Build | Tempo-relative bass motion, articulation and phrase-scale escalation |
 
 For version `X.Y.Z`, the release HEX filename begins with the bank name:
 
@@ -73,14 +74,18 @@ fm-drift-generative-...
 fm-drift-ambient-...
 fm-drift-electronica-...
 fm-drift-percussion-...
+fm-drift-dubstep-...    # first appears in a future tag that includes the Unreleased bank
 ```
 
 > [!IMPORTANT]
 > **Flashing selects the bank.** The rear DIP switches cannot move between banks. They select one of the four algorithms in the firmware image that is currently installed.
 
+> [!NOTE]
+> Release `0.2.0` contains the first six rows only. Dubstep/Bass is present in the current source and developer flashing workflow but has not yet appeared in a tagged release asset set.
+
 ## Step 2 — choose the Nano bootloader variant
 
-Every current bank is released in two Arduino Nano upload variants:
+Every bank contained in a tagged release is published in two Arduino Nano upload variants:
 
 | Nano bootloader | Filename ending | Baud rate |
 |---|---|---:|
@@ -169,6 +174,7 @@ The meaning of those slots depends on the flashed bank:
 | Ambient | Current | Anchor | Breath | Fog |
 | Electronica | Pump | Acid | Shuffle | Polymeter |
 | Percussion | Euclid | Repeat | Probability | Humanize |
+| Dubstep / Bass — Unreleased | Wobble | Growl | Chop | Build |
 
 **ON is the upper physical switch position.** The switches are sampled at startup, so changing them while Drift is already running has no effect until the next power cycle.
 

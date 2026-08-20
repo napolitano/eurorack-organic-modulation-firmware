@@ -62,6 +62,7 @@ def validate(source: Path) -> None:
         embedded_ambient: dict[str, str] = {}
         embedded_electronica: dict[str, str] = {}
         embedded_percussion: dict[str, str] = {}
+        embedded_dubstep: dict[str, str] = {}
         embedded_bank_config: dict[str, str] = {}
         embedded_bank_slot: dict[str, str] = {}
         embedded_manual: dict[str, str] = {}
@@ -81,6 +82,8 @@ def validate(source: Path) -> None:
                 embedded_electronica[frame_name.removeprefix("Electronica-")] = href
             elif frame_name.startswith("Percussion-"):
                 embedded_percussion[frame_name.removeprefix("Percussion-")] = href
+            elif frame_name.startswith("Dubstep-"):
+                embedded_dubstep[frame_name.removeprefix("Dubstep-")] = href
             elif frame_name.startswith("BankConfig-"):
                 embedded_bank_config[frame_name.removeprefix("BankConfig-")] = href
             elif frame_name.startswith("BankSlot-"):
@@ -169,6 +172,22 @@ def validate(source: Path) -> None:
             if archive.read(href) != standalone.read_bytes():
                 raise ValueError(f"manual embeds a stale copy of Percussion SVG {asset_name}")
 
+        required_dubstep_assets = (
+            "wobble-rate-phrase.svg",
+            "growl-contour.svg",
+            "chop-phrase.svg",
+            "build-escalation.svg",
+        )
+        for asset_name in required_dubstep_assets:
+            href = embedded_dubstep.get(asset_name)
+            if href is None:
+                raise ValueError(f"manual is missing Dubstep/Bass SVG figure {asset_name}")
+            standalone = Path("docs/manual/assets") / asset_name
+            if not standalone.is_file():
+                raise ValueError(f"standalone Dubstep/Bass SVG is missing: {standalone}")
+            if archive.read(href) != standalone.read_bytes():
+                raise ValueError(f"manual embeds a stale copy of Dubstep/Bass SVG {asset_name}")
+
         required_bank_slot_assets = (
             "dip-slot-00.svg", "dip-slot-10.svg", "dip-slot-01.svg", "dip-slot-11.svg",
         )
@@ -207,6 +226,10 @@ def validate(source: Path) -> None:
             "config-repeat.svg",
             "config-probability.svg",
             "config-humanize.svg",
+            "config-wobble.svg",
+            "config-growl.svg",
+            "config-chop.svg",
+            "config-build.svg",
         )
         for asset_name in required_config_assets:
             href = embedded_bank_config.get(asset_name)
@@ -245,7 +268,8 @@ def validate(source: Path) -> None:
             "8 Ambient bank",
             "9 Electronica bank",
             "10 Percussion bank",
-            "11 Signals at a glance",
+            "11 Dubstep / Bass bank",
+            "12 Signals at a glance",
         )
         for heading in expected_sections:
             matches = paragraph_map.get(heading, [])
@@ -262,6 +286,7 @@ def validate(source: Path) -> None:
             "Current mode", "Anchor mode", "Breath mode", "Fog mode",
             "Pump mode", "Acid mode", "Shuffle mode", "Polymeter mode",
             "Euclid mode", "Repeat mode", "Probability mode", "Humanize mode",
+            "Wobble mode", "Growl mode", "Chop mode", "Build mode",
         )
         for heading in mode_headings:
             matches = paragraph_map.get(heading, [])
@@ -272,15 +297,15 @@ def validate(source: Path) -> None:
                 raise ValueError(f"algorithm heading lacks the standard T15 style: {heading}")
 
         math_headings = paragraph_map.get("Mathematical foundations", [])
-        if len(math_headings) != 24:
-            raise ValueError("manual must contain exactly twenty-four Mathematical foundations subsections")
+        if len(math_headings) != 28:
+            raise ValueError("manual must contain exactly twenty-eight Mathematical foundations subsections")
         for heading in math_headings:
             spans = heading.findall("text:span", namespaces)
             if heading.attrib.get(text_style) != "P20" or len(spans) != 1 or spans[0].attrib.get(text_style) != "T15":
                 raise ValueError("Mathematical foundations heading has inconsistent formatting")
 
         dip_headings = paragraph_map.get("DIP switch selection", [])
-        if len(dip_headings) != 6:
+        if len(dip_headings) != 7:
             raise ValueError("manual must contain one DIP switch selection subsection per bank")
         for heading in dip_headings:
             spans = heading.findall("text:span", namespaces)
@@ -303,6 +328,7 @@ def validate(source: Path) -> None:
     require("Ambient bank — DIP-switch positions", content, "Ambient bank DIP caption")
     require("Electronica bank — DIP-switch positions", content, "Electronica bank DIP caption")
     require("Percussion bank — DIP-switch positions", content, "Percussion bank DIP caption")
+    require("Dubstep / Bass bank — DIP-switch positions", content, "Dubstep/Bass bank DIP caption")
     require("f(t) = 6t", content, "Perlin mathematical foundation")
     require("P(move) = c / 1024", content, "Brownian mathematical foundation")
     require("C(t,", content, "Bezier mathematical foundation")
@@ -329,11 +355,16 @@ def validate(source: Path) -> None:
     require("Psecondary = τ", content, "Probability secondary law")
     require("Pghost = τ² / 2", content, "Probability ghost law")
     require("|δₙ| ≤ 12 ms", content, "Humanize timing bound")
-    require("twenty-four algorithms across six", content, "six-bank capability overview")
+    require("W(φ) = 1 − |2φ − 1|", content, "Wobble triangle foundation")
+    require("G(φ,τ) =", content, "Growl compound-contour foundation")
+    require("k(T) = floor(9T / 1024)", content, "Chop density law")
+    require("M(u) = 3u² − 2u³", content, "Build macro-rise law")
+    require("Y(u) = M(u)", content, "Build composite-output law")
+    require("twenty-eight algorithms across seven", content, "seven-bank capability overview")
     require("Software can add new banks, but it cannot create additional physical switch states", content, "hardware selector limitation")
-    require("WARNING — PERCUSSION CLOCK INPUT", content, "Percussion clock safety warning")
+    require("WARNING — PERCUSSION / DUBSTEP CLOCK INPUT", content, "shared Percussion/Dubstep clock safety warning")
     require("Do not patch 10 V Eurorack triggers or clocks into Speed CV", content, "Percussion 10 V warning")
-    require("returns automatically to the Speed-knob clock", content, "Percussion clock-loss fallback")
+    require("return automatically to the Speed-knob clock", content, "Percussion/Dubstep clock-loss fallback")
     require("Musical character and origin", content, "musical value table section")
     require("flashed firmware image", content, "compile-time bank selection explanation")
     require("symmetric triangular random offset", content, "Bezier timing-distribution description")

@@ -12,7 +12,7 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 | SVG | Manual source | Purpose |
 |---|---|---|
 | `drift-front-cover.svg` | Vector replacement for the original composed cover raster | User-manual cover covering the current firmware-bank scope |
-| `drift-back-cover.svg` | Vector replacement for the original composed back-cover raster | Credits, licence and Classic/Organic/Generative/Ambient/Electronica/Percussion bank summary |
+| `drift-back-cover.svg` | Vector replacement for the original composed back-cover raster | Credits, licence and Classic/Organic/Generative/Ambient/Electronica/Percussion/Dubstep-Bass bank summary |
 | `drift-front-panel.svg` | `Pictures/10000000000004D000000764D6EF55BF.png` | Numbered front-panel control reference |
 | `config-perlin.svg` | `Pictures/10000000000001C2000001203D7620D3.png` | Perlin configuration-switch position |
 | `config-brownian.svg` | `Pictures/10000000000001C200000120799504B3.png` | Brownian configuration-switch position |
@@ -70,8 +70,16 @@ The SVGs are intentionally maintained as real vector geometry. They do not conta
 | `repeat-ratchets.svg` | Generated from the implemented Repeat placement contract | Single/double/four-pulse ratchet placement |
 | `probability-grid.svg` | Generated from the implemented metric class probabilities | Primary/secondary/ghost rhythm positions |
 | `humanize-timing.svg` | Generated from the implemented bounded Humanize contract | Nominal grid versus timing/level deviation |
+| `config-wobble.svg` | Generated from the Dubstep/Bass bank DIP mapping | Wobble configuration-switch position |
+| `config-growl.svg` | Generated from the Dubstep/Bass bank DIP mapping | Growl configuration-switch position |
+| `config-chop.svg` | Generated from the Dubstep/Bass bank DIP mapping | Chop configuration-switch position |
+| `config-build.svg` | Generated from the Dubstep/Bass bank DIP mapping | Build configuration-switch position |
+| `wobble-rate-phrase.svg` | Generated from the implemented rate-phrase vocabulary | Eight phrase cells across the four Texture rate vocabularies |
+| `growl-contour.svg` | Generated from the implemented three-component contour contract | Low/mid/high-Texture timbral CV shapes |
+| `chop-phrase.svg` | Generated from the implemented anchor/candidate onset grammar | Sparse and fully populated deterministic Chop patterns plus articulation shape |
+| `build-escalation.svg` | Generated from the implemented Build macro/micro laws | Smooth macro rise with accelerating internal motion |
 
-The Organic-bank configuration diagrams and five Organic-bank explanatory figures are generated deterministically by `scripts/generate_organic_manual_assets.py`. The Generative DIP diagrams, compact slot symbols and four Generative explanatory figures are generated deterministically by `scripts/generate_generative_manual_assets.py`. The Ambient DIP diagrams and four Ambient explanatory figures are generated deterministically by `scripts/generate_ambient_manual_assets.py`. The Electronica DIP diagrams and four Electronica explanatory figures are generated deterministically by `scripts/generate_electronica_manual_assets.py`. The Percussion DIP diagrams, four Percussion explanatory figures and six-bank cover artwork are generated deterministically by `scripts/generate_percussion_manual_assets.py`. They are explanatory visualisations of the implemented control laws rather than oscilloscope captures.
+The Organic-bank configuration diagrams and five Organic-bank explanatory figures are generated deterministically by `scripts/generate_organic_manual_assets.py`. The Generative DIP diagrams, compact slot symbols and four Generative explanatory figures are generated deterministically by `scripts/generate_generative_manual_assets.py`. The Ambient DIP diagrams and four Ambient explanatory figures are generated deterministically by `scripts/generate_ambient_manual_assets.py`. The Electronica DIP diagrams and four Electronica explanatory figures are generated deterministically by `scripts/generate_electronica_manual_assets.py`. The Percussion DIP diagrams and four Percussion explanatory figures are generated deterministically by `scripts/generate_percussion_manual_assets.py`. The Dubstep/Bass DIP diagrams, four Dubstep/Bass explanatory figures and current seven-bank cover artwork are generated deterministically by `scripts/generate_dubstep_manual_assets.py`. They are explanatory visualisations of the implemented control laws rather than oscilloscope captures.
 
 The ODT now embeds the reusable vector front/back covers from this directory. Creative Commons marks, callout-number circles and small decorative symbols remain embedded document artwork because they do not add reusable technical information outside the composed manual pages.
 
@@ -83,7 +91,7 @@ The ODT now embeds the reusable vector front/back covers from this directory. Cr
 - Prefer the manual palette and Ubuntu-family typography.
 - Do not add generated release-version strings to asset filenames.
 - If the corresponding figure in the ODT changes materially, update the SVG and this source mapping together.
-- Regenerate the Organic figures with `python scripts/generate_organic_manual_assets.py`, the Generative figures with `python scripts/generate_generative_manual_assets.py`, the Ambient figures with `python scripts/generate_ambient_manual_assets.py`, the Electronica figures with `python scripts/generate_electronica_manual_assets.py`, and the Percussion figures/covers with `python scripts/generate_percussion_manual_assets.py`; do not hand-edit generated geometry.
+- Regenerate the Organic figures with `python scripts/generate_organic_manual_assets.py`, the Generative figures with `python scripts/generate_generative_manual_assets.py`, the Ambient figures with `python scripts/generate_ambient_manual_assets.py`, the Electronica figures with `python scripts/generate_electronica_manual_assets.py`, the Percussion figures with `python scripts/generate_percussion_manual_assets.py`, and the Dubstep/Bass figures/current covers with `python scripts/generate_dubstep_manual_assets.py`; do not hand-edit generated geometry.
 
 Run `python scripts/check_manual_assets.py` to verify the vector-asset contract.
 

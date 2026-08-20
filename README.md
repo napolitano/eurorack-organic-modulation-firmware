@@ -7,14 +7,14 @@
 ![ATmega328P](https://img.shields.io/badge/target-ATmega328P-00979D?logo=arduino)
 ![AVR resource guardrails](https://img.shields.io/badge/resource%20guardrails-flash%20%E2%89%A485%25%20%7C%20SRAM%20%E2%89%A465%25-success)
 
-**24 algorithms. Six banks. The original 4 HP Drift hardware.**
+**28 algorithms. Seven banks. The original 4 HP Drift hardware.**
 
-This repository provides an independent C++17/PlatformIO firmware for the **Free Modular Drift** Eurorack modulation source. It keeps the original module recognisably Drift, preserves the four original algorithms in the **Classic** bank, and expands the same Arduino Nano / ATmega328P hardware into five additional musical banks covering organic motion, generative structures, long-form ambient modulation, tempo-shaped electronic modulation and percussion/rhythm generation.
+This repository provides an independent C++17/PlatformIO firmware for the **Free Modular Drift** Eurorack modulation source. It keeps the original module recognisably Drift, preserves the four original algorithms in the **Classic** bank, and expands the same Arduino Nano / ATmega328P hardware into six additional musical banks covering organic motion, generative structures, long-form ambient modulation, tempo-shaped electronic modulation, percussion/rhythm generation and tempo-relative bass modulation.
 
 No PCB modification is required. Changing banks is a firmware update; the two rear DIP switches then select one of the four algorithms inside the installed bank.
 
 > [!NOTE]
-> **Development status:** release `0.2.0` remains the stable **6-bank / 24-algorithm** release. The current `main` source additionally contains an **Unreleased Dubstep / Bass bank** with Wobble, Growl, Chop and Build for development and hardware qualification. Its release publication is intentionally blocked until the maintained user manual is expanded for the new bank.
+> **Development status:** release `0.2.0` remains the stable **6-bank / 24-algorithm** release. The current `main` source additionally contains an **Unreleased Dubstep / Bass bank** with Wobble, Growl, Chop and Build for development and hardware qualification. The maintained development manual now documents all seven banks; no tagged release includes Dubstep/Bass yet.
 
 **Start here:** [Install or change a bank](docs/installation/README.md) · [User manual](docs/manual/README.md) · [Choose a bank](#choose-your-bank) · [Latest release](https://github.com/napolitano/eurorack-organic-modulation-firmware/releases) · [Developer/testing guide](README_TESTING.md)
 
@@ -48,7 +48,7 @@ The banks are deliberately different rather than collections of minor variations
 
 > [!TIP]
 > ### A small problem of abundance
-> With **24 algorithms across 6 banks**, the user is left with the rather luxurious problem of deciding which four algorithms to have installed today. One Drift can, by stubborn physical reality, run only one bank at a time. A second Drift is therefore an entirely defensible engineering response. A third begins to look like sensible redundancy. Beyond that, the distinction between *need* and *system architecture* becomes increasingly academic. Strictly speaking, convincing evidence that one can own too many Drifts has yet to emerge.
+> With **28 algorithms across 7 banks**, the user is left with the rather luxurious problem of deciding which four algorithms to have installed today. One Drift can, by stubborn physical reality, run only one bank at a time. A second Drift is therefore an entirely defensible engineering response. A third begins to look like sensible redundancy. Beyond that, the distinction between *need* and *system architecture* becomes increasingly academic. Strictly speaking, convincing evidence that one can own too many Drifts has yet to emerge.
 
 ## Choose your bank
 
@@ -199,7 +199,7 @@ The algorithm derivations and engineering assessments live under [docs/analysis]
 
 ## User manual
 
-The maintained end-user manual is the complete reference for the module, all six banks and all twenty-four algorithms.
+The maintained development manual is the complete reference for the current source: all seven banks and all twenty-eight algorithms. The frozen `0.2.0` manual remains the six-bank / 24-algorithm release record.
 
 - [Manual workspace and publication notes](docs/manual/README.md)
 - [Editable ODT source](docs/manual/drift-user-manual.odt)
