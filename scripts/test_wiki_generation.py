@@ -51,8 +51,9 @@ def main() -> int:
         require("Bank-Dubstep" in home and "Wobble" in home, "Dubstep/Bass is missing from Home page")
 
         triage_page = (first / "Issue-Triage-Agent.md").read_text()
-        require("feature_likelihood" in triage_page and "75" in triage_page,
-                "issue triage policy is missing from generated wiki")
+        require("feature likelihood" in triage_page.casefold() and "75" in triage_page
+                and "COPILOT_GITHUB_TOKEN" in triage_page,
+                "issue triage policy/Copilot setup is missing from generated wiki")
 
         source_page = (first / "Source-Code-Reference.md").read_text()
         require(MANAGED_MARKER in source_page, "generated source reference lacks managed marker")

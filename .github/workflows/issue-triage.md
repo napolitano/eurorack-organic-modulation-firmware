@@ -205,3 +205,9 @@ make them prove that they deserve maintainer attention.
 
 Never finish a comment with engagement bait or generic offers. End with the concrete next state of
 the issue.
+
+<!-- drift-footer:start -->
+<p align="center">
+  From Munich with <img src="../../docs/assets/drift-heart.svg" alt="an orange-red heart" width="16" height="16">
+</p>
+<!-- drift-footer:end -->

@@ -13,7 +13,7 @@ Use the repository issue forms where possible. Bug reports should identify the c
 
 Feature requests should describe the user-facing goal first. New behavior must fit the ATmega328P real-time and resource envelope unless the proposal explicitly belongs to a later hardware revision.
 
-New issues receive one automated first-pass review from the clearly identified Free Modular Drift Triage-Agent. The agent is intended to help, not bounce reports: it never closes issues or marks them invalid. It may point to a concrete documented feature, offer relevant first-aid references, or prepare and assign a likely defect. See [the triage-agent policy](docs/development/issue-triage-agent.md) for the exact thresholds and safeguards.
+New issues receive one automated first-pass review from the clearly identified Free Modular Drift Triage-Agent, running as a GitHub Agentic Workflow with GitHub Copilot. The agent is intended to help, not bounce reports: it never closes issues or marks them invalid. It may point to a concrete documented feature, offer relevant first-aid references, or prepare and assign a likely defect. See [the triage-agent policy](docs/development/issue-triage-agent.md) for the exact thresholds, authentication setup and safeguards.
 
 ## Development environment
 

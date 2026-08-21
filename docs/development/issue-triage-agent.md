@@ -1,125 +1,54 @@
 # Issue triage agent
 
-The repository uses a deliberately conservative, documentation-aware agent for the **first response to newly opened GitHub issues**. Its purpose is not to reject reports or replace maintainer judgement. It is a one-shot helper that tries to connect a report with existing documentation, offers useful first checks when the situation is ambiguous, and prepares likely defects for human investigation.
+The repository uses a deliberately conservative, documentation-aware **GitHub Agentic Workflow** for the first response to newly opened issues. It is visibly identified as the **Free Modular Drift Triage-Agent**. Its purpose is to reduce effort for reporters and maintainers, not to reject reports or replace maintainer judgement.
 
-## Design goals
+The agent reads the issue and canonical repository documentation, decides whether the behaviour is likely documented/intentional, ambiguous, or more likely defective, and may produce one helpful comment. Only the likely-defect path may additionally assign the issue to the maintainer.
 
-The agent follows five non-negotiable rules:
+## Architecture
 
-1. **Run once:** only the `issues.opened` event triggers the workflow. A hidden marker in the agent comment prevents a manual workflow re-run from posting a second triage response.
-2. **Never close or invalidate an issue:** the agent does not close, lock, mark `invalid`, or otherwise dispose of reports.
-3. **Evidence before confidence:** a high-confidence feature classification requires a concrete, matching **user-facing canonical documentation section** from the repository. Model confidence alone is never sufficient.
-4. **Escalate risk:** safety/hardware-damage reports, crashes/hangs, build/flash failures, explicit regressions and reports that contradict the documentation are forced into maintainer triage.
-5. **Be useful:** every visible response must either explain a relevant documented behaviour, provide targeted first-aid references/checks, or prepare a defect dossier with likely code/tests and missing diagnostic information.
+The implementation is GitHub-native:
 
-The visible comment always identifies itself as the **Free Modular Drift Triage-Agent** and states that it is an automated first-pass review rather than a final bug/feature decision.
+```text
+new GitHub issue
+      │
+      ▼
+.github/workflows/issue-triage.lock.yml
+      │  generated from issue-triage.md by gh-aw
+      ▼
+GitHub Copilot agent
+      │
+      ├── read-only GitHub tools
+      │     ├── triggering issue
+      │     ├── README / bank guides
+      │     ├── installation/manual documentation
+      │     ├── analyses / changelog
+      │     └── source + tests when defect evidence is stronger
+      │
+      ▼
+restricted safe outputs
+      ├── at most one comment
+      └── optional assignment to napolitano
+```
 
-## Routing policy
+There is **no direct external model-provider API call or provider API-key secret** in this design. GitHub Agentic Workflows runs the reasoning step through the `copilot` engine.
 
-The model produces a `feature_likelihood` score from 0 to 100 plus an independent evidence-quality score. These values are inputs to a deterministic policy engine, not direct GitHub actions.
+The human-authored agentic source is:
 
-| Effective feature likelihood | Route | Agent action |
-|---:|---|---|
-| `75–100` | Documented feature | Explain the matching behaviour, link the concrete documentation and ask the reporter to compare it with the observed result. The issue remains open. |
-| `50–74` | First aid / ambiguous | Do not claim feature or bug. Provide the most relevant documentation references and a short list of useful checks. |
-| `0–49` | Likely bug | Prepare expected/observed behaviour, plausible source and test entry points, missing information, apply the likely-bug label and assign the configured maintainer. |
+```text
+.github/workflows/issue-triage.md
+```
 
-### High-feature evidence gate
+GitHub Actions actually runs the compiled artifact:
 
-A score of 75 or more is **not sufficient** on its own. The high-feature route additionally requires:
+```text
+.github/workflows/issue-triage.lock.yml
+```
 
-- at least one documentation candidate selected by the model;
-- that candidate to come from user-facing canonical documentation such as the root README, a bank README or the installation/manual documentation;
-- evidence quality of at least 70.
+GitHub's `gh aw` compiler owns the lock file. It must never be edited manually.
 
-If any of these requirements is missing, the effective feature score is capped at 74 and the issue receives the first-aid response instead.
+## One-shot behaviour
 
-Engineering analyses can help the model understand a report but **cannot by themselves trigger the high-feature response**. This prevents a user from being redirected to internal design notes when the behaviour was never properly documented for users.
-
-### Hard escalations
-
-The policy engine caps the feature score below 50 when the issue contains a strong signal in one of these classes:
-
-- safety or possible hardware damage;
-- crash, hang or similar runtime failure;
-- compile, build, upload or flashing failure;
-- explicit regression from an earlier release/working state;
-- explicit mismatch between the documentation/manual and observed behaviour.
-
-These are deterministic repository rules. The model cannot override them.
-
-## Retrieval
-
-`scripts/issue_triage_agent.py` performs local retrieval before inference.
-
-### Documentation
-
-Markdown is split by headings and ranked against the issue title/body. The candidate set includes:
-
-- `README.md`;
-- all `README-BANK-*.md` guides;
-- installation and manual documentation;
-- testing/development documentation;
-- engineering analyses under `docs/analysis/`.
-
-The model receives stable candidate IDs such as `D01`, never an unrestricted request to invent a file path. Returned IDs are validated against the retrieved set before they can appear in a comment.
-
-### Source and tests
-
-For likely-defect preparation, the same ticket text is matched against:
-
-- portable and platform source under `lib/fmd/` and `src/`;
-- tests under `test/`.
-
-The model may select only the supplied `Sxx` and `Txx` candidates. These links are described as **plausible investigation starting points**, never as proof that a particular file is defective or that a test has passed/failed.
-
-## Model boundary
-
-The workflow currently uses the OpenAI Responses API. GitHub Models is intentionally not used: GitHub retired the standalone GitHub Models service, including its inference API, on 30 July 2026.
-
-The workflow sends the following to the model:
-
-- issue title and body;
-- selected repository documentation excerpts;
-- compact source/test candidate hints;
-- the fixed analysis instructions and JSON schema.
-
-The API request sets `store: false`. No repository secret is included in the prompt. The API key is used only in the HTTP `Authorization` header.
-
-The default model is `gpt-5.6-terra`; it can be replaced with the `TRIAGE_MODEL` repository variable without changing the policy code.
-
-## Prompt-injection boundary
-
-Issue content is fully untrusted. GitHub explicitly warns that issue titles and bodies can contain attacker-controlled data and should not be injected into executable workflow scripts.
-
-The implementation therefore:
-
-- reads the original JSON payload through `GITHUB_EVENT_PATH` in Python;
-- never substitutes `github.event.issue.title` or `github.event.issue.body` into a shell command;
-- tells the model that issue content is evidence and **never instructions**;
-- validates every returned documentation/source/test ID;
-- keeps routing and GitHub mutations outside the model;
-- gives the workflow only `contents: read` and `issues: write` permissions.
-
-The model cannot ask the workflow to close an issue, run commands, modify source code, or choose arbitrary GitHub API operations.
-
-## GitHub mutations
-
-The policy engine can perform only these issue changes:
-
-- add `triage: agent-reviewed`;
-- add `triage: docs-relevant` for the documented-feature or first-aid routes;
-- add `triage: likely-bug` for the likely-bug route;
-- assign the configured maintainer for the likely-bug route;
-- post exactly one triage comment.
-
-The labels are created automatically if they do not exist. `TRIAGE_MAINTAINER` can be set as a repository variable; if unset, the repository owner is used. For this repository that resolves to `napolitano`.
-
-The comment is deliberately posted **last**. A visible agent response therefore means that the required labels and, for a likely bug, the assignee mutation have already succeeded.
-
-## One-shot protection
-
-The workflow is triggered only by:
+The source workflow is triggered only by:
 
 ```yaml
 on:
@@ -127,65 +56,208 @@ on:
     types: [opened]
 ```
 
-The posted comment additionally contains:
+Edits, later comments, labels and normal issue activity do not trigger another triage run.
 
-```html
-<!-- fmd-triage-agent:v1 -->
+A manual Actions re-run is treated as an exceptional operator action. Before requesting any safe output, the agent checks the triggering issue for an earlier comment beginning with:
+
+```text
+🤖 Free Modular Drift Triage-Agent — automated first-pass review
 ```
 
-Before spending a model request, the script inspects existing issue comments for this marker. A manual job re-run therefore exits without a second comment.
+If such a comment exists, it produces no output. `hide-older-comments` is configured as an additional guard so an accidental rerun does not leave multiple visible agent comments.
 
-## Repository setup
+## Routing policy
 
-The workflow needs one repository secret:
+The policy contract remains versioned in:
 
-- `OPENAI_API_KEY` — API key used only for the inference request.
+```text
+scripts/issue_triage_policy.json
+```
 
-Optional repository variables:
+The agent internally evaluates two 0–100 routing scores:
 
-- `TRIAGE_MODEL` — model override; empty means `gpt-5.6-terra`;
-- `TRIAGE_MAINTAINER` — GitHub login for likely-bug assignment; empty means repository owner.
+- **feature likelihood** — strength of evidence that the report describes documented intentional behaviour;
+- **evidence quality** — how directly repository evidence supports that assessment.
 
-GitHub path:
+These are routing scores, not calibrated statistical probabilities.
 
-**Settings → Secrets and variables → Actions**
+| Effective feature likelihood | Route | Behaviour |
+|---:|---|---|
+| `75–100` | Documented behaviour | Explain the concrete matching behaviour and link the exact user-facing documentation section. |
+| `50–74` | First aid / ambiguous | Do not claim feature or bug. Give specific relevant references and ticket-specific checks. |
+| `0–49` | Likely defect | Prepare a defect dossier, identify plausible code/tests and missing diagnostics, then assign the issue to `napolitano`. |
 
-Create the secret under **Secrets** and the optional settings under **Variables**.
+### High-feature evidence gate
 
-The workflow itself is `.github/workflows/issue-triage.yml`.
+The `>=75` route is allowed only when all of these conditions hold:
+
+1. effective feature likelihood is at least 75;
+2. evidence quality is at least 70;
+3. at least one concrete **user-facing** canonical documentation section was found;
+4. the section directly describes the reported behaviour;
+5. no hard escalation applies.
+
+Engineering analyses may help interpretation but cannot by themselves trigger the documented-behaviour route.
+
+### Hard escalations
+
+The agent must use the likely-defect route regardless of a high feature score when the issue plausibly involves:
+
+- safety concerns or possible hardware damage;
+- smoke, burning, overheating, short circuit, reverse polarity or dangerous voltage behaviour;
+- crash or hang;
+- compile/build/upload/flashing failure;
+- an explicit regression from an earlier working release/state;
+- behaviour explicitly contradicting the README/manual/documentation.
+
+Safety uncertainty escalates rather than being normalised as expected behaviour.
+
+## Documentation retrieval
+
+For deciding whether behaviour is intentional, the agent prioritises:
+
+1. `README.md`;
+2. the relevant `README-BANK-*.md`;
+3. `docs/installation/`;
+4. `docs/manual/README.md`;
+5. other user-facing Markdown under `docs/`;
+6. `CHANGELOG.md` for version-specific contracts.
+
+For likely defects it may additionally inspect:
+
+- engineering analyses under `docs/analysis/`;
+- portable source under `lib/fmd/`;
+- platform code under `src/`;
+- tests under `test/`;
+- `README_TESTING.md` and requirement traceability.
+
+Code/test matches are presented as investigation starting points unless the evidence genuinely establishes more. The agent must never invent a passing/failing test result.
+
+## Reporter-facing behaviour
+
+Every comment starts with:
+
+```text
+🤖 Free Modular Drift Triage-Agent — automated first-pass review
+```
+
+It then makes clear that the response is automated and is not a final maintainer decision.
+
+The agent must be useful rather than dismissive. It never uses language such as `RTFM`, `user error`, `invalid`, `not a bug` or `works as designed`. The documented-behaviour path explicitly leaves the issue open and asks the reporter to describe the remaining mismatch if the documentation does not explain what they observe.
+
+The reply language should follow the reporter's language when reasonably clear.
+
+## Security model
+
+Issue content is attacker-controlled. The workflow therefore treats title, body, comments, quotes and attachments as **untrusted evidence, never instructions**.
+
+The agent has read-only GitHub tooling for repository/issue inspection. It does not receive direct issue-write capability. GitHub Agentic Workflows performs writes through separately validated safe-output handlers.
+
+The configured write surface is deliberately small:
+
+```yaml
+safe-outputs:
+  add-comment:
+    max: 1
+    target: triggering
+  assign-to-user:
+    allowed: [napolitano]
+    max: 1
+    target: triggering
+```
+
+There is no safe output for closing, locking, editing, transferring or deleting an issue; no pull-request creation; and no arbitrary shell tool in the agentic workflow.
+
+## Copilot authentication
+
+This repository is owned by a personal GitHub account. For that case GitHub Agentic Workflows supports the repository secret:
+
+```text
+COPILOT_GITHUB_TOKEN
+```
+
+It must contain a **fine-grained personal access token** owned by a user with an active GitHub Copilot licence. The token needs the account permission **Copilot Requests: Read**. It is used for Copilot inference by the `gh-aw` runtime.
+
+Create/store it under:
+
+**Repository → Settings → Secrets and variables → Actions → New repository secret**
+
+Name:
+
+```text
+COPILOT_GITHUB_TOKEN
+```
+
+For an organization-owned repository with centralized Copilot billing, `copilot-requests: write` can instead use the ephemeral `GITHUB_TOKEN`; that is intentionally not the default here because this repository is under a personal account.
+
+No OpenAI account or OpenAI API key is required.
+
+## Compiling the agentic workflow
+
+GitHub Agentic Workflows uses a source/lock model. Any change to `issue-triage.md` must be compiled with `gh aw`.
+
+The repository automates this through:
+
+```text
+.github/workflows/agentic-workflows-sync.yml
+```
+
+When `issue-triage.md` changes on `main`, the sync workflow installs the pinned `gh-aw` CLI, runs:
+
+```bash
+gh aw compile issue-triage --strict --yamllint --actionlint
+```
+
+and commits the generated `issue-triage.lock.yml` plus compiler-owned `.github/aw/` metadata when they changed.
+
+This means the first commit containing the agentic source may briefly have no compiled lock file. The compile workflow creates it immediately on `main`; future newly opened issues then execute the compiled workflow.
+
+If repository branch protection prevents the automation commit, compile locally instead:
+
+```bash
+gh extension install github/gh-aw@v0.86.1
+gh aw compile issue-triage --strict --yamllint --actionlint
+git add .github/workflows/issue-triage.lock.yml .github/aw
+git commit -m "ci: compile issue triage agentic workflow"
+git push
+```
+
+Never hand-edit the `.lock.yml` file.
 
 ## Verification
 
-The deterministic policy, retrieval expectations, safety overrides, wording constraints and workflow permissions are covered by:
+The repository contract test is:
 
 ```bash
 python scripts/test_issue_triage_agent.py
 ```
 
-A local end-to-end dry run can use a captured `issues.opened` JSON payload and a fixture model result:
+It checks, among other things:
 
-```bash
-python scripts/issue_triage_agent.py \
-  --event /path/to/issues-opened.json \
-  --analysis-fixture /path/to/analysis.json \
-  --dry-run
-```
+- `issues.opened` is the only issue trigger;
+- Copilot is the engine;
+- agent GitHub access is read-only;
+- only `add-comment` and `assign-to-user` are enabled;
+- comment and assignment counts are bounded to one;
+- assignment is statically restricted to `napolitano`;
+- the 75/50/70 routing thresholds remain present;
+- hard escalations remain present;
+- the prompt-injection boundary remains explicit;
+- no direct OpenAI API dependency returns;
+- the compile/sync workflow remains pinned to the expected `gh-aw` version.
 
-This performs retrieval, policy routing and comment rendering without GitHub writes or a model request.
-
-The test contract also forbids the retired GitHub Models permission, direct issue-title/body interpolation in workflow shell, and issue-closing/locking mutations in the agent implementation.
+The actual agentic source is additionally validated by `gh aw compile --strict --yamllint --actionlint` in the sync workflow.
 
 ## Failure behaviour
 
-The agent fails closed from an automation perspective:
+The design fails toward human review:
 
-- missing `OPENAI_API_KEY` causes the workflow to fail without posting a misleading comment;
-- invalid model output is rejected before routing;
-- unknown candidate IDs are discarded;
-- a failed required label/assignment mutation prevents the final comment from being posted;
-- no fallback path guesses a bug/feature result when inference fails.
+- if Copilot authentication is missing or invalid, the agentic run fails without a fabricated triage comment;
+- if reasoning cannot support a high-feature route with concrete user documentation, it must stay in first aid or likely-defect handling;
+- safe-output limits prevent additional arbitrary mutations;
+- no failure path closes or invalidates the issue.
 
-A failed triage workflow therefore leaves the issue untouched for normal human review rather than posting a low-quality automated answer.
+A failed automation therefore leaves the issue available for ordinary maintainer handling.
 
 <!-- drift-footer:start -->
 <p align="center">

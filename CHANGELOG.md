@@ -6,7 +6,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Added
 
-- Added a one-shot, documentation-aware GitHub issue triage agent: newly opened tickets are matched against canonical docs and repository code/tests, high-feature routing requires validated user-facing evidence, ambiguous reports receive targeted first aid, likely defects are prepared and assigned to the maintainer, and hard safety/regression/build/crash signals bypass feature routing.
+- Added a one-shot, documentation-aware GitHub issue triage agent as a GitHub Agentic Workflow using GitHub Copilot: newly opened tickets are matched against canonical docs and repository code/tests, high-feature routing requires validated user-facing evidence, ambiguous reports receive targeted first aid, likely defects are prepared and assigned to the maintainer, and hard safety/regression/build/crash signals bypass feature routing.
 - Automated GitHub Wiki generation and publishing from canonical repository Markdown, including generated Home/sidebar/footer navigation, bank guides, installation/testing/development pages, algorithm analyses, deterministic link/image rewriting and a managed-page manifest that preserves unrelated hand-written wiki pages.
 - Maintained source-code architecture reference covering execution flow, numeric/Q-format conventions, shared-domain contracts, every bank's persistent-state invariants and the ports/AVR boundary.
 
@@ -16,6 +16,8 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Fixed
 
+- Made the GitHub Agentic Workflow Markdown source footer-compatible so both legacy and current repository footer guards accept `.github/workflows/issue-triage.md` regardless of workflow/checker update order.
+- Replaced the initial direct OpenAI Responses API prototype of issue triage with GitHub Agentic Workflows and the GitHub Copilot engine; the repository no longer requires `OPENAI_API_KEY`, and the agent write surface is now enforced through bounded safe outputs.
 - Corrected the Dubstep/Bass engineering analyses to describe the released 0.3.0 implementation rather than stale prototype assumptions: Wobble's active rate vocabulary, Growl fixed-point normalization/hot-path behavior, Chop's hard-onset articulation/mask construction and Build's internal phrase-wrap overshoot are now documented exactly.
 
 ## 0.3.0 — 2026-08-20

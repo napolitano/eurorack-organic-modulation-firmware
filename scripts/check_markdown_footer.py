@@ -2,7 +2,9 @@
 """Validate the shared Drift footer on repository Markdown documentation.
 
 The pull-request template is intentionally excluded because its body is copied
-into every newly opened pull request and is not project documentation.
+into every newly opened pull request. GitHub Agentic Workflow Markdown sources
+under .github/workflows are executable workflow definitions rather than project
+documentation and are excluded for the same reason.
 
 SPDX-License-Identifier: GPL-3.0-or-later
 """
@@ -18,6 +20,16 @@ END = "<!-- drift-footer:end -->"
 EXCLUDED = {ROOT / ".github" / "pull_request_template.md"}
 
 
+def excluded(path: Path) -> bool:
+    if path in EXCLUDED:
+        return True
+    try:
+        relative = path.relative_to(ROOT)
+    except ValueError:
+        return False
+    return len(relative.parts) >= 3 and relative.parts[:2] == (".github", "workflows")
+
+
 def expected_footer(path: Path) -> str:
     heart = os.path.relpath(HEART, path.parent).replace("\\", "/")
     return (
@@ -31,7 +43,7 @@ def expected_footer(path: Path) -> str:
 
 def main() -> int:
     failures: list[str] = []
-    files = sorted(p for p in ROOT.rglob("*.md") if p not in EXCLUDED)
+    files = sorted(p for p in ROOT.rglob("*.md") if not excluded(p))
     for path in files:
         text = path.read_text(encoding="utf-8").rstrip()
         footer = expected_footer(path)
