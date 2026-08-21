@@ -1,0 +1,52 @@
+name: Compile agentic workflows
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/issue-triage.md'
+      - '.github/workflows/agentic-workflows-sync.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: compile-agentic-workflows-main
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    if: github.repository == 'napolitano/eurorack-organic-modulation-firmware'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Install GitHub Agentic Workflows CLI
+        uses: github/gh-aw/actions/setup-cli@v0.86.1
+        with:
+          version: v0.86.1
+
+      - name: Compile and validate issue triage workflow
+        run: gh aw compile issue-triage --strict --yamllint --actionlint
+
+      - name: Commit generated lock files
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git add .github/workflows/issue-triage.lock.yml
+          if [[ -d .github/aw ]]; then
+            git add .github/aw
+          fi
+          if git diff --cached --quiet; then
+            echo "Agentic workflow lock files are already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "ci: compile issue triage agentic workflow"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
