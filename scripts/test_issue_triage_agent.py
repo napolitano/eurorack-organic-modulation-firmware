@@ -52,8 +52,11 @@ def main() -> int:
         "assign-to-user:",
         "allowed: [napolitano]",
         "issue-intent: true",
+        "max-bot-mentions: 1",
     ):
         require(marker in fm, f"agentic workflow contract missing: {marker}")
+
+    require("max-bot-mentions: 0" not in fm, "gh-aw v0.86.1 rejects max-bot-mentions below 1")
 
     for forbidden_output in (
         "close-issue:",

@@ -16,6 +16,7 @@ This changelog records release-relevant changes to the firmware and repository. 
 
 ### Fixed
 
+- Fixed the GitHub Agentic Workflow safe-output configuration for gh-aw v0.86.1 by raising `max-bot-mentions` from the compiler-rejected value `0` to the accepted minimum `1`; the contract test now prevents that invalid value from returning.
 - Made the GitHub Agentic Workflow Markdown source footer-compatible so both legacy and current repository footer guards accept `.github/workflows/issue-triage.md` regardless of workflow/checker update order.
 - Replaced the initial direct OpenAI Responses API prototype of issue triage with GitHub Agentic Workflows and the GitHub Copilot engine; the repository no longer requires `OPENAI_API_KEY`, and the agent write surface is now enforced through bounded safe outputs.
 - Corrected the Dubstep/Bass engineering analyses to describe the released 0.3.0 implementation rather than stale prototype assumptions: Wobble's active rate vocabulary, Growl fixed-point normalization/hot-path behavior, Chop's hard-onset articulation/mask construction and Build's internal phrase-wrap overshoot are now documented exactly.

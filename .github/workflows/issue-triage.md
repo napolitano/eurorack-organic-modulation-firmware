@@ -32,7 +32,7 @@ safe-outputs:
     max: 1
     target: triggering
     issue-intent: true
-  max-bot-mentions: 0
+  max-bot-mentions: 1
 ---
 
 # Free Modular Drift issue triage
