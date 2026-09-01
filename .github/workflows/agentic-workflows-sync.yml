@@ -22,12 +22,12 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       - name: Install GitHub Agentic Workflows CLI
-        uses: github/gh-aw/actions/setup-cli@v0.86.1
+        uses: github/gh-aw/actions/setup-cli@v0.87.7
         with:
           version: v0.86.1
 
