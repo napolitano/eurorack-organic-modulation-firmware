@@ -13,8 +13,8 @@ jobs:
   metadata:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python scripts/check_requirement_traceability.py
@@ -38,8 +38,8 @@ jobs:
   named-target-smoke:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -69,8 +69,8 @@ jobs:
           - regression/test_upstream_behaviour
           - system/test_signal_path
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -93,8 +93,8 @@ jobs:
           - property/test_invariants
           - system/test_signal_path
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -116,8 +116,8 @@ jobs:
           - property/test_invariants
           - system/test_signal_path
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -139,8 +139,8 @@ jobs:
           - property/test_invariants
           - system/test_signal_path
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -162,8 +162,8 @@ jobs:
           - property/test_invariants
           - system/test_signal_path
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -186,8 +186,8 @@ jobs:
           - property/test_invariants
           - system/test_signal_path
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -210,8 +210,8 @@ jobs:
           - property/test_invariants
           - system/test_signal_path
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -220,8 +220,8 @@ jobs:
   native-coverage:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -261,8 +261,8 @@ jobs:
   native-clock-coverage:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -280,8 +280,8 @@ jobs:
   native-organic-coverage:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -313,8 +313,8 @@ jobs:
   native-generative-coverage:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -346,8 +346,8 @@ jobs:
   native-ambient-coverage:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -376,8 +376,8 @@ jobs:
   native-electronica-coverage:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -406,8 +406,8 @@ jobs:
   native-percussion-coverage:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -436,8 +436,8 @@ jobs:
   native-dubstep-coverage:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -466,8 +466,8 @@ jobs:
   native-sanitizers:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -492,8 +492,8 @@ jobs:
   native-organic-sanitizers:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -512,8 +512,8 @@ jobs:
   native-generative-sanitizers:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -532,8 +532,8 @@ jobs:
   native-ambient-sanitizers:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -552,8 +552,8 @@ jobs:
   native-electronica-sanitizers:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -572,8 +572,8 @@ jobs:
   native-percussion-sanitizers:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -593,8 +593,8 @@ jobs:
   native-dubstep-sanitizers:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -632,8 +632,8 @@ jobs:
           - nanoatmega328new_dubstep
           - nanoatmega328_dubstep
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt
@@ -647,8 +647,8 @@ jobs:
       matrix:
         environment: [nanoatmega328new_timing, nanoatmega328new_organic_timing, nanoatmega328new_generative_timing, nanoatmega328new_ambient_timing, nanoatmega328new_electronica_timing, nanoatmega328new_percussion_timing, nanoatmega328new_dubstep_timing]
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6.2.0
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.11.15'
       - run: python -m pip install -r scripts/requirements-ci.txt

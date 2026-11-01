@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: Check out canonical repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v7.0.1
 
       - name: Verify deterministic wiki generation
         run: python scripts/test_wiki_generation.py
