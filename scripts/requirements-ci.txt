@@ -1,2 +1,2 @@
-platformio==6.1.18
-gcovr==8.3
+platformio==6.2.0
+gcovr==8.8
